@@ -40,6 +40,6 @@ if __name__ == "__main__":
 	subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/usr/local/zookeeper'])
 	# hosts
 	for node in config['nodes']:
-		appendline('/etc/hosts', 'zoo'+str(node['id'])+'\t'+node['ip'])
+		appendline('/etc/hosts', node['ip']+'\t'+'zoo'+str(node['id']))
 
 	
