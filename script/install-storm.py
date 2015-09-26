@@ -7,7 +7,7 @@ import json
 from util import appendline
 
 def install_storm():
-	config = json.load(open(os.path.dirname(__file__)+'/cluster-config.json'));
+	config = json.load(open(os.path.dirname(os.path.realpath(__file__))+'/cluster-config.json'));
 
 	# cp storm
 	subprocess.call(['sudo', 'rm', '-rf', '/usr/local/storm'])

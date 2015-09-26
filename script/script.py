@@ -5,7 +5,7 @@ import json
 import os
 
 if __name__ == "__main__":
-	config = json.load(open(os.path.dirname(__file__)+'/cluster-config.json'))
+	config = json.load(open(os.path.dirname(os.path.realpath(__file__))+'/cluster-config.json'))
 	# install git, clone repository, install jdk
 	for node in config['nodes']:
 		print("Install git on server %s" % node['ip'])
