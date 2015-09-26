@@ -34,6 +34,7 @@ if __name__ == "__main__":
 	# cp zookeeper
 	for node in config['nodes']:
 		appendline('./zookeeper/conf/zoo.cfg', 'server.'+str(node['id'])+'=zoo'+str(node['id'])+'1:2888:3888')
+	subprocess.call(['sudo', 'rm', '-rf', '/usr/local/zookeeper'])
 	subprocess.call(['sudo', 'cp', '-r', './zookeeper', '/usr/local/zookeeper'])
 	subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/usr/local/zookeeper'])
 	# hosts
