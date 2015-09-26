@@ -2,9 +2,10 @@
 from __future__ import print_function
 import subprocess
 import json
+import os
 
 if __name__ == "__main__":
-	config = json.load(open('cluster-config.json'))
+	config = json.load(open(os.path.realpath(__file__)+'/cluster-config.json'))
 	# install git, clone repository, install jdk
 	for node in config['nodes']:
 		print("Install git on server %s" % node['ip'])
@@ -17,7 +18,7 @@ if __name__ == "__main__":
 		if 'RealtimeStreamBenchmark' not in files:
 			subprocess.call(["ssh", "cloud-user@"+node['ip'], "git clone https://github.com/wangyangjun/RealtimeStreamBenchmark.git"])
 		else:
-			subprocess.Popen('ssh cloud-user@'+node['ip']+'"cd /home/cloud-user/RealtimeStreamBenchmark;git pull;"', shell=True)
+			subprocess.Popen('ssh cloud-user@'+node['ip']+' "cd /home/cloud-user/RealtimeStreamBenchmark;git pull;"', shell=True)
 
 		# install jdk
 		subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install-jdk.py"])

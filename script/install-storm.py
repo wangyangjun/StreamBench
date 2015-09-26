@@ -2,11 +2,12 @@
 from __future__ import print_function
 import subprocess
 import sys
+import os
 import json
 from util import appendline
 
 def install_storm():
-	config = json.load(open('cluster-config.json'));
+	config = json.load(open(os.path.realpath(__file__)+'cluster-config.json'));
 
 	# cp storm
 	subprocess.call(['sudo', 'rm', '-rf', '/usr/local/storm'])
