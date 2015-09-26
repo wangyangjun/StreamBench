@@ -11,7 +11,7 @@ def install_JDK():
 	else:
 		print("JDK is already installed.")
 	# set JAVA_HOME
-	appendline('/etc/profile', 'export JAVA_HOME=/usr/lib/jvm/java-1.6.0-*/')
+	appendline('/etc/profile', 'export JAVA_HOME=/usr/lib/jvm/java-1.6.0-openjdk-amd64/')
 	appendline('/etc/profile', 'export PATH=$JAVA_HOME/bin:$PATH')
 
 if __name__ == "__main__":

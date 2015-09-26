@@ -5,18 +5,7 @@ import sys
 import json
 from util import appendline, get_ip_address
 
-def install_JDK():
-	if '/usr/bin/java' not in subprocess.check_output(['whereis', 'java']):
-		jdk_installed = subprocess.check_call(["sudo", "apt-get", "install", "-y", "openjdk-6-jdk"])
-		if jdk_installed == 0:
-			print("JDK installed successfully")
-	else:
-		print("JDK is already installed.")
-	# set JAVA_HOME
-	appendline('/etc/profile', 'export JAVA_HOME=/usr/lib/jvm/java-1.6.0-*/')
-	appendline('/etc/profile', 'export PATH=$JAVA_HOME/bin:$PATH')
-
-if __name__ == "__main__":
+def install_zookeeper():
 	# /var/zookeeper/data chown
 	config = json.load(open('zookeeper-config.json'));
 	data_dir_maked = subprocess.check_call(["sudo", "mkdir", "-p", "/var/zookeeper/data"])
@@ -41,5 +30,9 @@ if __name__ == "__main__":
 	# hosts
 	for node in config['nodes']:
 		appendline('/etc/hosts', node['ip']+'\t'+'zoo'+str(node['id']))
+
+
+if __name__ == "__main__":
+	install_zookeeper()
 
 	

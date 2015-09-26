@@ -1,0 +1,60 @@
+{
+	"nodes": [{
+			"ip": "192.168.1.4",
+			"host": "master",
+			"master": true
+		},{
+			"ip": "192.168.1.7",
+			"host": "worker1",
+			"master": false
+		},{
+			"ip": "192.168.1.8",
+			"host": "worker2",
+			"master": false
+		},{
+			"ip": "192.168.1.9",
+			"host": "worker3",
+			"master": false
+		},{
+			"ip": "192.168.1.10",
+			"host": "worker4",
+			"master": false
+		},{
+			"ip": "192.168.1.11",
+			"host": "worker5",
+			"master": false
+		},{
+			"ip": "192.168.1.12",
+			"host": "worker6",
+			"master": false
+		},{
+			"ip": "192.168.1.13",
+			"host": "worker7",
+			"master": false
+		},{
+			"ip": "192.168.1.14",
+			"host": "worker8",
+			"master": false
+		},{
+			"ip": "192.168.1.15",
+			"host": "worker9",
+			"master": false
+		},{
+			"ip": "192.168.1.16",
+			"host": "worker10",
+			"master": false
+		},{
+			"ip": "192.168.1.17",
+			"host": "worker11",
+			"master": false
+		},{
+			"ip": "192.168.1.18",
+			"host": "worker12",
+			"master": false
+		},{
+			"ip": "192.168.1.19",
+			"host": "worker13",
+			"master": false
+		}
+	]
+}
