@@ -35,6 +35,7 @@ if __name__ == "__main__":
 	for node in config['nodes']:
 		appendline('./zookeeper/conf/zoo.cfg', 'server.'+str(node['id'])+'=zoo'+str(node['id'])+'1:2888:3888')
 	subprocess.call(['sudo', 'cp', '-r', './zookeeper', '/usr/local/zookeeper'])
+	subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/usr/local/zookeeper'])
 	# hosts
 	for node in config['nodes']:
 		appendline('/etc/hosts', 'zoo'+str(node['id'])+'\t'+node['ip'])
