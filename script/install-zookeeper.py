@@ -29,7 +29,7 @@ if __name__ == "__main__":
 	# myid
 	myip = get_ip_address()
 	mynode = [node for node in config['nodes'] if node['ip'] == myip][0]
-	open("/var/zookeeper/data/myid", "w").write(mynode['id'])
+	open("/var/zookeeper/data/myid", "w").write(str(mynode['id']))
 	print("Set myid for zookeeper successfully")
 	# cp zookeeper
 	for node in config['nodes']:
