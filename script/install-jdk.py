@@ -5,6 +5,7 @@ from util import appendline
 
 def install_JDK():
 	if '/usr/bin/java' not in subprocess.check_output(['whereis', 'java']):
+		subprocess.call(["sudo", "apt-get", "update"])
 		jdk_installed = subprocess.check_call(["sudo", "apt-get", "install", "-y", "openjdk-6-jdk"])
 		if jdk_installed == 0:
 			print("JDK installed successfully")
