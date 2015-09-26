@@ -1,6 +1,7 @@
 #!/bin/python
 from __future__ import print_function
 import subprocess
+import json
 
 if __name__ == "__main__":
 	config = json.load(open('cluster-config.json'))
