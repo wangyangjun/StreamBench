@@ -16,7 +16,7 @@ def appendline(filename, line):
 			else:
 				subprocess.call(["echo", filename + " updated failed"])
 		else:
-			print('"%s" is already in file %s' % line, filename)
+			print('"%s" is already in file %s' % (line, filename))
 
 
 def get_ip_address():
