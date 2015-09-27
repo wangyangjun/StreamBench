@@ -7,6 +7,7 @@ from util import appendline, get_ip_address
 
 
 if __name__ == "__main__":
+	# start server one by one
 	if len(sys.argv) < 2 or sys.argv[1] not in ['start', 'stop']:
 		sys.stderr.write("Usage: python %s start or stop\n" % (sys.argv[0]))
 		sys.exit(1)
