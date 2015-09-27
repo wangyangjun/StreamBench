@@ -7,11 +7,12 @@ import json
 from util import appendline
 
 def install_storm():
-	config = json.load(open(os.path.dirname(os.path.realpath(__file__))+'/cluster-config.json'));
+	path = os.path.dirname(os.path.realpath(__file__))
+	config = json.load(open(path+'/cluster-config.json'));
 
 	# cp storm
 	subprocess.call(['sudo', 'rm', '-rf', '/usr/local/storm'])
-	subprocess.call(['sudo', 'cp', '-r', './storm', '/usr/local/storm'])
+	subprocess.call(['sudo', 'cp', '-r', path+'/storm', '/usr/local/storm'])
 	subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/usr/local/storm'])
 	# hosts
 	for node in config['nodes']:
