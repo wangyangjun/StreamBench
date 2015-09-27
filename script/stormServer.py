@@ -16,9 +16,11 @@ if __name__ == "__main__":
 		if sys.argv[1] == 'start':
 			for node in config['nodes']:
 				if node['master']:
+					print("Start nimbus in server " + node['ip'])
 					subprocess.call(['ssh', 'cloud-user@'+node['ip'], 'nohup /usr/local/storm/bin/storm nimbus&'])
-					subprocess.call(['ssh', 'cloud-user@'+node['ip'], 'nohup /usr/local/storm/bin/storm ui&'])
+					# subprocess.call(['ssh', 'cloud-user@'+node['ip'], 'nohup /usr/local/storm/bin/storm ui&'])
 				else:
+					print("Start supervisor in server " + node['ip'])
 					subprocess.call(['ssh', 'cloud-user@'+node['ip'], 'nohup /usr/local/storm/bin/storm subvisor&'])
 					
 		else:
