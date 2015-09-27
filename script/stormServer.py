@@ -16,10 +16,10 @@ if __name__ == "__main__":
 		if sys.argv[1] == 'start':
 			for node in config['nodes']:
 				if node['master']:
-					subprocess.call(['ssh', 'cloud-user@'+node['ip'], 'nohup /usr/local/storm/bin/storm nimbus'])
-					subprocess.call(['ssh', 'cloud-user@'+node['ip'], 'nohup /usr/local/storm/bin/storm ui'])
+					subprocess.call(['ssh', 'cloud-user@'+node['ip'], 'nohup /usr/local/storm/bin/storm nimbus&'])
+					subprocess.call(['ssh', 'cloud-user@'+node['ip'], 'nohup /usr/local/storm/bin/storm ui&'])
 				else:
-					subprocess.call(['ssh', 'cloud-user@'+node['ip'], 'nohup /usr/local/storm/bin/storm subvisor'])
+					subprocess.call(['ssh', 'cloud-user@'+node['ip'], 'nohup /usr/local/storm/bin/storm subvisor&'])
 					
 		else:
 			output = subprocess.check_output(['jps'])
