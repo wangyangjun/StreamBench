@@ -22,9 +22,10 @@ if __name__ == "__main__":
 					subprocess.call(['ssh', 'cloud-user@'+node['ip'], 'nohup /usr/local/storm/bin/storm subvisor&'])
 					
 		else:
-			output = subprocess.check_output(['jps'])
-			for process in output.split('\n'):
-				if 'supervisor' in process or 'nimbus' in process:
-					pid = process.split(' ')[0]
-					# kill pid
-					subprocess.call(['ssh', 'cloud-user@'+node['ip'], 'kill -9 ' + pid])
+			for node in config['nodes']:
+				output = subprocess.check_output(['ssh', 'cloud-user@'+node['ip'], 'jps'])
+				for process in output.split('\n'):
+					if 'supervisor' in process or 'nimbus' in process:
+						pid = process.split(' ')[0]
+						# kill pid
+						subprocess.call(['ssh', 'cloud-user@'+node['ip'], 'kill -9 ' + pid])
