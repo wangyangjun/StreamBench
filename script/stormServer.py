@@ -21,7 +21,7 @@ if __name__ == "__main__":
 					# subprocess.call(['ssh', 'cloud-user@'+node['ip'], 'nohup /usr/local/storm/bin/storm ui&'])
 				else:
 					print("Start supervisor in server " + node['ip'])
-					subprocess.call(['ssh', 'cloud-user@'+node['ip'], 'nohup /usr/local/storm/bin/storm subvisor&'])
+					subprocess.call(['ssh', 'cloud-user@'+node['ip'], 'nohup /usr/local/storm/bin/storm supervisor&'])
 					
 		else:
 			for node in config['nodes']:
