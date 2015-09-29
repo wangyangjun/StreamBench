@@ -28,6 +28,12 @@ if __name__ == "__main__":
 		# if 0 == p.wait():
 		# 	subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install-storm.py"])
 
+		# install spark
+		# if 0 == p.wait():
+		# 	subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install-spark.py"])
+
+		# install flink
 		if 0 == p.wait():
-			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install-spark.py"])
+			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install-flink.py"])
+
 

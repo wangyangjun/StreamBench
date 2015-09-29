@@ -6,7 +6,7 @@ import os
 import json
 from util import appendline
 
-def install_storm():
+def install_spark():
 	path = os.path.dirname(os.path.realpath(__file__))
 	config = json.load(open(path+'/cluster-config.json'));
 
@@ -32,6 +32,6 @@ def install_storm():
 
 
 if __name__ == "__main__":
-	install_storm()
+	install_spark()
 
 	
