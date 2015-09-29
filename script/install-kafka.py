@@ -42,9 +42,9 @@ if __name__ == "__main__":
 		sys.exit(1)
 	else:
 		try:
-	        broker_id = int(argv[1])
-	    except ValueError:
-	        sys.stderr.write("Usage: python %s broker.id\n" % (sys.argv[0]))
+			broker_id = int(argv[1])
+		except ValueError:
+			sys.stderr.write("Usage: python %s broker.id\n" % (sys.argv[0]))
 			sys.exit(1)
 	install_kafka(broker_id)
 
