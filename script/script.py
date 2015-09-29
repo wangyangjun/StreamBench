@@ -18,7 +18,7 @@ if __name__ == "__main__":
 		if 'RealtimeStreamBenchmark' not in files:
 			p = subprocess.call(["ssh", "cloud-user@"+node['ip'], "git clone https://github.com/wangyangjun/RealtimeStreamBenchmark.git"])
 		else:
-			p = subprocess.Popen('ssh cloud-user@'+node['ip']+' "cd /home/cloud-user/RealtimeStreamBenchmark;git pull;"', shell=True)
+			p = subprocess.Popen('ssh cloud-user@'+node['ip']+' "cd /home/cloud-user/RealtimeStreamBenchmark;git checkout .;git pull;"', shell=True)
 
 		# install jdk
 		if 0 == p.wait():
