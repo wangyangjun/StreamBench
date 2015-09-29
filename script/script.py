@@ -3,6 +3,7 @@ from __future__ import print_function
 import subprocess
 import json
 import os
+from util import appendline
 
 if __name__ == "__main__":
 	config = json.load(open(os.path.dirname(os.path.realpath(__file__))+'/cluster-config.json'))
