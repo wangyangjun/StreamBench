@@ -1,7 +1,9 @@
 #!/bin/python
-import os
-import sys
+from __future__ import print_function
 import subprocess
+import sys
+import os
+import json
 
 def update_broker_id(id):
 	path = os.path.dirname(os.path.realpath(__file__))
