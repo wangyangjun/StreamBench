@@ -40,3 +40,10 @@ if __name__ == "__main__":
 		if 0 == p.wait():
 			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install-kafka.py " + str(node['borker_id'])])
 
+		# hosts
+		appendline('/etc/hosts', '192.168.1.4	zoo1')
+		appendline('/etc/hosts', '192.168.1.7	zoo2')
+		appendline('/etc/hosts', '192.168.1.8	zoo3')
+		appendline('/etc/hosts', '192.168.1.9	zoo4')
+		appendline('/etc/hosts', '192.168.1.10	zoo5')
+
