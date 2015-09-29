@@ -11,7 +11,7 @@ def update_broker_id(id):
 	open(path+'/kafka/config/server.properties.tmp', 'w') as outfile:
 	    for line in infile:
 	        if 'broker.id=' in line:
-	        	line = 'broker.id='+str(id)
+	        	line = 'broker.id='+str(id)+'\n'
 	        outfile.write(line)
 
     	subprocess.call(['mv', path+'/kafka/config/server.properties.tmp', path+'/kafka/config/server.properties'])
