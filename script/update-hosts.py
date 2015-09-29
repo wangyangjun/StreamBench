@@ -7,7 +7,7 @@ import json
 from util import appendline
 
 if __name__ == "__main__":
-
+	path = os.path.dirname(os.path.realpath(__file__))
 	config = json.load(open(path+'/cluster-config.json'));
 	for node in config['nodes']:
 		appendline('/etc/hosts', node['ip']+'\t'+node['host'])
