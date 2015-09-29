@@ -3,7 +3,8 @@
 # This file is sourced when running various Spark programs.
 # Copy it as spark-env.sh and edit that to configure Spark for your site.
 
-
+export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64/
+export PATH=$JAVA_HOME/bin:$PATH
 # Options for the daemons used in the standalone deploy mode
 # - SPARK_MASTER_IP, to bind the master to a different IP address or hostname
 export SPARK_MASTER_IP=master

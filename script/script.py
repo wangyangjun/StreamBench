@@ -21,8 +21,8 @@ if __name__ == "__main__":
 			p = subprocess.Popen('ssh cloud-user@'+node['ip']+' "cd /home/cloud-user/RealtimeStreamBenchmark;git pull;"', shell=True)
 
 		# install jdk
-		# if 0 == p.wait():
-		# 	subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install-jdk.py"])
+		if 0 == p.wait():
+			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install-jdk.py"])
 
 		# install storm
 		# if 0 == p.wait():
