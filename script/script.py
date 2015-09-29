@@ -33,7 +33,10 @@ if __name__ == "__main__":
 		# 	subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install-spark.py"])
 
 		# install flink
-		if 0 == p.wait():
-			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install-flink.py"])
+		# if 0 == p.wait():
+		# 	subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install-flink.py"])
 
+		# install kafka
+		if 0 == p.wait():
+			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install-kafka.py " + node['borker_id']])
 
