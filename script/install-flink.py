@@ -17,7 +17,7 @@ def install_flink():
 			# exact
 			p = subprocess.Popen(['tar', '-zvxf', 'flink-0.9.1-bin-hadoop26.tgz'])
 			p.wait()
-			subprocess.call(['mv', 'flink-0.9.1-bin-hadoop26', 'flink'])
+			subprocess.call(['mv', 'flink-0.9.1', 'flink'])
 	# cp flink
 	subprocess.call(['sudo', 'rm', '-rf', '/usr/local/flink'])
 	subprocess.call(['sudo', 'cp', '-r', 'flink', '/usr/local/flink'])
