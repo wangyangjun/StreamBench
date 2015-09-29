@@ -16,7 +16,7 @@ def install_JDK():
 	else:
 		print("JDK 1.6 is already installed.")
 
-	if 'java-1.6.0-openjdk-amd64' not in subprocess.check_output(['ls', '/usr/lib/jvm']):
+	if 'java-1.7.0-openjdk-amd64' not in subprocess.check_output(['ls', '/usr/lib/jvm']):
 		update = subprocess.Popen(["sudo", "apt-get", "update"])
 		if update.wait() == 0:
 			jdk_installed = subprocess.check_call(["sudo", "apt-get", "install", "-y", "openjdk-7-jdk"])
@@ -26,7 +26,7 @@ def install_JDK():
 			print("apt-get update failed on server")
 	else:
 		print("JDK 1.7 is already installed.")
-	
+
 	# set JAVA_HOME 1.6
 	appendline('/etc/profile', 'export JAVA_HOME=/usr/lib/jvm/java-1.6.0-openjdk-amd64/')
 	appendline('/etc/profile', 'export PATH=$JAVA_HOME/bin:$PATH')
