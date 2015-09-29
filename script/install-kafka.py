@@ -1,5 +1,6 @@
 #!/bin/python
 import os
+import sys
 import subprocess
 
 def update_broker_id(id):
