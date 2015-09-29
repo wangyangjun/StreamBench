@@ -26,8 +26,10 @@ def install_flink():
 	subprocess.call(['rm', '-rf', '/usr/local/flink/conf'])
 	subprocess.call(['cp', '-r', path+'/flink/conf', '/usr/local/flink/conf'])
 	# mkdir flink tmp dir
-	if 'tmp' not in subprocess.check_output(['ls', '/mnt/flink']):
-		subprocess.call(['sudo', 'mkdir', '-p', '/mnt/flink/tmp'])
+	if 'flink' not in subprocess.check_output(['ls', '/mnt']):
+		subprocess.call(['sudo', 'mkdir', '-p', '/mnt/flink'])
+		if 'tmp' not in subprocess.check_output(['ls', '/mnt/flink']):
+			subprocess.call(['sudo', 'mkdir', '-p', '/mnt/flink/tmp'])
 		subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/mnt/flink'])
 
 	# hosts
