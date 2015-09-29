@@ -36,7 +36,9 @@ def install_kafka(broker_id):
 	# config
 	subprocess.call(['rm', '-rf', '/usr/local/kafka/config'])
 	subprocess.call(['cp', '-r', path+'/kafka/config', '/usr/local/kafka/config'])
-	
+	if '/mnt/kafka-logs' not in subprocess.check_output(['ls', '/mnt']):
+		subprocess.call(['sudo', 'mkdir', '/mnt/kafka-logs'])
+		subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/mnt/kafka-logs'])
 
 if __name__ == "__main__":
 	broker_id = 0
