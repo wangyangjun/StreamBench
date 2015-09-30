@@ -12,6 +12,4 @@ if __name__ == "__main__":
 	for node in config['nodes']:
 		appendline('/etc/hosts', node['ip']+'\t'+node['host'])
 
-	config = json.load(open(path+'/zookeeper-config.json'));
-	for node in config['nodes']:
-		appendline('/etc/hosts', node['ip']+'\t'+'zoo'+str(node['id']))
+	appendline('/etc/hosts', '192.168.1.4\t'+'zoo1')

@@ -27,8 +27,8 @@ if __name__ == "__main__":
 			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install.py jdk7"])
 
 		# install storm
-		# if 0 == p.wait():
-		# 	subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install.py storm"])
+		if 0 == p.wait():
+			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install.py storm"])
 
 		# install spark
 		# if 0 == p.wait():
