@@ -13,7 +13,7 @@ if __name__ == "__main__":
 		sys.stderr.write("Usage: python %s software name %s \n" % (sys.argv[0], softwares))
 		sys.exit(1)
 	else:
-		print("Start install %s \n", sys.argv[1])
+		print("Start install %s \n" % sys.argv[1])
 		if 'jdk6' == sys.argv[1]: # set JAVA_HOME
 			install_jdk6()
 		elif 'jdk7' == sys.argv[1]:
