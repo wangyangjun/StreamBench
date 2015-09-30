@@ -40,7 +40,7 @@ if __name__ == "__main__":
 
 		# install kafka
 		if 0 == p.wait():
-			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install.py kafka" + str(node['borker_id'])])
+			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install.py kafka " + str(node['borker_id'])])
 
 		# hosts
 		subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/update-hosts.py"])
