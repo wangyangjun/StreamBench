@@ -4,7 +4,7 @@ import subprocess
 import sys
 import os
 import json
-from util import appendline
+from util import appendline, get_ip_address
 
 def install_jdk6():
 	# Install JDK 1.6
