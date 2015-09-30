@@ -2,17 +2,19 @@
 from __future__ import print_function
 import subprocess
 import sys
+import os
 import json
 from util import appendline, get_ip_address
 
 
 if __name__ == "__main__":
+	path = os.path.dirname(os.path.realpath(__file__))
 	# start server one by one
 	if len(sys.argv) < 2 or sys.argv[1] not in ['start', 'stop']:
 		sys.stderr.write("Usage: python %s start or stop\n" % (sys.argv[0]))
 		sys.exit(1)
 	else:
-		config = json.load(open('cluster-config.json'));
+		config = json.load(open(path+'/cluster-config.json'));
 		if sys.argv[1] == 'start':
 			for node in config['nodes']:
 				if node['master']:
@@ -31,3 +33,5 @@ if __name__ == "__main__":
 						pid = process.split(' ')[0]
 						# kill pid
 						subprocess.Popen(['ssh', 'cloud-user@'+node['ip'], 'kill -9 ' + pid])
+
+
