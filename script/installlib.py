@@ -1,6 +1,9 @@
 #!/bin/python
 from __future__ import print_function
 import subprocess
+import sys
+import os
+import json
 from util import appendline
 
 def install_jdk6():
@@ -89,7 +92,7 @@ def install_spark():
 	subprocess.call(['rm', '-rf', '/usr/local/spark/conf'])
 	subprocess.call(['cp', '-r', path+'/spark/conf', '/usr/local/spark/conf'])
 	
-	
+
 def install_flink():
 	path = os.path.dirname(os.path.realpath(__file__))
 	config = json.load(open(path+'/cluster-config.json'));
