@@ -119,6 +119,32 @@ def install_flink():
 			subprocess.call(['sudo', 'mkdir', '-p', '/mnt/flink/tmp'])
 		subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/mnt/flink'])
 
+def install_hadoop():
+	path = os.path.dirname(os.path.realpath(__file__))
+	config = json.load(open(path+'/cluster-config.json'))
+	if 'hadoop' not in subprocess.check_output(['ls']).split('\n'):
+		p = subprocess.Popen(['wget', 'http://mirror.netinch.com/pub/apache/hadoop/common/hadoop-2.6.0/hadoop-2.6.0.tar.gz'])
+		if 0 == p.wait():
+			# exact
+			p = subprocess.Popen(['tar', '-zvxf', 'hadoop-2.6.0.tar.gz'])
+			p.wait()
+			subprocess.call(['mv', 'hadoop-2.6.0', 'hadoop'])
+	# cp hadoop
+	subprocess.call(['sudo', 'rm', '-rf', '/usr/local/hadoop'])
+	subprocess.call(['sudo', 'cp', '-r', 'hadoop', '/usr/local/hadoop'])
+	subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/usr/local/hadoop'])
+	# conf
+	subprocess.call(['rm', '-rf', '/usr/local/hadoop/etc'])
+	subprocess.call(['cp', '-r', path+'/hadoop/etc', '/usr/local/hadoop/etc'])
+	# mkdir hadoop tmp dir
+	if 'hadoop' not in subprocess.check_output(['ls', '/hadoop']):
+		subprocess.call(['sudo', 'mkdir', '-p', '/mnt/hadoop'])
+		if 'namenode' not in subprocess.check_output(['ls', '/mnt/hadoop']):
+			subprocess.call(['sudo', 'mkdir', '-p', '/mnt/hadoop/namenode'])
+		if 'datanode' not in subprocess.check_output(['ls', '/mnt/hadoop']):
+			subprocess.call(['sudo', 'mkdir', '-p', '/mnt/hadoop/datanode'])
+		subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/mnt/hadoop'])
+
 
 def update_broker_id(id):
 	path = os.path.dirname(os.path.realpath(__file__))

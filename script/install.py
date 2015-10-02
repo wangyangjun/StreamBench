@@ -5,7 +5,7 @@ import sys
 from util import appendline
 from installlib import *
 
-softwares = ['jdk6', 'jdk7', 'zookeeper', 'storm', 'spark', 'flink', 'kafka']
+softwares = ['jdk6', 'jdk7', 'zookeeper', 'storm', 'spark', 'flink', 'kafka', 'hadoop']
 
 if __name__ == "__main__":
 
@@ -38,5 +38,7 @@ if __name__ == "__main__":
 					sys.stderr.write("Usage: python %s kafka broker.id\n" % (sys.argv[0]))
 					sys.exit(1)
 			install_kafka(broker_id)
-
+		elif 'hadoop' == sys.argv[1]:
+			install_hadoop()
+			
 	
