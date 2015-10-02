@@ -140,9 +140,11 @@ def install_hadoop():
 	if 'hadoop' not in subprocess.check_output(['ls', '/mnt']):
 		subprocess.call(['sudo', 'mkdir', '-p', '/mnt/hadoop'])
 		if 'namenode' not in subprocess.check_output(['ls', '/mnt/hadoop']):
-			subprocess.call(['sudo', 'mkdir', '-p', '/mnt/hadoop/namenode'])
+			if 0 == subprocess.call(['sudo', 'mkdir', '-p', '/mnt/hadoop/namenode']):
+				print("/mnt/hadoop/namenode created successfully")
 		if 'datanode' not in subprocess.check_output(['ls', '/mnt/hadoop']):
-			subprocess.call(['sudo', 'mkdir', '-p', '/mnt/hadoop/datanode'])
+			if 0 == subprocess.call(['sudo', 'mkdir', '-p', '/mnt/hadoop/datanode']):
+				print("/mnt/hadoop/datanode created successfully")
 		subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/mnt/hadoop'])
 
 
