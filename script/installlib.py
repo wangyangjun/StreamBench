@@ -30,7 +30,7 @@ def install_jdk7():
 			print("apt-get update failed on server")
 	else:
 		print("JDK 1.7 is already installed.")
-	appendline('/home/cloud-user/.profile', 'export JAVA_HOME=/usr/lib/jvm/java-1.6.0-openjdk-amd64/')
+	appendline('/home/cloud-user/.profile', 'export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-amd64/')
 	appendline('/home/cloud-user/.profile', 'export PATH=$JAVA_HOME/bin:$PATH')
 
 def install_zookeeper():
