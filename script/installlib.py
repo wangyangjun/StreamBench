@@ -146,8 +146,8 @@ def install_hadoop():
 				print("/mnt/hadoop/datanode created successfully")
 		subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/mnt/hadoop'])
 	# set hadoop home
-	appendline('/home/cloud-user/profile', 'export HADOOP_HOME=/usr/local/hadoop/')
-	appendline('/home/cloud-user/profile', 'export PATH=$HADOOP_HOME/bin:$PATH')
+	appendline('/home/cloud-user/.profile', 'export HADOOP_HOME=/usr/local/hadoop/')
+	appendline('/home/cloud-user/.profile', 'export PATH=$HADOOP_HOME/bin:$PATH')
 
 
 def update_broker_id(id):
