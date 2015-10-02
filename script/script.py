@@ -22,9 +22,9 @@ if __name__ == "__main__":
 			p = subprocess.Popen('ssh cloud-user@'+node['ip']+' "cd /home/cloud-user/RealtimeStreamBenchmark;git checkout .;git pull;"', shell=True)
 
 		# install jdk
-		# if 0 == p.wait():
-		# 	subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install.py jdk6"])
-		# 	subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install.py jdk7"])
+		if 0 == p.wait():
+			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install.py jdk6"])
+			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install.py jdk7"])
 
 		# install storm
 		# if 0 == p.wait():
@@ -48,4 +48,4 @@ if __name__ == "__main__":
 		# install hadoop
 		if 0 == p.wait():
 			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install.py hadoop"])
-
+			

@@ -18,10 +18,7 @@ def install_jdk6():
 			print("apt-get update failed on server")
 	else:
 		print("JDK 1.6 is already installed.")
-	# set JAVA_HOME 1.6
-	appendline('/etc/profile', 'export JAVA_HOME=/usr/lib/jvm/java-1.6.0-openjdk-amd64/')
-	appendline('/etc/profile', 'export PATH=$JAVA_HOME/bin:$PATH')
-
+	
 def install_jdk7():
 	if 'java-1.7.0-openjdk-amd64' not in subprocess.check_output(['ls', '/usr/lib/jvm']):
 		update = subprocess.Popen(["sudo", "apt-get", "update"])
@@ -33,6 +30,8 @@ def install_jdk7():
 			print("apt-get update failed on server")
 	else:
 		print("JDK 1.7 is already installed.")
+	appendline('/home/cloud-user/.profile', 'export JAVA_HOME=/usr/lib/jvm/java-1.6.0-openjdk-amd64/')
+	appendline('/home/cloud-user/.profile', 'export PATH=$JAVA_HOME/bin:$PATH')
 
 def install_zookeeper():
 	# /var/zookeeper/data chown
@@ -146,6 +145,9 @@ def install_hadoop():
 			if 0 == subprocess.call(['sudo', 'mkdir', '-p', '/mnt/hadoop/datanode']):
 				print("/mnt/hadoop/datanode created successfully")
 		subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/mnt/hadoop'])
+	# set hadoop home
+	appendline('/home/cloud-user/profile', 'export HADOOP_HOME=/usr/local/hadoop/')
+	appendline('/home/cloud-user/profile', 'export PATH=$HADOOP_HOME/bin:$PATH')
 
 
 def update_broker_id(id):
