@@ -137,7 +137,7 @@ def install_hadoop():
 	subprocess.call(['rm', '-rf', '/usr/local/hadoop/etc'])
 	subprocess.call(['cp', '-r', path+'/hadoop/etc', '/usr/local/hadoop/etc'])
 	# mkdir hadoop tmp dir
-	if 'hadoop' not in subprocess.check_output(['ls', '/hadoop']):
+	if 'hadoop' not in subprocess.check_output(['ls', '/mnt']):
 		subprocess.call(['sudo', 'mkdir', '-p', '/mnt/hadoop'])
 		if 'namenode' not in subprocess.check_output(['ls', '/mnt/hadoop']):
 			subprocess.call(['sudo', 'mkdir', '-p', '/mnt/hadoop/namenode'])
