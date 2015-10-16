@@ -10,4 +10,4 @@ if __name__ == "__main__":
 	# install git, clone repository, install jdk
 	for node in config['nodes']:
 		print("Download logs on server %s" % node['ip'])
-		subprocess.call(["scp", "-r", "cloud-user@"+node['ip']+":/mnt/anis-logs", "~/2.0/"+node['host']+'-anis-logs'])
+		subprocess.call(["scp", "-r", "cloud-user@"+node['ip']+":/mnt/anis-logs", "/home/cloud-user/2.0/"+node['host']+'-anis-logs'])
