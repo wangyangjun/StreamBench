@@ -43,9 +43,10 @@ if __name__ == "__main__":
 		# 	subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install.py kafka " + str(node['borker_id'])])
 
 		# hosts
-		# subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/update-hosts.py"])
+		subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/update-hosts.py"])
 
 		# install hadoop
-		if 0 == p.wait():
-			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install.py hadoop"])
-			
+		# if 0 == p.wait():
+		# 	subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install.py hadoop"])
+		
+		
