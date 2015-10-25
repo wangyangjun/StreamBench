@@ -5,4 +5,13 @@ package fi.aalto.dmg.frame;
  */
 abstract public class OperatorBase {
     protected int parallelism = -1;
+
+    public int getParallelism(){
+        return this.parallelism;
+    }
+
+    public void setParallelism(int parallelism){
+        this.parallelism = parallelism;
+    }
+
 }

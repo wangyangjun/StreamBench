@@ -18,9 +18,9 @@ public class SparkWorkloadPairOperator<K,V> extends SparkWorkloadOperator<Tuple2
     }
 
     @Override
-    public WorkloadPairOperator<K, Iterable<V>> groupByKey(K key) {
+    public SparkWorkloadGrouperOperator<K, V> groupByKey(K key) {
         JavaPairDStream<K, Iterable<V>> newStream = pairDStream.groupByKey();
-        return new SparkWorkloadPairOperator<>(newStream);
+        return new SparkWorkloadGrouperOperator<>(newStream);
     }
 
     @Override

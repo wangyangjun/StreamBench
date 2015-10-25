@@ -8,3 +8,4 @@ import java.io.Serializable;
 public interface FilterFunction<T> extends Serializable {
     boolean filter(T var1) throws Exception;
 }
+

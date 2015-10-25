@@ -10,7 +10,7 @@ import java.util.Iterator;
  */
 public interface WorkloadPairOperator<K, V> extends WorkloadOperator<Tuple2<K,V>> {
 
-    WorkloadPairOperator<K, Iterable<V>> groupByKey(K key);
+    WorkloadGrouperOperator<K,V> groupByKey(K key);
 
     // TODO: translate to reduce on each node, then group merge
     WorkloadPairOperator<K, V> reduceByKey(K key, ReduceFunction<V> fun);

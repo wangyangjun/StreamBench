@@ -1,6 +1,11 @@
 package fi.aalto.dmg.frame;
 
 import fi.aalto.dmg.frame.functions.*;
+import fi.aalto.dmg.frame.functions.FilterFunction;
+import fi.aalto.dmg.frame.functions.FlatMapFunction;
+import fi.aalto.dmg.frame.functions.MapFunction;
+import fi.aalto.dmg.frame.functions.MapPartitionFunction;
+import fi.aalto.dmg.frame.functions.ReduceFunction;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.util.Collector;
 
@@ -18,6 +23,20 @@ public class FlinkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
         DataSet<R> newDataSet = dataSet.map(new org.apache.flink.api.common.functions.MapFunction<T, R>() {
             public R map(T t) throws Exception {
                 return fun.map(t);
+            }
+        });
+        return new FlinkWorkloadOperator<R>(newDataSet);
+    }
+
+    @Override
+    public <R> WorkloadOperator<R> mapPartition(final MapPartitionFunction<T, R> fun) {
+        DataSet<R> newDataSet = dataSet.mapPartition(new org.apache.flink.api.common.functions.MapPartitionFunction<T, R>() {
+            @Override
+            public void mapPartition(Iterable<T> iterable, Collector<R> collector) throws Exception {
+                Iterable<R> results = fun.mapPartition(iterable);
+                for (R r : results) {
+                    collector.collect(r);
+                }
             }
         });
         return new FlinkWorkloadOperator<R>(newDataSet);

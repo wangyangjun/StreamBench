@@ -27,102 +27,108 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="App.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/flink/src/main/java/fi/aalto/dmg/App.java">
+      <file leaf-file-name="WordCountGrouping.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/workloads/spark/WordCountGrouping.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="7" column="1" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
+              <caret line="62" column="85" selection-start-line="58" selection-start-column="16" selection-end-line="62" selection-end-column="85" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BenchStarter.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/BenchStarter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="25" column="88" selection-start-line="25" selection-start-column="24" selection-end-line="25" selection-end-column="88" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="OperatorCreater.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/OperatorCreater.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
               <folding>
-                <element signature="e#119#120#0" expanded="false" />
-                <element signature="e#171#172#0" expanded="false" />
+                <element signature="e#176#177#0" expanded="true" />
+                <element signature="e#211#212#0" expanded="true" />
+                <element signature="e#253#254#0" expanded="true" />
+                <element signature="e#288#289#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FlinkWorkloadOperator.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/flink/src/main/java/fi/aalto/dmg/frame/FlinkWorkloadOperator.java">
+      <file leaf-file-name="SparkOperatorCreater.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkOperatorCreater.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
-              <folding>
-                <element signature="e#999#1186#0" expanded="false" />
-                <element signature="e#1185#1186#0" expanded="false" />
-                <element signature="e#1369#1552#0" expanded="false" />
-                <element signature="e#1551#1552#0" expanded="false" />
-                <marker date="1445703057000" expanded="true" signature="1745:1892" placeholder="(t, collector) → {" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FlinkWorkloadPairOperator.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/flink/src/main/java/fi/aalto/dmg/frame/FlinkWorkloadPairOperator.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.75982535">
-              <caret line="46" column="13" selection-start-line="46" selection-start-column="13" selection-end-line="46" selection-end-column="13" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#544#545#0" expanded="true" />
-                <element signature="e#575#576#0" expanded="true" />
-                <element signature="e#861#1047#0" expanded="true" />
-                <element signature="e#1046#1047#0" expanded="true" />
-                <element signature="e#1374#1560#0" expanded="true" />
-                <element signature="e#1559#1560#0" expanded="true" />
-                <element signature="e#1621#1913#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="WorkloadPairOperator.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/WorkloadPairOperator.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="15" column="73" selection-start-line="15" selection-start-column="73" selection-end-line="15" selection-end-column="73" />
+              <caret line="39" column="77" selection-start-line="39" selection-start-column="77" selection-end-line="39" selection-end-column="77" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#1279#1296#0" expanded="true" />
+                <element signature="e#1745#1746#0" expanded="true" />
+                <element signature="e#1808#1809#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DataSet.java" pinned="false" current-in-tab="false">
-        <entry file="jar://$MAVEN_REPOSITORY$/org/apache/flink/flink-java/0.9.1/flink-java-0.9.1-sources.jar!/org/apache/flink/api/java/DataSet.java">
+      <file leaf-file-name="KafkaUtils.class" pinned="false" current-in-tab="true">
+        <entry file="jar://$MAVEN_REPOSITORY$/org/apache/spark/spark-streaming-kafka_2.10/1.5.0/spark-streaming-kafka_2.10-1.5.0.jar!/org/apache/spark/streaming/kafka/KafkaUtils.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="659" column="53" selection-start-line="659" selection-start-column="49" selection-end-line="659" selection-end-column="53" />
+            <state vertical-scroll-proportion="0.44217688">
+              <caret line="13" column="339" selection-start-line="13" selection-start-column="339" selection-end-line="13" selection-end-column="339" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UnsortedGrouping.java" pinned="false" current-in-tab="false">
-        <entry file="jar://$MAVEN_REPOSITORY$/org/apache/flink/flink-java/0.9.1/flink-java-0.9.1-sources.jar!/org/apache/flink/api/java/operators/UnsortedGrouping.java">
+      <file leaf-file-name="JavaInputDStream.scala" pinned="false" current-in-tab="false">
+        <entry file="jar://$MAVEN_REPOSITORY$/org/apache/spark/spark-streaming_2.10/1.5.0/spark-streaming_2.10-1.5.0-sources.jar!/org/apache/spark/streaming/api/java/JavaInputDStream.scala">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="138" column="24" selection-start-line="138" selection-start-column="24" selection-end-line="138" selection-end-column="24" />
+              <caret line="27" column="6" selection-start-line="27" selection-start-column="6" selection-end-line="27" selection-end-column="6" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ReduceOperator.java" pinned="false" current-in-tab="false">
-        <entry file="jar://$MAVEN_REPOSITORY$/org/apache/flink/flink-java/0.9.1/flink-java-0.9.1-sources.jar!/org/apache/flink/api/java/operators/ReduceOperator.java">
+      <file leaf-file-name="spark-cluster.properties" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/spark/src/main/resources/spark-cluster.properties">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="90" column="39" selection-start-line="90" selection-start-column="39" selection-end-line="90" selection-end-column="39" />
+              <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Grouping.java" pinned="false" current-in-tab="false">
-        <entry file="jar://$MAVEN_REPOSITORY$/org/apache/flink/flink-java/0.9.1/flink-java-0.9.1-sources.jar!/org/apache/flink/api/java/operators/Grouping.java">
+      <file leaf-file-name="WordCount.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/workloads/spark/WordCount.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="46" column="40" selection-start-line="46" selection-start-column="36" selection-end-line="46" selection-end-column="40" />
+              <caret line="33" column="101" selection-start-line="33" selection-start-column="97" selection-end-line="33" selection-end-column="101" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SparkWorkloadGrouperOperator.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkWorkloadGrouperOperator.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="27" column="18" selection-start-line="27" selection-start-column="18" selection-end-line="27" selection-end-column="18" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#494#495#0" expanded="true" />
+                <element signature="e#535#536#0" expanded="true" />
+                <element signature="e#701#1274#0" expanded="true" />
+                <element signature="e#1273#1274#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -131,36 +137,8 @@
         <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkWorkloadOperator.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="13" column="89" selection-start-line="13" selection-start-column="38" selection-end-line="13" selection-end-column="89" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#599#600#0" expanded="true" />
-                <element signature="e#631#632#0" expanded="true" />
-                <element signature="e#765#918#0" expanded="true" />
-                <element signature="e#917#918#0" expanded="true" />
-                <element signature="e#1152#1323#0" expanded="true" />
-                <element signature="e#1322#1323#0" expanded="true" />
-                <element signature="e#1525#1695#0" expanded="true" />
-                <element signature="e#1694#1695#0" expanded="true" />
-                <element signature="e#1894#2062#0" expanded="true" />
-                <element signature="e#2061#2062#0" expanded="true" />
-                <element signature="e#2271#2490#0" expanded="true" />
-                <element signature="e#2489#2490#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SparkWorkloadPairOperator.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkWorkloadPairOperator.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="30" column="41" selection-start-line="30" selection-start-column="41" selection-end-line="30" selection-end-column="41" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#966#1136#0" expanded="true" />
-                <element signature="e#1135#1136#0" expanded="true" />
-              </folding>
+              <caret line="87" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="87" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -183,24 +161,14 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/workloads/SparkWordCount.java" />
-        <option value="$PROJECT_DIR$/core/src/main/resources/log4j.properties" />
-        <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/Workload.java" />
-        <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/BenchStarter.java" />
-        <option value="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/workloads/storm/StormWordCount.java" />
-        <option value="$PROJECT_DIR$/storm/src/main/resources/workloads.properties" />
-        <option value="$PROJECT_DIR$/core/src/main/resources/WordCountWorkload.properties" />
-        <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/workloads/WordCountWorkload.java" />
         <option value="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/workloads/storm/WordCountGrouping.java" />
         <option value="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/workloads/storm/WordCount.java" />
         <option value="$PROJECT_DIR$/spark/src/main/resources/workloads.properties" />
         <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/Builder.java" />
         <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/UserFunctions.java" />
         <option value="$PROJECT_DIR$/spark/src/main/jvm/fi/aalto/dmg/workloads/spark/WordCountGrouping.java" />
-        <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/userfunctions/UserFunctions.java" />
         <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/functions/Function2.java" />
         <option value="$PROJECT_DIR$/spark/src/main/jvm/fi/aalto/dmg/workloads/spark/WordCount.java" />
-        <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/functions/FilterFunction.java" />
         <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/functions/Function.java" />
         <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/functions/ReduceFunction.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
@@ -215,25 +183,35 @@
         <option value="$PROJECT_DIR$/spark/pom.xml" />
         <option value="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkPairWorkBuilder.scala" />
         <option value="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkWorkBuilder.scala" />
-        <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/functions/FlatMapFunction.java" />
-        <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/functions/MapFunction.java" />
         <option value="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/Test2.java" />
         <option value="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/Test.scala" />
         <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/WorkBuilder.java" />
-        <option value="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/workloads/spark/WordCountGrouping.java" />
-        <option value="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/workloads/spark/WordCount.java" />
-        <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/functions/MapPairFunction.java" />
         <option value="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkWorkBuilder.java" />
         <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/Operator.java" />
-        <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/OperatorBase.java" />
-        <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/WorkloadOperator.java" />
-        <option value="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkWorkloadOperator.java" />
-        <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/WorkloadPairOperator.java" />
-        <option value="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkWorkloadPairOperator.java" />
         <option value="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/ScalaWorkBuilder.scala" />
         <option value="$PROJECT_DIR$/flink/src/main/java/fi/aalto/dmg/frame/FlinkWorkBuilder.java" />
+        <option value="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/workloads/spark/WordCount.java" />
+        <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/functions/FilterFunction.java" />
+        <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/functions/MapFunction.java" />
+        <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/functions/FlatMapFunction.java" />
+        <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/functions/MapPartitionFunction.java" />
+        <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/functions/MapPairFunction.java" />
+        <option value="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/Utils.java" />
+        <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/WorkloadOperator.java" />
+        <option value="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkWorkloadOperator.java" />
         <option value="$PROJECT_DIR$/flink/src/main/java/fi/aalto/dmg/frame/FlinkWorkloadOperator.java" />
+        <option value="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/workloads/spark/WordCountGrouping.java" />
+        <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/WorkloadGrouperOperator.java" />
+        <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/WorkloadPairOperator.java" />
         <option value="$PROJECT_DIR$/flink/src/main/java/fi/aalto/dmg/frame/FlinkWorkloadPairOperator.java" />
+        <option value="$PROJECT_DIR$/flink/src/main/java/fi/aalto/dmg/frame/FlinkWorkloadGrouperOperator.java" />
+        <option value="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkWorkloadPairOperator.java" />
+        <option value="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkWorkloadGrouperOperator.java" />
+        <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/userfunctions/UserFunctions.java" />
+        <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/OperatorBase.java" />
+        <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/OperatorCreater.java" />
+        <option value="$PROJECT_DIR$/spark/src/main/resources/spark-cluster.properties" />
+        <option value="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkOperatorCreater.java" />
       </list>
     </option>
   </component>
@@ -256,6 +234,28 @@
     <option name="y" value="23" />
     <option name="width" value="1440" />
     <option name="height" value="807" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>Compiler issuesJava</id>
+          </State>
+          <State>
+            <id>Java</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>UNCHECKED_WARNING</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -375,11 +375,71 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="resources" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="StreamBench" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="StreamBench" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="spark" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="java" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="dmg" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="StreamBench" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="StreamBench" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="spark" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dmg" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="spark" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -566,34 +626,8 @@
               <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-          </PATH>
-          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="StreamBench" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="StreamBench" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dmg" />
+              <option name="myItemId" value="resources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -624,10 +658,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="dmg" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="frame" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -883,16 +913,16 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="807" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32867134" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23066103" sideWeight="0.5028612" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22937062" sideWeight="0.5028612" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3062937" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3062937" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23462088" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32587412" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -957,126 +987,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$MAVEN_REPOSITORY$/org/scala-lang/scala-library/2.10.4/scala-library-2.10.4.jar!/scala/collection/TraversableLike.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.75">
-          <caret line="33" column="37" selection-start-line="33" selection-start-column="37" selection-end-line="33" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/spark/spark-streaming-kafka_2.10/1.5.0/spark-streaming-kafka_2.10-1.5.0.jar!/org/apache/spark/streaming/kafka/KafkaUtils.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.045454547">
-          <caret line="2" column="18" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/spark/spark-streaming_2.10/1.5.0/spark-streaming_2.10-1.5.0-sources.jar!/org/apache/spark/streaming/dstream/MappedDStream.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.15283842">
-          <caret line="24" column="46" selection-start-line="24" selection-start-column="46" selection-end-line="24" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="30" column="17" selection-start-line="30" selection-start-column="17" selection-end-line="30" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/flink/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.49">
-          <caret line="60" column="52" selection-start-line="60" selection-start-column="52" selection-end-line="60" selection-end-column="52" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/scala-lang/scala-library/2.10.4/scala-library-2.10.4.jar!/scala/package.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.35889572">
-          <caret line="24" column="7" selection-start-line="24" selection-start-column="7" selection-end-line="24" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spark/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5766871">
-          <caret line="46" column="21" selection-start-line="46" selection-start-column="21" selection-end-line="46" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/scala-lang/scala-library/2.10.4/scala-library-2.10.4.jar!/scala/collection/Iterable.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.04601227">
-          <caret line="1" column="6" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/scala-lang/scala-library/2.10.4/scala-library-2.10.4.jar!/scala/Tuple2.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.5555556">
-          <caret line="1" column="11" selection-start-line="1" selection-start-column="11" selection-end-line="1" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/spark/spark-streaming_2.10/1.5.0/spark-streaming_2.10-1.5.0-sources.jar!/org/apache/spark/streaming/dstream/PairDStreamFunctions.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.25751072">
-          <caret line="34" column="3" selection-start-line="34" selection-start-column="3" selection-end-line="34" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/spark/spark-core_2.10/1.5.0/spark-core_2.10-1.5.0.jar!/org/apache/spark/api/java/JavaPairRDD.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.029880479">
-          <caret line="1" column="6" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/workloads/WordCountWorkload.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="10" column="8" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/Workload.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="52" column="28" selection-start-line="52" selection-start-column="28" selection-end-line="52" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/BenchStarter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.45726496">
-          <caret line="57" column="17" selection-start-line="57" selection-start-column="17" selection-end-line="57" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/spark/spark-streaming_2.10/1.5.0/spark-streaming_2.10-1.5.0-sources.jar!/org/apache/spark/streaming/api/java/JavaPairDStream.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="44" column="48" selection-start-line="44" selection-start-column="41" selection-end-line="44" selection-end-column="48" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/scala-lang/scala-library/2.10.4/scala-library-2.10.4-sources.jar!/scala/Function1.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1167,66 +1077,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/BuilderCreater.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="5" column="22" selection-start-line="5" selection-start-column="22" selection-end-line="5" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home/src.zip!/java/lang/Iterable.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.37117904">
           <caret line="44" column="17" selection-start-line="44" selection-start-column="17" selection-end-line="44" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/workloads/spark/WordCountGrouping.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
-          <folding>
-            <element signature="e#2397#2865#0" expanded="false" />
-            <element signature="e#2864#2865#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/workloads/spark/WordCount.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="55" column="0" selection-start-line="55" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
-          <folding>
-            <element signature="e#1776#1983#0" expanded="false" />
-            <element signature="e#1982#1983#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/functions/MapFunction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="10" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/functions/MapPairFunction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="9" column="32" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="32" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/functions/FlatMapFunction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="13" column="16" selection-start-line="13" selection-start-column="7" selection-end-line="13" selection-end-column="16" />
           <folding />
         </state>
       </provider>
@@ -1271,54 +1125,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/OperatorBase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="6" column="20" selection-start-line="6" selection-start-column="20" selection-end-line="6" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/WorkloadOperator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="16" column="52" selection-start-line="16" selection-start-column="31" selection-end-line="16" selection-end-column="52" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/ScalaWorkBuilder.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="33" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
-          <folding>
-            <element signature="e#28#53#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkWorkloadOperator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="13" column="89" selection-start-line="13" selection-start-column="38" selection-end-line="13" selection-end-column="89" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#599#600#0" expanded="true" />
-            <element signature="e#631#632#0" expanded="true" />
-            <element signature="e#765#918#0" expanded="true" />
-            <element signature="e#917#918#0" expanded="true" />
-            <element signature="e#1152#1323#0" expanded="true" />
-            <element signature="e#1322#1323#0" expanded="true" />
-            <element signature="e#1525#1695#0" expanded="true" />
-            <element signature="e#1694#1695#0" expanded="true" />
-            <element signature="e#1894#2062#0" expanded="true" />
-            <element signature="e#2061#2062#0" expanded="true" />
-            <element signature="e#2271#2490#0" expanded="true" />
-            <element signature="e#2489#2490#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/flink/src/main/java/fi/aalto/dmg/App.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1330,40 +1136,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/flink/src/main/java/fi/aalto/dmg/frame/FlinkWorkloadOperator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
-          <folding>
-            <element signature="e#999#1186#0" expanded="false" />
-            <element signature="e#1185#1186#0" expanded="false" />
-            <element signature="e#1369#1552#0" expanded="false" />
-            <element signature="e#1551#1552#0" expanded="false" />
-            <marker date="1445703057000" expanded="true" signature="1745:1892" placeholder="(t, collector) → {" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/flink/flink-java/0.9.1/flink-java-0.9.1-sources.jar!/org/apache/flink/api/java/DataSet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="659" column="53" selection-start-line="659" selection-start-column="49" selection-end-line="659" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/apache/flink/flink-java/0.9.1/flink-java-0.9.1-sources.jar!/org/apache/flink/api/java/operators/Grouping.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="46" column="40" selection-start-line="46" selection-start-column="36" selection-end-line="46" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/flink/flink-java/0.9.1/flink-java-0.9.1-sources.jar!/org/apache/flink/api/java/operators/UnsortedGrouping.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="138" column="24" selection-start-line="138" selection-start-column="24" selection-end-line="138" selection-end-column="24" />
           <folding />
         </state>
       </provider>
@@ -1376,42 +1152,296 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/WorkloadPairOperator.java">
+    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/flink/flink-java/0.9.1/flink-java-0.9.1-sources.jar!/org/apache/flink/api/java/operators/UnsortedGrouping.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.25641027">
+          <caret line="41" column="38" selection-start-line="41" selection-start-column="38" selection-end-line="41" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/flink/flink-java/0.9.1/flink-java-0.9.1-sources.jar!/org/apache/flink/api/java/DataSet.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="15" column="73" selection-start-line="15" selection-start-column="73" selection-end-line="15" selection-end-column="73" />
+          <caret line="207" column="9" selection-start-line="207" selection-start-column="9" selection-end-line="207" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/functions/FilterFunction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/functions/MapFunction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="8" column="18" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/functions/FlatMapFunction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="14" column="34" selection-start-line="14" selection-start-column="34" selection-end-line="14" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/functions/MapPartitionFunction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="8" column="28" selection-start-line="8" selection-start-column="28" selection-end-line="8" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/functions/MapPairFunction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/Utils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.51282054">
+          <caret line="16" column="10" selection-start-line="16" selection-start-column="10" selection-end-line="16" selection-end-column="10" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#296#416#0" expanded="false" />
+            <element signature="e#415#416#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkWorkloadPairOperator.java">
+    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/functions/ReduceFunction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3525641">
+          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/WorkloadOperator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="30" column="41" selection-start-line="30" selection-start-column="41" selection-end-line="30" selection-end-column="41" />
+          <caret line="19" column="30" selection-start-line="19" selection-start-column="24" selection-end-line="19" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/WorkloadGrouperOperator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/WorkloadPairOperator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/flink/src/main/java/fi/aalto/dmg/frame/FlinkWorkloadOperator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="35" column="16" selection-start-line="35" selection-start-column="16" selection-end-line="35" selection-end-column="16" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#966#1136#0" expanded="true" />
-            <element signature="e#1135#1136#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#1187#1571#0" expanded="false" />
+            <element signature="e#1570#1571#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/flink/src/main/java/fi/aalto/dmg/frame/FlinkWorkloadPairOperator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.75982535">
-          <caret line="46" column="13" selection-start-line="46" selection-start-column="13" selection-end-line="46" selection-end-column="13" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="22" column="4" selection-start-line="22" selection-start-column="4" selection-end-line="22" selection-end-column="4" />
+          <folding>
+            <element signature="e#1329#2072#0" expanded="false" />
+            <element signature="e#1576#1582#0" expanded="false" />
+            <element signature="e#2071#2072#0" expanded="false" />
+            <element signature="e#2136#2320#0" expanded="false" />
+            <element signature="e#2319#2320#0" expanded="false" />
+            <element signature="e#2329#2621#0" expanded="false" />
+            <element signature="e#2620#2621#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/flink/src/main/java/fi/aalto/dmg/frame/FlinkWorkloadGrouperOperator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="13" column="39" selection-start-line="13" selection-start-column="39" selection-end-line="13" selection-end-column="39" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#544#545#0" expanded="true" />
-            <element signature="e#575#576#0" expanded="true" />
-            <element signature="e#861#1047#0" expanded="true" />
-            <element signature="e#1046#1047#0" expanded="true" />
-            <element signature="e#1374#1560#0" expanded="true" />
-            <element signature="e#1559#1560#0" expanded="true" />
-            <element signature="e#1621#1913#0" expanded="true" />
+            <element signature="e#690#956#0" expanded="true" />
+            <element signature="e#955#956#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/workloads/spark/WordCountGrouping.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="62" column="85" selection-start-line="58" selection-start-column="16" selection-end-line="62" selection-end-column="85" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkWorkloadOperator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="87" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="87" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/OperatorBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.48076922">
+          <caret line="15" column="4" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="4" />
+          <folding>
+            <element signature="e#182#183#0" expanded="true" />
+            <element signature="e#221#222#0" expanded="true" />
+            <element signature="e#271#272#0" expanded="true" />
+            <element signature="e#317#318#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/spark/spark-streaming_2.10/1.5.0/spark-streaming_2.10-1.5.0-sources.jar!/org/apache/spark/streaming/api/java/JavaReceiverInputDStream.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3525641">
+          <caret line="29" column="63" selection-start-line="29" selection-start-column="63" selection-end-line="29" selection-end-column="63" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/userfunctions/UserFunctions.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.64102566">
+          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+          <folding>
+            <element signature="e#340#341#0" expanded="true" />
+            <element signature="e#398#399#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spark/src/main/resources/workloads.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.06410257">
+          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/workloads/spark/WordCount.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="33" column="101" selection-start-line="33" selection-start-column="97" selection-end-line="33" selection-end-column="101" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/App.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.22435898">
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/OperatorCreater.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <folding>
+            <element signature="e#176#177#0" expanded="true" />
+            <element signature="e#211#212#0" expanded="true" />
+            <element signature="e#253#254#0" expanded="true" />
+            <element signature="e#288#289#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkWorkloadPairOperator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.67948717">
+          <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkWorkloadGrouperOperator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="27" column="18" selection-start-line="27" selection-start-column="18" selection-end-line="27" selection-end-column="18" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#494#495#0" expanded="true" />
+            <element signature="e#535#536#0" expanded="true" />
+            <element signature="e#701#1274#0" expanded="true" />
+            <element signature="e#1273#1274#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/BenchStarter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="25" column="88" selection-start-line="25" selection-start-column="24" selection-end-line="25" selection-end-column="88" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spark/src/main/resources/spark-cluster.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkOperatorCreater.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="39" column="77" selection-start-line="39" selection-start-column="77" selection-end-line="39" selection-end-column="77" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1279#1296#0" expanded="true" />
+            <element signature="e#1745#1746#0" expanded="true" />
+            <element signature="e#1808#1809#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/spark/spark-streaming_2.10/1.5.0/spark-streaming_2.10-1.5.0-sources.jar!/org/apache/spark/streaming/api/java/JavaInputDStream.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="27" column="6" selection-start-line="27" selection-start-column="6" selection-end-line="27" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/spark/spark-streaming-kafka_2.10/1.5.0/spark-streaming-kafka_2.10-1.5.0.jar!/org/apache/spark/streaming/kafka/KafkaUtils.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.44217688">
+          <caret line="13" column="339" selection-start-line="13" selection-start-column="339" selection-end-line="13" selection-end-column="339" />
+          <folding />
         </state>
       </provider>
     </entry>

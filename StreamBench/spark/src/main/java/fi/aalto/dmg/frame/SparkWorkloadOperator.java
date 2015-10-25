@@ -1,12 +1,14 @@
 package fi.aalto.dmg.frame;
 
+import fi.aalto.dmg.Utils;
 import fi.aalto.dmg.frame.functions.*;
-import org.apache.spark.api.java.function.Function;
-import org.apache.spark.api.java.function.Function2;
-import org.apache.spark.api.java.function.PairFunction;
+import fi.aalto.dmg.frame.functions.FlatMapFunction;
+import org.apache.spark.api.java.function.*;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
 import scala.Tuple2;
+
+import java.util.Iterator;
 
 /**
  * Created by yangjun.wang on 23/10/15.
@@ -30,11 +32,22 @@ public class SparkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
     }
 
     @Override
+    public <R> WorkloadOperator<R> mapPartition(final MapPartitionFunction<T, R> fun) {
+        JavaDStream<R> newStream = dStream.mapPartitions(new org.apache.spark.api.java.function.FlatMapFunction<Iterator<T>, R>() {
+            @Override
+            public Iterable<R> call(Iterator<T> tIterator) throws Exception {
+                return fun.mapPartition(Utils.iterable(tIterator));
+            }
+        });
+        return new SparkWorkloadOperator<R>(newStream);
+    }
+
+    @Override
     public <K, V> WorkloadPairOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun) {
         JavaPairDStream<K,V> pairDStream = dStream.mapToPair(new PairFunction<T, K, V>() {
             @Override
             public Tuple2<K, V> call(T t) throws Exception {
-                return fun.map(t);
+                return fun.mapPair(t);
             }
         });
         return new SparkWorkloadPairOperator(pairDStream);

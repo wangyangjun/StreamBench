@@ -10,6 +10,9 @@ public interface WorkloadOperator<T> {
     // return new WorkloadOperator<R>();
     <R> WorkloadOperator<R> map(MapFunction<T, R> fun);
 
+    // return WorkloadOperator<R>
+    <R> WorkloadOperator<R> mapPartition(MapPartitionFunction<T, R> fun);
+
     // return new WorkloadPairOperator<K,V>
     <K, V> WorkloadPairOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun);
 
