@@ -1,5 +1,7 @@
 package fi.aalto.dmg.frame.userfunctions;
 
+import fi.aalto.dmg.frame.functions.MapFunction;
+
 import java.util.Arrays;
 
 /**
@@ -16,5 +18,10 @@ public class UserFunctions {
         return t1.doubleValue() + t2.doubleValue();
     }
 
+    public static MapFunction<String, String> mapToSelf = new MapFunction<String, String>(){
+        public String map(String var1) {
+            return var1;
+        }
+    };
 
 }

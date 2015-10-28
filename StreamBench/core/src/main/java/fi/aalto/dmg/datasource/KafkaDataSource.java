@@ -5,12 +5,13 @@ import fi.aalto.dmg.exceptions.WorkloadException;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Properties;
 
 /**
  * Created by yangjun.wang on 14/10/15.
  */
-public class KafkaSource {
+public class KafkaDataSource implements Serializable {
 
     private final Logger logger;
     private final static String DEFAULT_ZOOKEEPER_CONNECT = "localhost:2181";
@@ -20,7 +21,7 @@ public class KafkaSource {
 
     private Properties properties;
 
-    public KafkaSource() throws WorkloadException {
+    public KafkaDataSource() throws WorkloadException {
         logger = Logger.getLogger(this.getClass());
         properties = new Properties();
         try {

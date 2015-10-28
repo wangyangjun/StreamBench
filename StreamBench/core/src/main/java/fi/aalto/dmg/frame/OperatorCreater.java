@@ -1,9 +1,11 @@
 package fi.aalto.dmg.frame;
 
+import java.io.Serializable;
+
 /**
  * Created by yangjun.wang on 23/10/15.
  */
-abstract public class OperatorCreater {
+abstract public class OperatorCreater implements Serializable {
     private String appName;
 
     public String getAppName(){

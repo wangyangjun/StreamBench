@@ -1,7 +1,7 @@
 package fi.aalto.dmg.workloads;
 
 import fi.aalto.dmg.Workload;
-import fi.aalto.dmg.datasource.KafkaSource;
+import fi.aalto.dmg.datasource.KafkaDataSource;
 import fi.aalto.dmg.exceptions.WorkloadException;
 
 /**
@@ -10,7 +10,7 @@ import fi.aalto.dmg.exceptions.WorkloadException;
  */
 abstract public class WordCountWorkload extends Workload{
     // Word count workload has one stream source
-    protected KafkaSource kafkaSource;
+    protected KafkaDataSource kafkaSource;
 
     public WordCountWorkload() throws WorkloadException {
         super();
@@ -24,7 +24,7 @@ abstract public class WordCountWorkload extends Workload{
     }
 
     public void Init() throws WorkloadException {
-        kafkaSource = new KafkaSource();
+        kafkaSource = new KafkaDataSource();
         // Default configure file
         this.setConfigFile("WordCountWorkload.properties");
         // read data source configure

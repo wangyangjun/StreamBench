@@ -1,7 +1,6 @@
 package fi.aalto.dmg.datasource;
 
 import fi.aalto.dmg.exceptions.WorkloadException;
-import junit.framework.Assert;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -22,7 +21,7 @@ public class KafkaSourceTest extends TestCase {
     }
 
     public void test() throws WorkloadException {
-        KafkaSource source = new KafkaSource();
+        KafkaDataSource source = new KafkaDataSource();
         System.out.println(source.getKafkaConsumerOffset());
         System.out.println(source.getKafkaProducerServers());
         System.out.println(source.getKafkaZookeeperConnect());

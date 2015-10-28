@@ -1,9 +1,12 @@
 package fi.aalto.dmg.frame;
 
+import com.google.common.base.Optional;
 import fi.aalto.dmg.frame.functions.*;
 import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
 import scala.Tuple2;
+
+import java.util.List;
 
 /**
  * Created by yangjun.wang on 24/10/15.
@@ -15,7 +18,7 @@ public class SparkWorkloadPairOperator<K,V> extends SparkWorkloadOperator<Tuple2
     public SparkWorkloadPairOperator(JavaPairDStream<K,V> stream){
         super(stream.toJavaDStream());
         this.pairDStream = stream;
-    }
+}
 
     @Override
     public SparkWorkloadGrouperOperator<K, V> groupByKey(K key) {
@@ -33,4 +36,16 @@ public class SparkWorkloadPairOperator<K,V> extends SparkWorkloadOperator<Tuple2
         });
         return new SparkWorkloadPairOperator<>(newStream);
     }
+
+    @Override
+    public WorkloadPairOperator<K, V> updateStateByKey(K key, final UpdateStateFunction<V> fun) {
+        JavaPairDStream<K, V> cumulateStream = pairDStream.updateStateByKey(new Function2<List<V>, Optional<V>, Optional<V>>() {
+            @Override
+            public Optional<V> call(List<V> vs, Optional<V> optional) throws Exception {
+                return fun.update(vs, optional);
+            }
+        });
+        return new SparkWorkloadPairOperator<>(cumulateStream);
+    }
 }
+
