@@ -38,30 +38,10 @@ public class WordCount extends Workload implements Serializable{
             WorkloadOperator<String> operator =
                     this.getOperatorCreater().createOperatorFromKafka("localhost:2181", "asdf", "WordCount").map(UserFunctions.mapToSelf);
             WorkloadPairOperator<String, Integer> counts =
-                    operator.flatMap(new FlatMapFunction<String, String>() {
-                        public Iterable<String> flatMap(String var1) throws Exception {
-                            return Arrays.asList(var1.toLowerCase().split("\\W+"));
-                        }
-                    }).
-                            mapToPair(new MapPairFunction<String, String, Integer>() {
-                                public Tuple2<String, Integer> mapPair(String s) {
-                                    return new Tuple2<String, Integer>(s, 1);
-                                }
-                            }).
-                            groupByKey().reduce(new ReduceFunction<Integer>() {
-                        public Integer reduce(Integer var1, Integer var2) throws Exception {
-                            return var1 + var2;
-                        }
-                    }).
-                            updateStateByKey(new UpdateStateFunction<Integer>() {
-                                public Optional<Integer> update(List<Integer> values, Optional<Integer> cumulateValue) {
-                                    Integer sum = cumulateValue.or(0);
-                                    for (Integer i : values) {
-                                        sum += i;
-                                    }
-                                    return Optional.of(sum);
-                                }
-                            });
+                    operator.flatMap(UserFunctions.splitFlatMap).
+                            mapToPair(UserFunctions.mapToStringIntegerPair).
+                            groupByKey().reduce(UserFunctions.sumReduce).
+                            updateStateByKey(UserFunctions.updateStateCount);
             counts.print();
         }
         catch (Exception e){

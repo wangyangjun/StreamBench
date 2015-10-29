@@ -5,13 +5,14 @@ import fi.aalto.dmg.frame.OperatorCreater;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 
 /**
  * Created by yangjun.wang on 14/10/15.
  */
-abstract public class Workload {
+abstract public class Workload implements Serializable{
     private final Logger logger;
 
     private String configFile;

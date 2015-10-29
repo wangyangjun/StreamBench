@@ -1,8 +1,11 @@
 package fi.aalto.dmg.frame.userfunctions;
 
-import fi.aalto.dmg.frame.functions.MapFunction;
+import com.google.common.base.Optional;
+import fi.aalto.dmg.frame.functions.*;
+import scala.Tuple2;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by yangjun.wang on 21/10/15.
@@ -24,4 +27,31 @@ public class UserFunctions {
         }
     };
 
+    public static FlatMapFunction<String, String> splitFlatMap = new FlatMapFunction<String, String>() {
+        public Iterable<String> flatMap(String var1) throws Exception {
+            return Arrays.asList(var1.toLowerCase().split("\\W+"));
+        }
+    };
+
+    public static  MapPairFunction<String, String, Integer> mapToStringIntegerPair = new MapPairFunction<String, String, Integer>() {
+        public Tuple2<String, Integer> mapPair(String s) {
+            return new Tuple2<String, Integer>(s, 1);
+        }
+    };
+
+    public static ReduceFunction<Integer> sumReduce = new ReduceFunction<Integer>() {
+        public Integer reduce(Integer var1, Integer var2) throws Exception {
+            return var1 + var2;
+        }
+    };
+
+    public static UpdateStateFunction<Integer> updateStateCount = new UpdateStateFunction<Integer>() {
+        public Optional<Integer> update(List<Integer> values, Optional<Integer> cumulateValue) {
+            Integer sum = cumulateValue.or(0);
+            for (Integer i : values) {
+                sum += i;
+            }
+            return Optional.of(sum);
+        }
+    };
 }
