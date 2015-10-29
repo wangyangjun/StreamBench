@@ -8,6 +8,7 @@ import fi.aalto.dmg.frame.functions.MapPartitionFunction;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.functions.WindowMapFunction;
 import org.apache.flink.util.Collector;
 
 /**
@@ -40,6 +41,7 @@ public class FlinkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
 //            }
 //        });
 //        return new FlinkWorkloadOperator<R>(newDataStream);
+
         return null;
     }
 

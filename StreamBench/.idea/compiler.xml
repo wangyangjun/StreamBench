@@ -38,8 +38,8 @@
     <bytecodeTargetLevel>
       <module name="core" target="1.5" />
       <module name="flink" target="1.5" />
-      <module name="spark" target="1.7" />
       <module name="Spark" target="1.5" />
+      <module name="spark" target="1.7" />
       <module name="storm" target="1.5" />
       <module name="StreamBench" target="1.5" />
     </bytecodeTargetLevel>

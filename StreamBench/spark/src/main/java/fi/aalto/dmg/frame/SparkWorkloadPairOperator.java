@@ -21,7 +21,7 @@ public class SparkWorkloadPairOperator<K,V> extends SparkWorkloadOperator<Tuple2
 }
 
     @Override
-    public SparkWorkloadGrouperOperator<K, V> groupByKey(K key) {
+    public SparkWorkloadGrouperOperator<K, V> groupByKey() {
         JavaPairDStream<K, Iterable<V>> newStream = pairDStream.groupByKey();
         return new SparkWorkloadGrouperOperator<>(newStream);
     }
@@ -38,14 +38,11 @@ public class SparkWorkloadPairOperator<K,V> extends SparkWorkloadOperator<Tuple2
     }
 
     @Override
-    public WorkloadPairOperator<K, V> updateStateByKey(K key, final UpdateStateFunction<V> fun) {
-        JavaPairDStream<K, V> cumulateStream = pairDStream.updateStateByKey(new Function2<List<V>, Optional<V>, Optional<V>>() {
-            @Override
-            public Optional<V> call(List<V> vs, Optional<V> optional) throws Exception {
-                return fun.update(vs, optional);
-            }
-        });
+    public WorkloadPairOperator<K, V> updateStateByKey(final UpdateStateFunction<V> fun) {
+        JavaPairDStream<K, V> cumulateStream = pairDStream.updateStateByKey(new UpdateStateFunctionImpl(fun));
         return new SparkWorkloadPairOperator<>(cumulateStream);
     }
+
+
 }
 

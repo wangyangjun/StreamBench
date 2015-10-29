@@ -28,7 +28,7 @@ public class DataLoader {
         BufferedReader in = new BufferedReader(new InputStreamReader(stream));
         String line = null;
 
-        StringBuilder responseData = new StringBuilder();
+        StringBuilder responsweData = new StringBuilder();
         while((line = in.readLine()) != null) {
             ProducerRecord<String,String> producerRecord = new ProducerRecord<String,String>(topic, key, line);
             // producer.send(producerRecord).get(); // sync

@@ -13,12 +13,12 @@ abstract public class WordCountWorkload extends Workload{
     protected KafkaDataSource kafkaSource;
 
     public WordCountWorkload() throws WorkloadException {
-        super();
+        super(null);
         Init();
     }
 
     public WordCountWorkload(String configure) throws WorkloadException {
-        super();
+        super(null);
         this.setConfigFile(configure);
         Init();
     }

@@ -26,7 +26,7 @@ public class SparkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
     @Override
     public <R> WorkloadOperator<R> mapPartition(final MapPartitionFunction<T, R> fun) {
         JavaDStream<R> newStream = dStream.mapPartitions(new MapPartitionFunctionImpl<>(fun));
-        return new SparkWorkloadOperator<R>(newStream);
+        return new SparkWorkloadOperator<>(newStream);
     }
 
     @Override

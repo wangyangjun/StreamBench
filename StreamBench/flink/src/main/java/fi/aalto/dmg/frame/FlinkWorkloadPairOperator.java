@@ -2,12 +2,14 @@ package fi.aalto.dmg.frame;
 
 import fi.aalto.dmg.frame.functions.ReduceFunction;
 import fi.aalto.dmg.frame.functions.UpdateStateFunction;
+import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapPartitionFunction;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.operators.UnsortedGrouping;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.GroupedDataStream;
+import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.util.Collector;
 import scala.Tuple2;
 
@@ -23,7 +25,7 @@ public class FlinkWorkloadPairOperator<K,V> extends FlinkWorkloadOperator<Tuple2
         super(dataStream1);
     }
 
-    public FlinkWorkloadGrouperOperator<K, V> groupByKey(K key) {
+    public FlinkWorkloadGrouperOperator<K, V> groupByKey() {
         GroupedDataStream<Tuple2<K, V>> groupedDataStream = this.dataStream.groupBy(new KeySelector<Tuple2<K, V>, K>() {
             public K getKey(Tuple2<K, V> tuple2) throws Exception {
                 return tuple2._1();
@@ -77,7 +79,7 @@ public class FlinkWorkloadPairOperator<K,V> extends FlinkWorkloadOperator<Tuple2
         return new FlinkWorkloadPairOperator<K, V>(newDataStream);
     }
 
-    public WorkloadPairOperator<K, V> updateStateByKey(K key, UpdateStateFunction<V> fun) {
+    public WorkloadPairOperator<K, V> updateStateByKey(UpdateStateFunction<V> fun) {
         return this;
     }
 }

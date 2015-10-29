@@ -12,12 +12,12 @@ import java.util.Iterator;
  */
 public interface WorkloadPairOperator<K, V> extends WorkloadOperator<Tuple2<K,V>> , Serializable{
 
-    WorkloadGrouperOperator<K,V> groupByKey(K key);
+    WorkloadGrouperOperator<K,V> groupByKey();
 
     // TODO: translate to reduce on each node, then group merge
     WorkloadPairOperator<K, V> reduceByKey(K key, ReduceFunction<V> fun);
 
-    WorkloadPairOperator<K, V> updateStateByKey(K key, UpdateStateFunction<V> fun);
+    WorkloadPairOperator<K, V> updateStateByKey(UpdateStateFunction<V> fun);
 
 }
 

@@ -1,9 +1,11 @@
 package fi.aalto.dmg;
 
 import fi.aalto.dmg.exceptions.WorkloadException;
+import fi.aalto.dmg.frame.OperatorCreater;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 
 /**
@@ -14,10 +16,12 @@ abstract public class Workload {
 
     private String configFile;
     private Properties properties;
+    private OperatorCreater operatorCreater;
 
-    public Workload() throws WorkloadException {
+    public Workload(OperatorCreater creater) throws WorkloadException {
         logger = Logger.getLogger(Workload.class);
         properties = new Properties();
+        this.operatorCreater = creater;
     }
 
     public String getConfigFile() {
@@ -38,18 +42,20 @@ abstract public class Workload {
     protected Properties getProperties() {
         return properties;
     }
+    protected OperatorCreater getOperatorCreater(){ return operatorCreater; }
 
     public void Start(){
         logger.info("Start workload: " + this.getClass().getSimpleName());
         try {
             Process();
-        } catch (WorkloadException e) {
+            this.getOperatorCreater().Start();
+        } catch (Exception e) {
             logger.warn("WorkloadException caught when run workload " + this.getClass().getSimpleName());
             e.printStackTrace();
         }
         logger.info("The end of workload: " + this.getClass().getSimpleName());
     }
 
-    abstract public void Process() throws WorkloadException;
+    abstract public void Process() throws WorkloadException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException;
 
 }
