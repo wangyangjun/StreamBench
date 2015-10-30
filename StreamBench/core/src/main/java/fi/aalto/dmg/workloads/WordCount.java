@@ -1,23 +1,15 @@
 package fi.aalto.dmg.workloads;
 
-import com.google.common.base.Optional;
 import fi.aalto.dmg.Workload;
 import fi.aalto.dmg.exceptions.WorkloadException;
 import fi.aalto.dmg.frame.WorkloadOperator;
 import fi.aalto.dmg.frame.OperatorCreater;
 import fi.aalto.dmg.frame.WorkloadPairOperator;
-import fi.aalto.dmg.frame.functions.FlatMapFunction;
-import fi.aalto.dmg.frame.functions.MapPairFunction;
-import fi.aalto.dmg.frame.functions.ReduceFunction;
-import fi.aalto.dmg.frame.functions.UpdateStateFunction;
 import fi.aalto.dmg.frame.userfunctions.UserFunctions;
 import org.apache.log4j.Logger;
-import scala.Tuple2;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by yangjun.wang on 27/10/15.
@@ -30,13 +22,21 @@ public class WordCount extends Workload implements Serializable{
         super(creater);
     }
 
+    private WorkloadOperator<String> kafkaStreamOperator(){
+        String topic = this.getProperties().getProperty("topic");
+        String groupId = this.getProperties().getProperty("group.id");
+        String kafkaServers = this.getProperties().getProperty("bootstrap.servers");
+        String zkConnectStr = this.getProperties().getProperty("zookeeper.connect");
+        String offset = this.getProperties().getProperty("auto.offset.reset");
+
+        WorkloadOperator<String> operator =
+                this.getOperatorCreater().createOperatorFromKafka(zkConnectStr, kafkaServers, groupId, topic, offset);//.map(UserFunctions.mapToSelf);
+        return operator;
+    }
+
     public void Process() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        // ClassLoader classLoader = WordCount.class.getClassLoader();
-        // Class dbclass = classLoader.loadClass("fi.aalto.dmg.frame.SparkOperatorCreater");
-        // OperatorCreater operatorCreater = (OperatorCreater)dbclass.getConstructor(String.class).newInstance("WordCount");
         try {
-            WorkloadOperator<String> operator =
-                    this.getOperatorCreater().createOperatorFromKafka("localhost:2181", "asdf", "WordCount").map(UserFunctions.mapToSelf);
+            WorkloadOperator<String> operator = kafkaStreamOperator();
             WorkloadPairOperator<String, Integer> counts =
                     operator.flatMap(UserFunctions.splitFlatMap).
                             mapToPair(UserFunctions.mapToStringIntegerPair).

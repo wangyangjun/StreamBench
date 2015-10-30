@@ -39,7 +39,7 @@ public class SparkOperatorCreater extends OperatorCreater implements Serializabl
     }
 
     @Override
-    public SparkWorkloadOperator<String> createOperatorFromKafka(String zkConStr, String group, String topics) {
+    public SparkWorkloadOperator<String> createOperatorFromKafka(String zkConStr, String kafkaServers, String group, String topics, String offset) {
 
         Map<String, Integer> topicMap = new HashMap<>();
 
@@ -51,8 +51,8 @@ public class SparkOperatorCreater extends OperatorCreater implements Serializabl
 
         HashSet<String> topicsSet = new HashSet<>(Arrays.asList(topics.split(",")));
         HashMap<String, String> kafkaParams = new HashMap<>();
-        kafkaParams.put("metadata.broker.list", "localhost:9092");
-        kafkaParams.put("auto.offset.reset", "smallest");
+        kafkaParams.put("metadata.broker.list", kafkaServers);
+        kafkaParams.put("auto.offset.reset", offset);
 
         // Create direct kafka stream with brokers and topics
         JavaPairInputDStream<String, String> messages = KafkaUtils.createDirectStream(

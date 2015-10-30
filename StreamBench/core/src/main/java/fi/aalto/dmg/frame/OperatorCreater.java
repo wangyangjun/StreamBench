@@ -19,8 +19,9 @@ abstract public class OperatorCreater implements Serializable {
     /**
      * zkConStr: zoo1:2181
      * topics: Topic1,Topic2
+     * offset smallest
      **/
-    abstract public WorkloadOperator<String> createOperatorFromKafka(String zkConStr, String group, String topics);
+    abstract public WorkloadOperator<String> createOperatorFromKafka(String zkConStr, String kafkaServers, String group, String topics, String offset);
 
     /**
      * Start streaming analysis job

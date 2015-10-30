@@ -31,7 +31,7 @@ public class FlinkOperatorCreater extends OperatorCreater {
      * @return
      */
     @Override
-    public WorkloadOperator<String> createOperatorFromKafka(String zkConStr, String group, String topics) {
+    public WorkloadOperator<String> createOperatorFromKafka(String zkConStr, String kafkaServers, String group, String topics, String offset) {
         /*
         * Note that the Kafka source is expecting the following parameters to be set
         *  - "bootstrap.servers" (comma separated list of kafka brokers)
@@ -41,8 +41,11 @@ public class FlinkOperatorCreater extends OperatorCreater {
         *  "--bootstrap.servers host:port,host1:port1 --zookeeper.connect host:port --topic testTopic"
         */
         Properties properties = new Properties();
-        properties.put("group.id", "flink-streaming-demo-a");
-        properties.put("auto.offset.reset", "smallest");
+        properties.put("bootstrap.servers", kafkaServers);
+        properties.put("zookeeper.connect", zkConStr);
+        properties.put("group.id", group);
+        properties.put("topic", topics);
+        properties.put("auto.offset.reset", offset);
 
         DataStream<String> stream = env
                 .addSource(new FlinkKafkaConsumer082<String>(topics, new SimpleStringSchema(), properties));

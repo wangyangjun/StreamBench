@@ -55,6 +55,7 @@ public class BenchStarter
             logger.error("Workload not found!");
             return;
         }
+
         Workload workloadInstance;
         try {
             Class dbclass = classLoader.loadClass(operatorCreatorConfig.getProperty("operator.creator"));
