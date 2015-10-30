@@ -6,10 +6,14 @@ import fi.aalto.dmg.frame.functions.FlatMapFunction;
 import fi.aalto.dmg.frame.functions.MapFunction;
 import fi.aalto.dmg.frame.functions.MapPartitionFunction;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.DataSet;
+import org.apache.flink.api.java.typeutils.TypeExtractor;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.functions.WindowMapFunction;
 import org.apache.flink.util.Collector;
+import scala.Tuple2;
+import scala.Tuple2$;
 
 /**
  * Created by yangjun.wang on 24/10/15.
@@ -22,12 +26,12 @@ public class FlinkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
     }
 
     public <R> WorkloadOperator<R> map(final MapFunction<T, R> fun) {
-        DataStream<R> newDataSet = dataStream.map(new org.apache.flink.api.common.functions.MapFunction<T, R>() {
+        DataStream<R> newDataStream = dataStream.map(new org.apache.flink.api.common.functions.MapFunction<T, R>() {
             public R map(T t) throws Exception {
                 return fun.map(t);
             }
         });
-        return new FlinkWorkloadOperator<R>(newDataSet);
+        return new FlinkWorkloadOperator<R>(newDataStream);
     }
 
     public <R> WorkloadOperator<R> mapPartition(final MapPartitionFunction<T, R> fun) {
@@ -45,8 +49,13 @@ public class FlinkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
         return null;
     }
 
-    public <K, V> WorkloadPairOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun) {
-        return null;
+    public <K, V> WorkloadPairOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun) {
+        DataStream<Tuple2<K,V>> newDataStream = dataStream.map(new org.apache.flink.api.common.functions.MapFunction<T, Tuple2<K, V>>() {
+            public Tuple2<K, V> map(T t) throws Exception {
+                return fun.mapPair(t);
+            }
+        });
+        return new FlinkWorkloadPairOperator<>(newDataStream);
     }
 
     public WorkloadOperator<T> reduce(final ReduceFunction<T> fun) {
@@ -68,6 +77,7 @@ public class FlinkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
     }
 
     public <R> WorkloadOperator<R> flatMap(final FlatMapFunction<T, R> fun) {
+        TypeInformation<R> returnType = TypeExtractor.createTypeInfo(FlatMapFunction.class, fun.getClass(), 1, null, null);
         DataStream<R> newDataStream = dataStream.flatMap(new org.apache.flink.api.common.functions.FlatMapFunction<T, R>() {
             public void flatMap(T t, Collector<R> collector) throws Exception {
                 java.lang.Iterable<R> flatResults = fun.flatMap(t);
@@ -75,8 +85,8 @@ public class FlinkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
                     collector.collect(r);
                 }
             }
-        });
-        return new FlinkWorkloadOperator<R>(newDataStream);
+        }).returns(returnType);
+        return new FlinkWorkloadOperator<>(newDataStream);
     }
 
     public void print() {

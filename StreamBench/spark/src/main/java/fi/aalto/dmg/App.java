@@ -32,7 +32,6 @@ public class App
 {
     private static final Pattern SPACE = Pattern.compile(" ");
     public static void main( String[] args ) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
-//        //BenchStarter.main(args);
 
         System.out.println("Start...");
         String[] testArgs = {"WordCount"};

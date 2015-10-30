@@ -20,7 +20,7 @@ public class FlinkOperatorCreater extends OperatorCreater {
         super(name);
         properties = new Properties();
         env = StreamExecutionEnvironment.getExecutionEnvironment();
-        properties.load(this.getClass().getClassLoader().getResourceAsStream("spark-cluster.properties"));
+        properties.load(this.getClass().getClassLoader().getResourceAsStream("flink-cluster.properties"));
     }
 
     /**

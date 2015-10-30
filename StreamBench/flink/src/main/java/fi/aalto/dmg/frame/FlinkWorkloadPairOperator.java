@@ -32,7 +32,7 @@ public class FlinkWorkloadPairOperator<K,V> extends FlinkWorkloadOperator<Tuple2
             }
 
         });
-        return new FlinkWorkloadGrouperOperator<K, V>(groupedDataStream);
+        return new FlinkWorkloadGrouperOperator<>(groupedDataStream);
     }
 
     // TODO: reduceByKey - reduce first then groupByKey, at last reduce again
@@ -73,10 +73,10 @@ public class FlinkWorkloadPairOperator<K,V> extends FlinkWorkloadOperator<Tuple2
         });
         DataStream<Tuple2<K,V>> newDataStream = groupedDataStream.reduce(new org.apache.flink.api.common.functions.ReduceFunction<Tuple2<K, V>>() {
             public Tuple2<K, V> reduce(Tuple2<K, V> t1, Tuple2<K, V> t2) throws Exception {
-                return new Tuple2<K, V>(t1._1(), fun.reduce(t1._2(), t2._2()));
+                return new Tuple2<>(t1._1(), fun.reduce(t1._2(), t2._2()));
             }
         });
-        return new FlinkWorkloadPairOperator<K, V>(newDataStream);
+        return new FlinkWorkloadPairOperator<>(newDataStream);
     }
 
     public WorkloadPairOperator<K, V> updateStateByKey(UpdateStateFunction<V> fun) {

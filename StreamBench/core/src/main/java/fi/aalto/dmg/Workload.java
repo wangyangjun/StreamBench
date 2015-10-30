@@ -13,31 +13,24 @@ import java.util.Properties;
  * Created by yangjun.wang on 14/10/15.
  */
 abstract public class Workload implements Serializable{
-    private final Logger logger;
+    private static final Logger logger = Logger.getLogger(Workload.class);
 
-    private String configFile;
     private Properties properties;
     private OperatorCreater operatorCreater;
 
     public Workload(OperatorCreater creater) throws WorkloadException {
-        logger = Logger.getLogger(Workload.class);
-        properties = new Properties();
         this.operatorCreater = creater;
-    }
-
-    public String getConfigFile() {
-        return configFile;
-    }
-
-    public void setConfigFile(String configFile) throws WorkloadException {
-        this.configFile = configFile;
+        properties = new Properties();
+        String configFile = this.getClass().getSimpleName() + ".properties";
         try {
             properties.load(this.getClass().getClassLoader().getResourceAsStream(configFile));
         } catch (IOException e) {
             throw new WorkloadException("Read configure file " + configFile + " failed");
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("Read configure file: " + configFile + " failed");
         }
+
     }
 
     protected Properties getProperties() {
