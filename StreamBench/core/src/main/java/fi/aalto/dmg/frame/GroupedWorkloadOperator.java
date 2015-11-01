@@ -7,6 +7,6 @@ import java.io.Serializable;
 /**
  * Created by yangjun.wang on 25/10/15.
  */
-public interface WorkloadGrouperOperator<K,V> extends Serializable{
-    WorkloadPairOperator<K, V> reduce(ReduceFunction<V> fun);
+public interface GroupedWorkloadOperator<K,V> extends Serializable{
+    PairedWorkloadOperator<K, V> reduce(ReduceFunction<V> fun, String componentId);
 }

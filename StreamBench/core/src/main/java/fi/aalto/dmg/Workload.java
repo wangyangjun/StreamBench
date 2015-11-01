@@ -2,7 +2,8 @@ package fi.aalto.dmg;
 
 import fi.aalto.dmg.exceptions.WorkloadException;
 import fi.aalto.dmg.frame.OperatorCreater;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -13,7 +14,7 @@ import java.util.Properties;
  * Created by yangjun.wang on 14/10/15.
  */
 abstract public class Workload implements Serializable{
-    private static final Logger logger = Logger.getLogger(Workload.class);
+    private static final Logger logger = LoggerFactory.getLogger(Workload.class);
 
     private Properties properties;
     private OperatorCreater operatorCreater;
@@ -44,7 +45,7 @@ abstract public class Workload implements Serializable{
             Process();
             this.getOperatorCreater().Start();
         } catch (Exception e) {
-            logger.warn("WorkloadException caught when run workload " + this.getClass().getSimpleName());
+            logger.error("WorkloadException caught when run workload " + this.getClass().getSimpleName());
             e.printStackTrace();
         }
         logger.info("The end of workload: " + this.getClass().getSimpleName());

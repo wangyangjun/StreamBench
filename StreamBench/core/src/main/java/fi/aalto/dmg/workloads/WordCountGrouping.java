@@ -2,9 +2,9 @@ package fi.aalto.dmg.workloads;
 
 import fi.aalto.dmg.Workload;
 import fi.aalto.dmg.exceptions.WorkloadException;
+import fi.aalto.dmg.frame.OperatorCreater;
 import fi.aalto.dmg.frame.PairedWorkloadOperator;
 import fi.aalto.dmg.frame.WorkloadOperator;
-import fi.aalto.dmg.frame.OperatorCreater;
 import fi.aalto.dmg.frame.userfunctions.UserFunctions;
 import org.apache.log4j.Logger;
 
@@ -12,13 +12,15 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * Created by yangjun.wang on 27/10/15.
+ * Created by yangjun.wang on 30/10/15.
+ * There is no difference between WordCount and WordCountGrouping in Flink
+ *
  */
-public class WordCount extends Workload implements Serializable{
+public class WordCountGrouping extends Workload implements Serializable {
 
     private static final Logger logger = Logger.getLogger(WordCount.class);
 
-    public WordCount(OperatorCreater creater) throws WorkloadException {
+    public WordCountGrouping(OperatorCreater creater) throws WorkloadException {
         super(creater);
     }
 
@@ -36,10 +38,10 @@ public class WordCount extends Workload implements Serializable{
         try {
             WorkloadOperator<String> operator = kafkaStreamOperator();
             PairedWorkloadOperator<String, Integer> counts =
-                    operator.flatMap(UserFunctions.splitFlatMap, "spliter")
-                            .mapToPair(UserFunctions.mapToStringIntegerPair, "pair")
-                            .reduceByKey(UserFunctions.sumReduce, "sum")
-                            .updateStateByKey(UserFunctions.updateStateCount, "cumulate");
+                    operator.flatMap(UserFunctions.splitFlatMap, "spliter").
+                            mapToPair(UserFunctions.mapToStringIntegerPair, "pair").
+                            groupByKey().reduce(UserFunctions.sumReduce, "sum").
+                            updateStateByKey(UserFunctions.updateStateCount, "cumulate");
             counts.print();
         }
         catch (Exception e){

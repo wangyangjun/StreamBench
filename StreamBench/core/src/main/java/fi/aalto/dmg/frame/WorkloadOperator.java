@@ -10,22 +10,19 @@ import java.io.Serializable;
 public interface WorkloadOperator<T> extends Serializable {
 
     // return new WorkloadOperator<R>();
-    <R> WorkloadOperator<R> map(MapFunction<T, R> fun);
+    <R> WorkloadOperator<R> map(MapFunction<T, R> fun, String componentId);
 
-    // return WorkloadOperator<R>
-    <R> WorkloadOperator<R> mapPartition(MapPartitionFunction<T, R> fun);
-
-    // return new WorkloadPairOperator<K,V>
-    <K, V> WorkloadPairOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun);
+    // return new PairedWorkloadOperator<K,V>
+    <K, V> PairedWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId);
 
     // return new WorkloadOperator<T>();
-    WorkloadOperator<T> reduce(ReduceFunction<T> fun);
+    WorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId);
 
     // return new WorkloadOperator<T>();
-    WorkloadOperator<T> filter(FilterFunction<T> fun);
+    WorkloadOperator<T> filter(FilterFunction<T> fun, String componentId);
 
     // return new WorkloadOperator<R>();
-    <R> WorkloadOperator<R> flatMap(FlatMapFunction<T, R> fun);
+    <R> WorkloadOperator<R> flatMap(FlatMapFunction<T, R> fun, String componentId);
 
     void print();
 }
