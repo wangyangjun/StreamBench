@@ -3,6 +3,7 @@ package fi.aalto.dmg.frame;
 import fi.aalto.dmg.frame.functions.*;
 import fi.aalto.dmg.frame.functions.FlatMapFunction;
 import fi.aalto.dmg.util.TimeDurations;
+import fi.aalto.dmg.util.Utils;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaDStream;
@@ -27,9 +28,9 @@ public class SparkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
     }
 
     @Override
-    public <K, V> PairedWorkloadOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun, String componentId) {
+    public <K, V> PairWorkloadOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun, String componentId) {
         JavaPairDStream<K,V> pairDStream = dStream.mapToPair(new PairFunctionImpl<>(fun));
-        return new SparkPairedWorkloadOperator<>(pairDStream);
+        return new SparkPairWorkloadOperator<>(pairDStream);
     }
 
     @Override
@@ -51,36 +52,15 @@ public class SparkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
     }
 
     @Override
-    public WindowedWordloadOperator<T> window(TimeDurations windowDuration) {
+    public WindowedWorkloadOperator<T> window(TimeDurations windowDuration) {
         return window(windowDuration, windowDuration);
     }
 
     @Override
-    public WindowedWordloadOperator<T> window(TimeDurations windowDuration, TimeDurations slideDuration) {
-        Duration windowDurations = Durations.seconds(1);
-        switch(windowDuration.getUnit()){
-            case MILLISECONDS:
-                windowDurations = Durations.milliseconds(windowDuration.getLength());
-                break;
-            case SECONDS:
-                windowDurations = Durations.seconds(windowDuration.getLength());
-                break;
-            case MINUTES:
-                windowDurations = Durations.minutes(windowDuration.getLength());
-                break;
-        }
-        Duration slideDurations = Durations.seconds(1);
-        switch(slideDuration.getUnit()){
-            case MILLISECONDS:
-                slideDurations = Durations.milliseconds(slideDuration.getLength());
-                break;
-            case SECONDS:
-                slideDurations = Durations.seconds(slideDuration.getLength());
-                break;
-            case MINUTES:
-                slideDurations = Durations.minutes(slideDuration.getLength());
-                break;
-        }
+    public WindowedWorkloadOperator<T> window(TimeDurations windowDuration, TimeDurations slideDuration) {
+        Duration windowDurations = Utils.timeDurationsToSparkDuration(windowDuration);
+        Duration slideDurations = Utils.timeDurationsToSparkDuration(slideDuration);
+
         JavaDStream<T> windowedStream = dStream.window(windowDurations, slideDurations);
         return new SparkWindowedWorkloadOperator<>(windowedStream);
     }

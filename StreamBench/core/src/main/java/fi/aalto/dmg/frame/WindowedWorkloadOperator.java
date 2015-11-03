@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Created by yangjun.wang on 31/10/15.
  */
-public interface WindowedWordloadOperator<T> extends Serializable {
+public interface WindowedWorkloadOperator<T> extends Serializable {
 
     // return WorkloadOperator<R>
     <R> WorkloadOperator<R> mapPartition(MapPartitionFunction<T, R> fun, String componentId);
@@ -21,7 +21,7 @@ public interface WindowedWordloadOperator<T> extends Serializable {
     // return new WorkloadOperator<T>();
     WorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId);
 
-    // return new PairedWorkloadOperator<K,V>
-    <K, V> PairedWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId);
+    // return new PairWorkloadOperator<K,V>
+    <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId);
 
 }

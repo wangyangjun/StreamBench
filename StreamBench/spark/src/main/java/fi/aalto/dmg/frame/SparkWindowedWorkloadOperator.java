@@ -1,17 +1,13 @@
 package fi.aalto.dmg.frame;
 
-import fi.aalto.dmg.frame.WindowedWordloadOperator;
-import fi.aalto.dmg.frame.WorkloadOperator;
 import fi.aalto.dmg.frame.functions.*;
-import org.apache.spark.streaming.Duration;
-import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
 
 /**
  * Created by yangjun.wang on 31/10/15.
  */
-public class SparkWindowedWorkloadOperator<T> implements WindowedWordloadOperator<T> {
+public class SparkWindowedWorkloadOperator<T> implements WindowedWorkloadOperator<T> {
     private JavaDStream<T> dStream;
 
     public SparkWindowedWorkloadOperator(JavaDStream<T> stream){
@@ -45,8 +41,8 @@ public class SparkWindowedWorkloadOperator<T> implements WindowedWordloadOperato
     }
 
     @Override
-    public <K, V> PairedWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId) {
+    public <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId) {
         JavaPairDStream<K,V> pairDStream = dStream.mapToPair(new PairFunctionImpl<>(fun));
-        return new SparkPairedWorkloadOperator<>(pairDStream);
+        return new SparkPairWorkloadOperator<>(pairDStream);
     }
 }

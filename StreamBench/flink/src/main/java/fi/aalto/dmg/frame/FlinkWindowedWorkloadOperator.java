@@ -11,7 +11,7 @@ import scala.Tuple2;
 /**
  * Created by yangjun.wang on 31/10/15.
  */
-public class FlinkWindowedWorkloadOperator<T> implements WindowedWordloadOperator<T> {
+public class FlinkWindowedWorkloadOperator<T> implements WindowedWorkloadOperator<T> {
 
     protected WindowedDataStream<T> dataStream;
 
@@ -72,7 +72,7 @@ public class FlinkWindowedWorkloadOperator<T> implements WindowedWordloadOperato
     }
 
     @Override
-    public <K, V> PairedWorkloadOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun, String componentId) {
+    public <K, V> PairWorkloadOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun, String componentId) {
         DataStream<Tuple2<K,V>> newDataStream = dataStream.mapWindow(new WindowMapFunction<T, Tuple2<K,V>>() {
             @Override
             public void mapWindow(Iterable<T> values, Collector<Tuple2<K,V>> collector) throws Exception {
@@ -82,7 +82,7 @@ public class FlinkWindowedWorkloadOperator<T> implements WindowedWordloadOperato
                 }
             }
         }).flatten();
-        return new FlinkPairedWorkloadOperator<>(newDataStream);
+        return new FlinkPairWorkloadOperator<>(newDataStream);
     }
 
 }

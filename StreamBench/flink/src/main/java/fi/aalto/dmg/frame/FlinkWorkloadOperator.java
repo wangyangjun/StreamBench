@@ -14,8 +14,6 @@ import org.apache.flink.streaming.api.windowing.helper.Time;
 import org.apache.flink.util.Collector;
 import scala.Tuple2;
 
-import java.util.concurrent.TimeUnit;
-
 /**
  * Created by yangjun.wang on 24/10/15.
  */
@@ -35,13 +33,13 @@ public class FlinkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
         return new FlinkWorkloadOperator<>(newDataStream);
     }
 
-    public <K, V> PairedWorkloadOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun, String componentId) {
+    public <K, V> PairWorkloadOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun, String componentId) {
         DataStream<Tuple2<K,V>> newDataStream = dataStream.map(new org.apache.flink.api.common.functions.MapFunction<T, Tuple2<K, V>>() {
             public Tuple2<K, V> map(T t) throws Exception {
                 return fun.mapPair(t);
             }
         });
-        return new FlinkPairedWorkloadOperator<>(newDataStream);
+        return new FlinkPairWorkloadOperator<>(newDataStream);
     }
 
     public WorkloadOperator<T> reduce(final ReduceFunction<T> fun, String componentId) {
@@ -76,12 +74,12 @@ public class FlinkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
     }
 
     @Override
-    public WindowedWordloadOperator<T> window(TimeDurations windowDuration) {
+    public WindowedWorkloadOperator<T> window(TimeDurations windowDuration) {
         return window(windowDuration, windowDuration);
     }
 
     @Override
-    public WindowedWordloadOperator<T> window(TimeDurations windowDuration, TimeDurations slideDuration) {
+    public WindowedWorkloadOperator<T> window(TimeDurations windowDuration, TimeDurations slideDuration) {
         WindowedDataStream<T> windowedDataStream = dataStream.window(Time.of(windowDuration.getLength(), windowDuration.getUnit()))
                 .every(Time.of(slideDuration.getLength(), slideDuration.getUnit()));
         return new FlinkWindowedWorkloadOperator<>(windowedDataStream);

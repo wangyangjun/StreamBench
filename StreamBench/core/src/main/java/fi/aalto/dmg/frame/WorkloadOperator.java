@@ -12,8 +12,8 @@ public interface WorkloadOperator<T> extends Serializable {
     // return new WorkloadOperator<R>();
     <R> WorkloadOperator<R> map(MapFunction<T, R> fun, String componentId);
 
-    // return new PairedWorkloadOperator<K,V>
-    <K, V> PairedWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId);
+    // return new PairWorkloadOperator<K,V>
+    <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId);
 
     // return new WorkloadOperator<T>();
     WorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId);
@@ -24,8 +24,8 @@ public interface WorkloadOperator<T> extends Serializable {
     // return new WorkloadOperator<R>();
     <R> WorkloadOperator<R> flatMap(FlatMapFunction<T, R> fun, String componentId);
 
-    WindowedWordloadOperator<T> window(TimeDurations windowDuration);
-    WindowedWordloadOperator<T> window(TimeDurations windowDuration, TimeDurations slideDuration);
+    WindowedWorkloadOperator<T> window(TimeDurations windowDuration);
+    WindowedWorkloadOperator<T> window(TimeDurations windowDuration, TimeDurations slideDuration);
 
     void print();
 }

@@ -19,9 +19,9 @@ public class StormGroupedWorkloadOperator<K,V> implements GroupedWorkloadOperato
     }
 
     @Override
-    public PairedWorkloadOperator<K, V> reduce(ReduceFunction<V> fun, String componentId) {
+    public PairWorkloadOperator<K, V> reduce(ReduceFunction<V> fun, String componentId) {
 
         topologyBuilder.setBolt(componentId, new GroupedReduceBolt<K,V>(fun)).fieldsGrouping(preComponentId, new Fields("key"));
-        return new StormPairedWordloadOperator<>(topologyBuilder, componentId);
+        return new StormPairWordloadOperator<>(topologyBuilder, componentId);
     }
 }

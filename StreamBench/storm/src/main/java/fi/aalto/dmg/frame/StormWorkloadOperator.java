@@ -22,9 +22,9 @@ public class StormWorkloadOperator<T> extends OperatorBase implements WorkloadOp
     }
 
     @Override
-    public <K, V> PairedWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId) {
+    public <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId) {
         topologyBuilder.setBolt(componentId, new MapToPairBolt<>(fun)).localOrShuffleGrouping(preComponentId);
-        return new StormPairedWordloadOperator<>(topologyBuilder, componentId);
+        return new StormPairWordloadOperator<>(topologyBuilder, componentId);
     }
 
     // TODO: whether previous operation is group

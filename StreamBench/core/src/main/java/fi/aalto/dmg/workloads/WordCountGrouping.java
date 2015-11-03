@@ -3,7 +3,7 @@ package fi.aalto.dmg.workloads;
 import fi.aalto.dmg.Workload;
 import fi.aalto.dmg.exceptions.WorkloadException;
 import fi.aalto.dmg.frame.OperatorCreater;
-import fi.aalto.dmg.frame.PairedWorkloadOperator;
+import fi.aalto.dmg.frame.PairWorkloadOperator;
 import fi.aalto.dmg.frame.WorkloadOperator;
 import fi.aalto.dmg.frame.userfunctions.UserFunctions;
 import org.apache.log4j.Logger;
@@ -37,7 +37,7 @@ public class WordCountGrouping extends Workload implements Serializable {
     public void Process() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         try {
             WorkloadOperator<String> operator = kafkaStreamOperator();
-            PairedWorkloadOperator<String, Integer> counts =
+            PairWorkloadOperator<String, Integer> counts =
                     operator.flatMap(UserFunctions.splitFlatMap, "spliter").
                             mapToPair(UserFunctions.mapToStringIntegerPair, "pair").
                             groupByKey().reduce(UserFunctions.sumReduce, "sum").
