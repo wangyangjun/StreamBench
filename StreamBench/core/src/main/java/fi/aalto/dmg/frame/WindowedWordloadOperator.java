@@ -1,6 +1,6 @@
 package fi.aalto.dmg.frame;
 
-import fi.aalto.dmg.frame.functions.MapPartitionFunction;
+import fi.aalto.dmg.frame.functions.*;
 
 import java.io.Serializable;
 
@@ -11,5 +11,17 @@ public interface WindowedWordloadOperator<T> extends Serializable {
 
     // return WorkloadOperator<R>
     <R> WorkloadOperator<R> mapPartition(MapPartitionFunction<T, R> fun, String componentId);
+
+    // return new WorkloadOperator<R>();
+    <R> WorkloadOperator<R> map(MapFunction<T, R> fun, String componentId);
+
+    // return new WorkloadOperator<T>();
+    WorkloadOperator<T> filter(FilterFunction<T> fun, String componentId);
+
+    // return new WorkloadOperator<T>();
+    WorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId);
+
+    // return new PairedWorkloadOperator<K,V>
+    <K, V> PairedWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId);
 
 }

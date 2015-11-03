@@ -5,11 +5,16 @@ import fi.aalto.dmg.frame.functions.FilterFunction;
 import fi.aalto.dmg.frame.functions.FlatMapFunction;
 import fi.aalto.dmg.frame.functions.MapFunction;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
+import fi.aalto.dmg.util.TimeDurations;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.typeutils.TypeExtractor;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.datastream.WindowedDataStream;
+import org.apache.flink.streaming.api.windowing.helper.Time;
 import org.apache.flink.util.Collector;
 import scala.Tuple2;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by yangjun.wang on 24/10/15.
@@ -68,6 +73,18 @@ public class FlinkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
             }
         }).returns(returnType);
         return new FlinkWorkloadOperator<>(newDataStream);
+    }
+
+    @Override
+    public WindowedWordloadOperator<T> window(TimeDurations windowDuration) {
+        return window(windowDuration, windowDuration);
+    }
+
+    @Override
+    public WindowedWordloadOperator<T> window(TimeDurations windowDuration, TimeDurations slideDuration) {
+        WindowedDataStream<T> windowedDataStream = dataStream.window(Time.of(windowDuration.getLength(), windowDuration.getUnit()))
+                .every(Time.of(slideDuration.getLength(), slideDuration.getUnit()));
+        return new FlinkWindowedWorkloadOperator<>(windowedDataStream);
     }
 
     public void print() {

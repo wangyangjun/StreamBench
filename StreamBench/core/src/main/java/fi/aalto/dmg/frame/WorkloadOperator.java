@@ -1,7 +1,7 @@
 package fi.aalto.dmg.frame;
 
 import fi.aalto.dmg.frame.functions.*;
-
+import fi.aalto.dmg.util.TimeDurations;
 import java.io.Serializable;
 
 /**
@@ -23,6 +23,9 @@ public interface WorkloadOperator<T> extends Serializable {
 
     // return new WorkloadOperator<R>();
     <R> WorkloadOperator<R> flatMap(FlatMapFunction<T, R> fun, String componentId);
+
+    WindowedWordloadOperator<T> window(TimeDurations windowDuration);
+    WindowedWordloadOperator<T> window(TimeDurations windowDuration, TimeDurations slideDuration);
 
     void print();
 }
