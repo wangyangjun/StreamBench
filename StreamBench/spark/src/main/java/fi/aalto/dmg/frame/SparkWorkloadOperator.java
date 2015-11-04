@@ -4,8 +4,11 @@ import fi.aalto.dmg.frame.functions.*;
 import fi.aalto.dmg.frame.functions.FlatMapFunction;
 import fi.aalto.dmg.util.TimeDurations;
 import fi.aalto.dmg.util.Utils;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.Durations;
+import org.apache.spark.streaming.Time;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
 
@@ -68,6 +71,7 @@ public class SparkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
     @Override
     public void print() {
         this.dStream.print();
+        // this.dStream.foreach(new PrintFunctionImpl<T>());
     }
 
 }

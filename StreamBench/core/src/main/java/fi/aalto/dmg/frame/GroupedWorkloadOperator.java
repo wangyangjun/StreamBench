@@ -11,7 +11,4 @@ import java.io.Serializable;
  */
 public interface GroupedWorkloadOperator<K,V> extends Serializable{
     PairWorkloadOperator<K, V> reduce(ReduceFunction<V> fun, String componentId);
-
-    WindowedPairWorkloadOperator<K,V> window(TimeDurations windowDuration);
-    WindowedPairWorkloadOperator<K,V> window(TimeDurations windowDuration, TimeDurations slideDuration);
 }

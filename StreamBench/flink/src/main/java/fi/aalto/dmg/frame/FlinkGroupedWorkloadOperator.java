@@ -28,15 +28,4 @@ public class FlinkGroupedWorkloadOperator<K,V> implements GroupedWorkloadOperato
         return new FlinkPairWorkloadOperator<>(newDataSet);
     }
 
-    @Override
-    public WindowedPairWorkloadOperator<K, V> window(TimeDurations windowDuration) {
-        return window(windowDuration, windowDuration);
-    }
-
-    @Override
-    public WindowedPairWorkloadOperator<K, V> window(TimeDurations windowDuration, TimeDurations slideDuration) {
-        WindowedDataStream<Tuple2<K,V>> windowedDataStream = groupedDataStream.window(Time.of(windowDuration.getLength(), windowDuration.getUnit()))
-                .every(Time.of(slideDuration.getLength(), slideDuration.getUnit()));
-        return new FlinkWindowedPairWorkloadOperator<>(windowedDataStream);
-    }
 }

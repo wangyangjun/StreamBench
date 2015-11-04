@@ -40,6 +40,14 @@ public class SparkPairWorkloadOperator<K,V> extends SparkWorkloadOperator<Tuple2
         return new SparkPairWorkloadOperator<>(cumulateStream);
     }
 
+    @Override
+    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, TimeDurations windowDuration, TimeDurations slideDuration) {
+        Duration windowDurations = Utils.timeDurationsToSparkDuration(windowDuration);
+        Duration slideDurations = Utils.timeDurationsToSparkDuration(slideDuration);
+        JavaPairDStream<K, V> cumulateStream = pairDStream.reduceByKeyAndWindow(new ReduceFunctionImpl<V>(fun), windowDurations, slideDurations);
+        return new SparkPairWorkloadOperator<>(cumulateStream);
+    }
+
 
     @Override
     public WindowedPairWorkloadOperator<K,V> window(TimeDurations windowDuration) {

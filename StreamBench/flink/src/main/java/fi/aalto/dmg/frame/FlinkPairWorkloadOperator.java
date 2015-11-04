@@ -50,6 +50,20 @@ public class FlinkPairWorkloadOperator<K,V> extends FlinkWorkloadOperator<Tuple2
     }
 
     @Override
+    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(final ReduceFunction<V> fun, TimeDurations windowDuration, TimeDurations slideDuration) {
+        DataStream<Tuple2<K, V>> newDataStream = dataStream.groupBy(0).window(Time.of(windowDuration.getLength(), windowDuration.getUnit()))
+                .every(Time.of(slideDuration.getLength(), slideDuration.getUnit()))
+                .reduceWindow(new org.apache.flink.api.common.functions.ReduceFunction<Tuple2<K, V>>() {
+                    @Override
+                    public Tuple2<K, V> reduce(Tuple2<K, V> t1, Tuple2<K, V> t2) throws Exception {
+                        V result = fun.reduce(t1._2(), t2._2());
+                        return new Tuple2<>(t1._1(), result);
+                    }
+                }).flatten();
+        return new FlinkPairWorkloadOperator<>(newDataStream);
+    }
+
+    @Override
     public WindowedPairWorkloadOperator<K,V> window(TimeDurations windowDuration) {
         return window(windowDuration, windowDuration);
     }

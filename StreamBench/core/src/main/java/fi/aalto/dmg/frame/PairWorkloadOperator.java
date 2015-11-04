@@ -18,9 +18,10 @@ public interface PairWorkloadOperator<K, V> extends WorkloadOperator<Tuple2<K,V>
 
     PairWorkloadOperator<K, V> updateStateByKey(UpdateStateFunction<V> fun, String componentId);
 
+    PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, TimeDurations windowDuration, TimeDurations slideDuration);
+
     @Override
     WindowedPairWorkloadOperator<K, V> window(TimeDurations windowDuration);
-
     @Override
     WindowedPairWorkloadOperator<K, V> window(TimeDurations windowDuration, TimeDurations slideDuration);
 

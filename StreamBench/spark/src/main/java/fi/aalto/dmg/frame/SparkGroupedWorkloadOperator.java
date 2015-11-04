@@ -24,16 +24,4 @@ public class SparkGroupedWorkloadOperator<K,V> implements GroupedWorkloadOperato
         return new SparkPairWorkloadOperator<>(newStream);
     }
 
-    @Override
-    public WindowedPairWorkloadOperator<K, V> window(TimeDurations windowDuration) {
-        return window(windowDuration, windowDuration);
-    }
-
-    @Override
-    public WindowedPairWorkloadOperator<K, V> window(TimeDurations windowDuration, TimeDurations slideDuration) {
-        Duration windowDurations = Utils.timeDurationsToSparkDuration(windowDuration);
-        Duration slideDurations = Utils.timeDurationsToSparkDuration(slideDuration);
-        JavaPairDStream<K, Iterable<V>> windowedStream = pairDStream.window(windowDurations, slideDurations);
-        return new SparkWindowedPairWorkloadOperator<>(windowedStream);
-    }
 }

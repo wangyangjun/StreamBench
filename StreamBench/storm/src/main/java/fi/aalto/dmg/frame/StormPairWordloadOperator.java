@@ -6,6 +6,7 @@ import fi.aalto.dmg.frame.bolts.GroupedReduceBolt;
 import fi.aalto.dmg.frame.bolts.PairPrintBolt;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
 import fi.aalto.dmg.frame.functions.UpdateStateFunction;
+import fi.aalto.dmg.util.TimeDurations;
 import scala.Tuple2;
 
 /**
@@ -33,6 +34,11 @@ public class StormPairWordloadOperator<K, V> extends StormWorkloadOperator<Tuple
     @Override
     public PairWorkloadOperator<K, V> updateStateByKey(UpdateStateFunction<V> fun, String componentId) {
         return this;
+    }
+
+    @Override
+    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, TimeDurations windowDuration, TimeDurations slideDuration) {
+        return null;
     }
 
     @Override

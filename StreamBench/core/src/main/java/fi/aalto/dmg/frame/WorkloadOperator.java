@@ -9,19 +9,19 @@ import java.io.Serializable;
  */
 public interface WorkloadOperator<T> extends Serializable {
 
-    // return new WorkloadOperator<R>();
+    /** Map T to R for each entity */
     <R> WorkloadOperator<R> map(MapFunction<T, R> fun, String componentId);
 
-    // return new PairWorkloadOperator<K,V>
+    /** Map T to Pair<K,V>, return PairWorkloadOperator */
     <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId);
 
-    // return new WorkloadOperator<T>();
+    /** reduce on whole stream */
     WorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId);
 
-    // return new WorkloadOperator<T>();
+    /** filter entity if fun(entity) is false */
     WorkloadOperator<T> filter(FilterFunction<T> fun, String componentId);
 
-    // return new WorkloadOperator<R>();
+    /** Map T to iterable<R> */
     <R> WorkloadOperator<R> flatMap(FlatMapFunction<T, R> fun, String componentId);
 
     WindowedWorkloadOperator<T> window(TimeDurations windowDuration);

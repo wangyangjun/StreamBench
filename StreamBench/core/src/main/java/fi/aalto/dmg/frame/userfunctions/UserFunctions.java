@@ -5,7 +5,9 @@ import fi.aalto.dmg.frame.functions.*;
 import scala.Tuple2;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by yangjun.wang on 21/10/15.
@@ -52,6 +54,23 @@ public class UserFunctions {
                 sum += i;
             }
             return Optional.of(sum);
+        }
+    };
+
+    public static MapPartitionFunction<Tuple2<String, Integer>, Tuple2<String, Integer>> localCount = new MapPartitionFunction<Tuple2<String, Integer>, Tuple2<String, Integer>>() {
+        @Override
+        public Iterable<Tuple2<String, Integer>> mapPartition(Iterable<Tuple2<String, Integer>> tuple2s) {
+            Map<String, Tuple2<String, Integer>> map = new HashMap<>();
+            for(Tuple2<String, Integer> tuple2 : tuple2s){
+                String word = tuple2._1();
+                Tuple2<String, Integer> count = map.get(word);
+                if (count == null){
+                    map.put(word, tuple2);
+                } else {
+                    map.put(word, new Tuple2<>(word, count._2() + tuple2._2()));
+                }
+            }
+            return map.values();
         }
     };
 }

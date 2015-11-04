@@ -4,6 +4,7 @@ import fi.aalto.dmg.Workload;
 import fi.aalto.dmg.exceptions.WorkloadException;
 import fi.aalto.dmg.frame.OperatorCreater;
 import fi.aalto.dmg.frame.WorkloadOperator;
+import fi.aalto.dmg.frame.functions.MapPartitionFunction;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
 import fi.aalto.dmg.frame.userfunctions.UserFunctions;
 import fi.aalto.dmg.util.TimeDurations;
@@ -47,10 +48,11 @@ public class WordCountWindowed  extends Workload implements Serializable {
             WorkloadOperator<Tuple2<String, Integer>> counts =
                     operator.flatMap(UserFunctions.splitFlatMap, "spliter")
                             .mapToPair(UserFunctions.mapToStringIntegerPair, "pair")
-                            .groupByKey()
                             .window(new TimeDurations(TimeUnit.SECONDS, 5))
-                            .reduce(tuple2ReduceFunction, "sum");
+                            .mapPartitionToPair(UserFunctions.localCount, "count");
+
             counts.print();
+            // cumulate counts
         }
         catch (Exception e){
             logger.error(e.getMessage());
