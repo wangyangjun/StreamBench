@@ -3,6 +3,8 @@ package fi.aalto.dmg.workloads;
 import fi.aalto.dmg.Workload;
 import fi.aalto.dmg.exceptions.WorkloadException;
 import fi.aalto.dmg.frame.OperatorCreater;
+import fi.aalto.dmg.frame.PairWorkloadOperator;
+import fi.aalto.dmg.frame.WindowedPairWorkloadOperator;
 import fi.aalto.dmg.frame.WorkloadOperator;
 import fi.aalto.dmg.frame.functions.MapPartitionFunction;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
@@ -44,15 +46,33 @@ public class WordCountWindowed  extends Workload implements Serializable {
     @Override
     public void Process() throws WorkloadException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         try {
-//            WorkloadOperator<String> operator = kafkaStreamOperator();
-//            WorkloadOperator<Tuple2<String, Integer>> counts =
-//                    operator.flatMap(UserFunctions.splitFlatMap, "spliter")
-//                            .mapToPair(UserFunctions.mapToStringIntegerPair, "pair")
-//                            .window(new TimeDurations(TimeUnit.SECONDS, 5))
-//                            .mapPartitionToPair(UserFunctions.localCount, "count");
-//
-//            counts.print();
+            /*
+            WorkloadOperator<String> operator = kafkaStreamOperator();
+            WindowedPairWorkloadOperator<String, Integer> counts =
+                    operator.flatMap(UserFunctions.splitFlatMap, "spliter")
+                            .mapToPair(UserFunctions.mapToStringIntegerPair, "pair")
+                            .window(new TimeDurations(TimeUnit.SECONDS, 5))
+                            .reduceByKey(UserFunctions.sumReduce, "sum");
+            //counts.print();
+
+            // Flink lose data
             // cumulate counts
+            PairWorkloadOperator<String, Integer> cumulateCounts =counts.updateStateByKey(UserFunctions.updateStateCount, "cumulate");
+            cumulateCounts.print();
+            */
+
+            WorkloadOperator<String> operator = kafkaStreamOperator();
+            WindowedPairWorkloadOperator<String, Integer> counts =
+                    operator.flatMap(UserFunctions.splitFlatMap, "spliter")
+                            .mapToPair(UserFunctions.mapToStringIntegerPair, "pair")
+                            .reduceByKeyAndWindow(UserFunctions.sumReduce, new TimeDurations(TimeUnit.SECONDS, 5), new TimeDurations(TimeUnit.SECONDS, 5))
+                            ;
+            //counts.print();
+
+            // cumulate counts
+            PairWorkloadOperator<String, Integer> cumulateCounts =counts.updateStateByKey(UserFunctions.updateStateCount, "cumulate");
+            cumulateCounts.print();
+
         }
         catch (Exception e){
             logger.error(e.getMessage());

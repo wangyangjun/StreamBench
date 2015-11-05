@@ -19,8 +19,8 @@ public class FlinkWindowedWorkloadOperator<T> implements WindowedWorkloadOperato
         dataStream = dataStream1;
     }
 
-    public <R> WorkloadOperator<R> mapPartition(final MapPartitionFunction<T, R> fun, String componentId) {
-        DataStream<R> newDataStream = dataStream.mapWindow(new WindowMapFunction<T, R>() {
+    public <R> WindowedWorkloadOperator<R> mapPartition(final MapPartitionFunction<T, R> fun, String componentId) {
+        WindowedDataStream<R> newDataStream = dataStream.mapWindow(new WindowMapFunction<T, R>() {
             @Override
             public void mapWindow(Iterable<T> values, Collector<R> collector) throws Exception {
                 Iterable<R> results = fun.mapPartition(values);
@@ -28,13 +28,13 @@ public class FlinkWindowedWorkloadOperator<T> implements WindowedWorkloadOperato
                     collector.collect(r);
                 }
             }
-        }).flatten();
-        return new FlinkWorkloadOperator<>(newDataStream);
+        });
+        return new FlinkWindowedWorkloadOperator<>(newDataStream);
     }
 
     @Override
-    public <R> WorkloadOperator<R> map(final MapFunction<T, R> fun, String componentId) {
-        DataStream<R> newDataStream = dataStream.mapWindow(new WindowMapFunction<T, R>() {
+    public <R> WindowedWorkloadOperator<R> map(final MapFunction<T, R> fun, String componentId) {
+        WindowedDataStream<R> newDataStream = dataStream.mapWindow(new WindowMapFunction<T, R>() {
             @Override
             public void mapWindow(Iterable<T> values, Collector<R> collector) throws Exception {
                 for(T value : values){
@@ -42,13 +42,13 @@ public class FlinkWindowedWorkloadOperator<T> implements WindowedWorkloadOperato
                     collector.collect(result);
                 }
             }
-        }).flatten();
-        return new FlinkWorkloadOperator<>(newDataStream);
+        });
+        return new FlinkWindowedWorkloadOperator<>(newDataStream);
     }
 
     @Override
-    public WorkloadOperator<T> filter(final FilterFunction<T> fun, String componentId) {
-        DataStream<T> newDataStream = dataStream.mapWindow(new WindowMapFunction<T, T>() {
+    public WindowedWorkloadOperator<T> filter(final FilterFunction<T> fun, String componentId) {
+        WindowedDataStream<T> newDataStream = dataStream.mapWindow(new WindowMapFunction<T, T>() {
             @Override
             public void mapWindow(Iterable<T> values, Collector<T> collector) throws Exception {
                 for(T value : values){
@@ -56,24 +56,24 @@ public class FlinkWindowedWorkloadOperator<T> implements WindowedWorkloadOperato
                         collector.collect(value);
                 }
             }
-        }).flatten();
-        return new FlinkWorkloadOperator<>(newDataStream);
+        });
+        return new FlinkWindowedWorkloadOperator<>(newDataStream);
     }
 
     @Override
-    public WorkloadOperator<T> reduce(final fi.aalto.dmg.frame.functions.ReduceFunction<T> fun, String componentId) {
-        DataStream<T> newDataStream = dataStream.reduceWindow(new ReduceFunction<T>() {
+    public WindowedWorkloadOperator<T> reduce(final fi.aalto.dmg.frame.functions.ReduceFunction<T> fun, String componentId) {
+        WindowedDataStream<T> newDataStream = dataStream.reduceWindow(new ReduceFunction<T>() {
             @Override
             public T reduce(T t, T t1) throws Exception {
                 return fun.reduce(t, t1);
             }
-        }).flatten();
-        return new FlinkWorkloadOperator<>(newDataStream);
+        });
+        return new FlinkWindowedWorkloadOperator<>(newDataStream);
     }
 
     @Override
-    public <K, V> PairWorkloadOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun, String componentId) {
-        DataStream<Tuple2<K,V>> newDataStream = dataStream.mapWindow(new WindowMapFunction<T, Tuple2<K,V>>() {
+    public <K, V> WindowedPairWorkloadOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun, String componentId) {
+        WindowedDataStream<Tuple2<K,V>> newDataStream = dataStream.mapWindow(new WindowMapFunction<T, Tuple2<K,V>>() {
             @Override
             public void mapWindow(Iterable<T> values, Collector<Tuple2<K,V>> collector) throws Exception {
                 for(T value : values){
@@ -81,8 +81,13 @@ public class FlinkWindowedWorkloadOperator<T> implements WindowedWorkloadOperato
                     collector.collect(result);
                 }
             }
-        }).flatten();
-        return new FlinkPairWorkloadOperator<>(newDataStream);
+        });
+        return new FlinkWindowedPairWorkloadOperator<>(newDataStream);
+    }
+
+    @Override
+    public void print() {
+        dataStream.flatten().print();
     }
 
 }

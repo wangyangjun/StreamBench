@@ -25,24 +25,24 @@ public class StreamingWordCount {
         final DataStream<Tuple2<String, Integer>> counts = env
                 .socketTextStream("localhost", 9999)
                 .flatMap(new Splitter())
-                .window(Time.of(5, TimeUnit.SECONDS))
-                .mapWindow(new WindowMapFunction<Tuple2<String,Integer>, Tuple2<String, Integer>>() {
-                    @Override
-                    public void mapWindow(Iterable<Tuple2<String, Integer>> values, Collector<Tuple2<String, Integer>> out) throws Exception {
-
-                    }
-                })
                 .groupBy(0)
+                .window(Time.of(5, TimeUnit.SECONDS))
                 .reduceWindow(new ReduceFunction<Tuple2<String, Integer>>() {
                     @Override
                     public Tuple2<String, Integer> reduce(Tuple2<String, Integer> t0, Tuple2<String, Integer> t1) throws Exception {
-                        return new Tuple2<String, Integer>(t0.f0, t0.f1 + t1.f1);
+                        return new Tuple2<>(t0.f0, t0.f1 + t1.f1);
                     }
                 })
-                .flatten();
+                .flatten().groupBy(0).reduce(new ReduceFunction<Tuple2<String, Integer>>() {
+                    @Override
+                    public Tuple2<String, Integer> reduce(Tuple2<String, Integer> t0, Tuple2<String, Integer> t1) throws Exception {
+                        return new Tuple2<String, Integer>(t0.f0, t0.f1+t1.f1);
+                    }
+                }).print();
 
-        //counts.print();
-        counts.shuffle().groupBy(0).sum(1).print();
+        // counts.print();
+        // UpdateStateByKey
+        // counts.groupBy(0).sum(1).print();
         env.execute("Socket Stream WordCount");
 
 

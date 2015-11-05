@@ -86,14 +86,23 @@ public class FlinkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
         return new FlinkPairWorkloadOperator<>(newDataStream);
     }
 
-
+    /**
+     * Whether is windowed stream?
+     * @param fun
+     * @param componentId
+     * @return
+     */
     public PairWorkloadOperator<K, V> updateStateByKey(UpdateStateFunction<V> fun, String componentId) {
         return this;
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(final ReduceFunction<V> fun, TimeDurations windowDuration, TimeDurations slideDuration) {
-        DataStream<Tuple2<K, V>> newDataStream = dataStream.groupBy(0).window(Time.of(windowDuration.getLength(), windowDuration.getUnit()))
+    public WindowedPairWorkloadOperator<K, V> reduceByKeyAndWindow(final ReduceFunction<V> fun, TimeDurations windowDuration, TimeDurations slideDuration) {
+        WindowedDataStream<Tuple2<K, V>> newDataStream = dataStream.groupBy(new KeySelector<Tuple2<K, V>, K>() {
+            public K getKey(Tuple2<K, V> tuple2) throws Exception {
+                return tuple2._1();
+            }
+        }).window(Time.of(windowDuration.getLength(), windowDuration.getUnit()))
                 .every(Time.of(slideDuration.getLength(), slideDuration.getUnit()))
                 .reduceWindow(new org.apache.flink.api.common.functions.ReduceFunction<Tuple2<K, V>>() {
                     @Override
@@ -101,8 +110,8 @@ public class FlinkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
                         V result = fun.reduce(t1._2(), t2._2());
                         return new Tuple2<>(t1._1(), result);
                     }
-                }).flatten();
-        return new FlinkPairWorkloadOperator<>(newDataStream);
+                });
+        return new FlinkWindowedPairWorkloadOperator<>(newDataStream);
     }
 
     @Override

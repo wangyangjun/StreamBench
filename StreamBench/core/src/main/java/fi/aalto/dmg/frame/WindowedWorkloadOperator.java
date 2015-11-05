@@ -10,18 +10,19 @@ import java.io.Serializable;
 public interface WindowedWorkloadOperator<T> extends Serializable {
 
     // return WorkloadOperator<R>
-    <R> WorkloadOperator<R> mapPartition(MapPartitionFunction<T, R> fun, String componentId);
+    <R> WindowedWorkloadOperator<R> mapPartition(MapPartitionFunction<T, R> fun, String componentId);
 
     // return new WorkloadOperator<R>();
-    <R> WorkloadOperator<R> map(MapFunction<T, R> fun, String componentId);
+    <R> WindowedWorkloadOperator<R> map(MapFunction<T, R> fun, String componentId);
 
     // return new WorkloadOperator<T>();
-    WorkloadOperator<T> filter(FilterFunction<T> fun, String componentId);
+    WindowedWorkloadOperator<T> filter(FilterFunction<T> fun, String componentId);
 
     // return new WorkloadOperator<T>();
-    WorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId);
+    WindowedWorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId);
 
     // return new PairWorkloadOperator<K,V>
-    <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId);
+    <K, V> WindowedPairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId);
 
+    void print();
 }

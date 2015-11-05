@@ -20,38 +20,40 @@ public class SparkWindowedPairWorkloadOperator<K,V> implements WindowedPairWorkl
     }
 
     @Override
-    public GroupedWorkloadOperator<K, V> groupByKey() {
-        return null;
-    }
-
-    @Override
-    public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId) {
-        return null;
+    public WindowedPairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId) {
+        JavaPairDStream<K,V> newStream = this.pairDStream.reduceByKey(new ReduceFunctionImpl<>(fun));
+        return new SparkWindowedPairWorkloadOperator<>(newStream);
     }
 
     @Override
     public PairWorkloadOperator<K, V> updateStateByKey(UpdateStateFunction<V> fun, String componentId) {
-        return null;
+        JavaPairDStream<K, V> cumulateStream = this.pairDStream.updateStateByKey(new UpdateStateFunctionImpl<>(fun));
+        return new SparkPairWorkloadOperator<>(cumulateStream);
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId) {
+    public <R> WindowedPairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId) {
         JavaPairDStream<K,R> newStream = pairDStream.mapPartitionsToPair(new PairMapPartitionFunctionImpl<>(fun));
-        return new SparkPairWorkloadOperator<>(newStream);
+        return new SparkWindowedPairWorkloadOperator<>(newStream);
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> map(MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId) {
+    public <R> WindowedPairWorkloadOperator<K, R> mapValue(MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId) {
         return null;
     }
 
     @Override
-    public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId) {
+    public WindowedPairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId) {
         return null;
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduce(ReduceFunction<Tuple2<K, V>> fun, String componentId) {
+    public WindowedPairWorkloadOperator<K, V> reduce(ReduceFunction<Tuple2<K, V>> fun, String componentId) {
         return null;
+    }
+
+    @Override
+    public void print() {
+        pairDStream.print();
     }
 }

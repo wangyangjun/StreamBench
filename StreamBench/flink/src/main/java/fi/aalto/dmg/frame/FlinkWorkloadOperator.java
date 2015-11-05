@@ -20,6 +20,7 @@ import scala.Tuple2;
 public class FlinkWorkloadOperator<T> extends OperatorBase implements WorkloadOperator<T> {
     protected DataStream<T> dataStream;
 
+
     public FlinkWorkloadOperator(DataStream<T> dataSet1){
         dataStream = dataSet1;
     }
