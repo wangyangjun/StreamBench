@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * Created by jun on 11/3/15.
  */
-public interface WindowedPairWorkloadOperator<K,V> extends WindowedWorkloadOperator<Tuple2<K,V>>, Serializable {
+public interface WindowedPairWorkloadOperator<K,V> extends Serializable {
 
     /**
      * Spark groupByKey return <K, Iterable<V>>, avoid use groupByKey
@@ -32,7 +32,15 @@ public interface WindowedPairWorkloadOperator<K,V> extends WindowedWorkloadOpera
     PairWorkloadOperator<K, V> updateStateByKey(UpdateStateFunction<V> fun, String componentId);
 
     // return WorkloadOperator<R>
-    <R> PairWorkloadOperator<K, R> mapPartitionToPair(MapPartitionFunction<Tuple2<K,V>, Tuple2<K,R>> fun, String componentId);
+    <R> PairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K,V>, Tuple2<K,R>> fun, String componentId);
 
-    // TODO: new APIs filter, mapValue
+    // return new WorkloadOperator<R>();
+    <R> PairWorkloadOperator<K, R> map(MapFunction<Tuple2<K,V>, Tuple2<K,R>> fun, String componentId);
+
+    // return new WorkloadOperator<T>();
+    PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K,V>> fun, String componentId);
+
+    // return new WorkloadOperator<T>();
+    PairWorkloadOperator<K, V> reduce(ReduceFunction<Tuple2<K,V>> fun, String componentId);
+
 }

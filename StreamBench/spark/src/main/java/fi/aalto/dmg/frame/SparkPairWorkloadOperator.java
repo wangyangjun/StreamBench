@@ -13,12 +13,11 @@ import scala.Tuple2;
 /**
  * Created by yangjun.wang on 24/10/15.
  */
-public class SparkPairWorkloadOperator<K,V> extends SparkWorkloadOperator<Tuple2<K,V>> implements PairWorkloadOperator<K,V> {
+public class SparkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V> {
 
     private JavaPairDStream<K,V> pairDStream;
 
     public SparkPairWorkloadOperator(JavaPairDStream<K, V> stream){
-        super(stream.toJavaDStream());
         this.pairDStream = stream;
     }
 
@@ -31,6 +30,24 @@ public class SparkPairWorkloadOperator<K,V> extends SparkWorkloadOperator<Tuple2
     @Override
     public PairWorkloadOperator<K, V> reduceByKey(final ReduceFunction<V> fun, String componentId) {
         JavaPairDStream<K,V> newStream = pairDStream.reduceByKey(new ReduceFunctionImpl<>(fun));
+        return new SparkPairWorkloadOperator<>(newStream);
+    }
+
+    @Override
+    public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<V, R> fun, String componentId) {
+        JavaPairDStream<K,R> newStream = pairDStream.mapValues(new FunctionImpl<>(fun));
+        return new SparkPairWorkloadOperator<>(newStream);
+    }
+
+    @Override
+    public <R> PairWorkloadOperator<K, R> flatMapValue(FlatMapFunction<V, R> fun, String componentId) {
+        JavaPairDStream<K,R> newStream = pairDStream.flatMapValues(new FlatMapValuesFunctionImpl<>(fun));
+        return new SparkPairWorkloadOperator<>(newStream);
+    }
+
+    @Override
+    public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId) {
+        JavaPairDStream<K,V> newStream = pairDStream.filter(new FilterFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(newStream);
     }
 
@@ -60,6 +77,11 @@ public class SparkPairWorkloadOperator<K,V> extends SparkWorkloadOperator<Tuple2
         Duration slideDurations = Utils.timeDurationsToSparkDuration(slideDuration);
         JavaPairDStream<K, V> windowedStream = pairDStream.window(windowDurations, slideDurations);
         return new SparkWindowedPairWorkloadOperator<>(windowedStream);
+    }
+
+    @Override
+    public void print() {
+        this.pairDStream.print();
     }
 }
 

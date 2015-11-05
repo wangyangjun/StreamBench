@@ -44,14 +44,14 @@ public class WordCountWindowed  extends Workload implements Serializable {
     @Override
     public void Process() throws WorkloadException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         try {
-            WorkloadOperator<String> operator = kafkaStreamOperator();
-            WorkloadOperator<Tuple2<String, Integer>> counts =
-                    operator.flatMap(UserFunctions.splitFlatMap, "spliter")
-                            .mapToPair(UserFunctions.mapToStringIntegerPair, "pair")
-                            .window(new TimeDurations(TimeUnit.SECONDS, 5))
-                            .mapPartitionToPair(UserFunctions.localCount, "count");
-
-            counts.print();
+//            WorkloadOperator<String> operator = kafkaStreamOperator();
+//            WorkloadOperator<Tuple2<String, Integer>> counts =
+//                    operator.flatMap(UserFunctions.splitFlatMap, "spliter")
+//                            .mapToPair(UserFunctions.mapToStringIntegerPair, "pair")
+//                            .window(new TimeDurations(TimeUnit.SECONDS, 5))
+//                            .mapPartitionToPair(UserFunctions.localCount, "count");
+//
+//            counts.print();
             // cumulate counts
         }
         catch (Exception e){

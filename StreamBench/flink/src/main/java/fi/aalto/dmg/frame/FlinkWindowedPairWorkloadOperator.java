@@ -1,8 +1,6 @@
 package fi.aalto.dmg.frame;
 
-import fi.aalto.dmg.frame.functions.MapPartitionFunction;
-import fi.aalto.dmg.frame.functions.ReduceFunction;
-import fi.aalto.dmg.frame.functions.UpdateStateFunction;
+import fi.aalto.dmg.frame.functions.*;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.WindowedDataStream;
 import org.apache.flink.streaming.api.functions.WindowMapFunction;
@@ -12,10 +10,12 @@ import scala.Tuple2;
 /**
  * Created by jun on 11/3/15.
  */
-public class FlinkWindowedPairWorkloadOperator<K,V>
-        extends FlinkWindowedWorkloadOperator<Tuple2<K,V>> implements WindowedPairWorkloadOperator<K,V>{
+public class FlinkWindowedPairWorkloadOperator<K,V> implements WindowedPairWorkloadOperator<K,V>{
+
+    protected WindowedDataStream<Tuple2<K,V>> dataStream;
+
     public FlinkWindowedPairWorkloadOperator(WindowedDataStream<Tuple2<K, V>> dataStream1) {
-        super(dataStream1);
+        this.dataStream = dataStream1;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class FlinkWindowedPairWorkloadOperator<K,V>
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> mapPartitionToPair(final MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId) {
+    public <R> PairWorkloadOperator<K, R> mapPartition(final MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId) {
         DataStream<Tuple2<K,R>> newDataStream = dataStream.mapWindow(new WindowMapFunction<Tuple2<K,V>, Tuple2<K,R>>() {
             @Override
             public void mapWindow(Iterable<Tuple2<K, V>> values, Collector<Tuple2<K, R>> collector) throws Exception {
@@ -45,5 +45,20 @@ public class FlinkWindowedPairWorkloadOperator<K,V>
             }
         }).flatten();
         return new FlinkPairWorkloadOperator<>(newDataStream);
+    }
+
+    @Override
+    public <R> PairWorkloadOperator<K, R> map(MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId) {
+        return null;
+    }
+
+    @Override
+    public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId) {
+        return null;
+    }
+
+    @Override
+    public PairWorkloadOperator<K, V> reduce(ReduceFunction<Tuple2<K, V>> fun, String componentId) {
+        return null;
     }
 }

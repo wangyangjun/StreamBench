@@ -11,12 +11,11 @@ import java.util.Iterator;
 /**
  * Created by jun on 11/3/15.
  */
-public class SparkWindowedPairWorkloadOperator<K,V> extends SparkWindowedWorkloadOperator<Tuple2<K,V>> implements WindowedPairWorkloadOperator<K,V> {
+public class SparkWindowedPairWorkloadOperator<K,V> implements WindowedPairWorkloadOperator<K,V> {
 
     private JavaPairDStream<K,V> pairDStream;
 
     public SparkWindowedPairWorkloadOperator(JavaPairDStream<K, V> stream) {
-        super(stream.toJavaDStream());
         this.pairDStream = stream;
     }
 
@@ -36,8 +35,23 @@ public class SparkWindowedPairWorkloadOperator<K,V> extends SparkWindowedWorkloa
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> mapPartitionToPair(MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId) {
+    public <R> PairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId) {
         JavaPairDStream<K,R> newStream = pairDStream.mapPartitionsToPair(new PairMapPartitionFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(newStream);
+    }
+
+    @Override
+    public <R> PairWorkloadOperator<K, R> map(MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId) {
+        return null;
+    }
+
+    @Override
+    public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId) {
+        return null;
+    }
+
+    @Override
+    public PairWorkloadOperator<K, V> reduce(ReduceFunction<Tuple2<K, V>> fun, String componentId) {
+        return null;
     }
 }
