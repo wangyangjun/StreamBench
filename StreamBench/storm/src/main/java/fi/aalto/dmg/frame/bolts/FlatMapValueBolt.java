@@ -11,34 +11,34 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by yangjun.wang on 01/11/15.
+ * Created by jun on 11/9/15.
  */
-public class FlatMapBolt<T, R> extends BaseBasicBolt {
+public class FlatMapValueBolt<V, R> extends BaseBasicBolt {
 
-    private static final Logger logger = LoggerFactory.getLogger(FlatMapBolt.class);
-    FlatMapFunction<T, R> fun;
+    private static final Logger logger = LoggerFactory.getLogger(FlatMapValueBolt.class);
+    FlatMapFunction<V, R> fun;
 
-    public FlatMapBolt(FlatMapFunction<T, R> function){
+    public FlatMapValueBolt(FlatMapFunction<V, R> function){
         this.fun = function;
     }
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
-        Object o = input.getValue(0);
+        Object o = input.getValue(1);
         try {
-            Iterable<R> results = this.fun.flatMap((T) o);
+            Iterable<R> results = this.fun.flatMap((V) o);
             for(R r : results){
-                collector.emit(new Values(r));
+                collector.emit(new Values(input.getValue(0), r));
             }
         } catch (ClassCastException e){
-            logger.error("Cast tuple[0] failed");
+            logger.error("Cast tuple[1] failed");
         } catch (Exception e) {
             logger.error("execute exception: " + e.toString());
         }
     }
 
     @Override
-    public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields(BoltConstants.OutputValueField));
+    public void declareOutputFields(OutputFieldsDeclarer collector) {
+        collector.declare(new Fields(BoltConstants.OutputKeyField, BoltConstants.OutputValueField));
     }
 }

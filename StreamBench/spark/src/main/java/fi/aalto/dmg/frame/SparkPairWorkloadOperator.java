@@ -58,7 +58,7 @@ public class SparkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
     }
 
     @Override
-    public WindowedPairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, TimeDurations windowDuration, TimeDurations slideDuration) {
+    public WindowedPairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration, TimeDurations slideDuration) {
         Duration windowDurations = Utils.timeDurationsToSparkDuration(windowDuration);
         Duration slideDurations = Utils.timeDurationsToSparkDuration(slideDuration);
         JavaPairDStream<K, V> cumulateStream = pairDStream.reduceByKeyAndWindow(new ReduceFunctionImpl<V>(fun), windowDurations, slideDurations);

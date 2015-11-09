@@ -24,7 +24,7 @@ public interface PairWorkloadOperator<K, V> extends Serializable{
 
     PairWorkloadOperator<K, V> updateStateByKey(UpdateStateFunction<V> fun, String componentId);
 
-    WindowedPairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, TimeDurations windowDuration, TimeDurations slideDuration);
+    WindowedPairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration, TimeDurations slideDuration);
 
     WindowedPairWorkloadOperator<K, V> window(TimeDurations windowDuration);
 

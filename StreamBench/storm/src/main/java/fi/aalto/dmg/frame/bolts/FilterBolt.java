@@ -40,6 +40,6 @@ public class FilterBolt<T> extends BaseBasicBolt {
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields());
+        declarer.declare(new Fields(BoltConstants.OutputValueField));
     }
 }

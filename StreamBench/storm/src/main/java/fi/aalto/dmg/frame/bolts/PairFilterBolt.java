@@ -6,31 +6,38 @@ import backtype.storm.topology.base.BaseBasicBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
-import fi.aalto.dmg.frame.functions.MapPairFunction;
-import scala.Tuple2;
+import fi.aalto.dmg.frame.functions.FilterFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scala.Tuple2;
+
 
 /**
- * Created by yangjun.wang on 31/10/15.
+ * Created by jun on 11/9/15.
  */
-public class MapToPairBolt<T, K, V> extends BaseBasicBolt {
-    private static final Logger logger = LoggerFactory.getLogger(MapToPairBolt.class);
 
-    MapPairFunction<T, K, V> fun;
+public class PairFilterBolt<K,V> extends BaseBasicBolt {
 
-    public MapToPairBolt(MapPairFunction<T, K, V> function){
+    private static final Logger logger = LoggerFactory.getLogger(FilterBolt.class);
+    FilterFunction<Tuple2<K,V>> fun;
+
+    public PairFilterBolt(FilterFunction<Tuple2<K, V>> function){
         this.fun = function;
     }
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
-        Object o = input.getValue(0);
+        Object k = input.getValue(0);
+        Object v = input.getValue(1);
         try {
-            Tuple2<K,V> result = this.fun.mapPair((T) o);
-            collector.emit(new Values(result._1(), result._2()));
+            if(this.fun.filter(new Tuple2<>((K) k, (V) v))){
+                collector.emit(new Values(k, v));
+            }
         } catch (ClassCastException e){
-            logger.error("Cast tuple[0] failed");
+            logger.error("Cast tuple failed");
+        } catch (Exception e) {
+            e.printStackTrace();
+            // logger.error("execute exception: " + e.toString());
         }
     }
 

@@ -3,6 +3,7 @@ package fi.aalto.dmg.frame;
 import backtype.storm.topology.TopologyBuilder;
 import fi.aalto.dmg.frame.bolts.*;
 import fi.aalto.dmg.frame.functions.*;
+import fi.aalto.dmg.util.TimeDurations;
 
 /**
  * Created by yangjun.wang on 31/10/15.
@@ -44,6 +45,16 @@ public class StormWorkloadOperator<T> extends OperatorBase implements WorkloadOp
     public <R> WorkloadOperator<R> flatMap(FlatMapFunction<T, R> fun, String componentId) {
         topologyBuilder.setBolt(componentId, new FlatMapBolt<>(fun)).localOrShuffleGrouping(preComponentId);
         return new StormWorkloadOperator<>(topologyBuilder, componentId);
+    }
+
+    @Override
+    public WindowedWorkloadOperator<T> window(TimeDurations windowDuration) {
+        return window(windowDuration, windowDuration);
+    }
+
+    @Override
+    public WindowedWorkloadOperator<T> window(TimeDurations windowDuration, TimeDurations slideDuration) {
+        return new StormWindowedWorkloadOperator<T>(topologyBuilder, preComponentId, windowDuration, slideDuration);
     }
 
     @Override

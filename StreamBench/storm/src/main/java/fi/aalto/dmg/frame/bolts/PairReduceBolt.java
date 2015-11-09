@@ -10,31 +10,38 @@ import fi.aalto.dmg.frame.functions.ReduceFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * Created by yangjun.wang on 31/10/15.
+ * Created by yangjun.wang on 01/11/15.
  */
-public class ReduceBolt<T> extends BaseBasicBolt {
+public class PairReduceBolt<K,V> extends BaseBasicBolt {
 
-    private static final Logger logger = LoggerFactory.getLogger(ReduceBolt.class);
-    private T currentValue;
+    private static final Logger logger = LoggerFactory.getLogger(PairReduceBolt.class);
+    private Map<K, V> map;
 
-    ReduceFunction<T> fun;
+    ReduceFunction<V> fun;
 
-    public ReduceBolt(ReduceFunction<T> function){
+    public PairReduceBolt(ReduceFunction<V> function){
         this.fun = function;
-        this.currentValue = null;
+        map = new HashMap<>();
     }
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
-        Object o = input.getValue(0);
+        Object k = input.getValue(0);
+        Object v = input.getValue(1);
+        V currentValue = map.get(k);
         try {
+            K key = (K)k;
             if(null != currentValue){
-                currentValue = this.fun.reduce((T) o, currentValue);
+                currentValue = this.fun.reduce((V) v, currentValue);
             } else {
-                currentValue = (T)o;
+                currentValue = (V)v;
             }
-            collector.emit(new Values(currentValue));
+            map.put(key, currentValue);
+            collector.emit(new Values(key, currentValue));
         } catch (ClassCastException e){
             logger.error("Cast tuple[0] failed");
         } catch (Exception e) {
@@ -45,6 +52,6 @@ public class ReduceBolt<T> extends BaseBasicBolt {
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields(BoltConstants.OutputValueField));
+        declarer.declare(new Fields(BoltConstants.OutputKeyField, BoltConstants.OutputValueField));
     }
 }
