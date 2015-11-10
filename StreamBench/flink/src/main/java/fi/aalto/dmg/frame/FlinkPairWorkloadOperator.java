@@ -97,6 +97,11 @@ public class FlinkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
     }
 
     @Override
+    public WindowedPairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration) {
+        return reduceByKeyAndWindow(fun, componentId, windowDuration, windowDuration);
+    }
+
+    @Override
     public WindowedPairWorkloadOperator<K, V> reduceByKeyAndWindow(final ReduceFunction<V> fun, String componentId, TimeDurations windowDuration, TimeDurations slideDuration) {
         WindowedDataStream<Tuple2<K, V>> newDataStream = dataStream.groupBy(new KeySelector<Tuple2<K, V>, K>() {
             public K getKey(Tuple2<K, V> tuple2) throws Exception {

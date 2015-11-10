@@ -176,6 +176,5 @@
     <orderEntry type="library" name="Maven: de.javakaffee:kryo-serializers:0.27" level="project" />
     <orderEntry type="library" name="Maven: joda-time:joda-time:2.5" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:3.8.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.kafka:kafka_2.10:0.8.2.2" level="project" />
   </component>
 </module>

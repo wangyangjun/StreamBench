@@ -3,10 +3,7 @@ package fi.aalto.dmg.frame;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.tuple.Fields;
 import fi.aalto.dmg.exceptions.DurationException;
-import fi.aalto.dmg.frame.bolts.BoltConstants;
-import fi.aalto.dmg.frame.bolts.PairReduceBolt;
-import fi.aalto.dmg.frame.bolts.UpdateStateBolt;
-import fi.aalto.dmg.frame.bolts.WindowPairReduceBolt;
+import fi.aalto.dmg.frame.bolts.*;
 import fi.aalto.dmg.frame.functions.*;
 import fi.aalto.dmg.util.TimeDurations;
 import scala.Tuple2;
@@ -69,6 +66,6 @@ public class StormWindowedPairWorkloadOperator <K,V> implements WindowedPairWork
 
     @Override
     public void print() {
-
+        topologyBuilder.setBolt("print", new PairPrintBolt<>()).localOrShuffleGrouping(preComponentId);
     }
 }
