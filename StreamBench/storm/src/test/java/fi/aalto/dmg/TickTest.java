@@ -40,9 +40,10 @@ public class TickTest  {
 
         builder.setSpout("spout", new KafkaSpout(spoutConfig));
         builder.setBolt("split", new SplitSentence()).shuffleGrouping("spout");
-        builder.setBolt("counter", new CounterBolt()).shuffleGrouping("split");
+        builder.setBolt("counter", new CounterBolt(), 2).shuffleGrouping("split");
         builder.setBolt("aggregator", new AggregatorBolt(), 1)
-                .fieldsGrouping("counter", Utils.DEFAULT_STREAM_ID, new Fields("word"));
+                .fieldsGrouping("counter", Utils.DEFAULT_STREAM_ID, new Fields("word"))
+                .allGrouping("counter", "tick");
 
         Config conf = new Config();
         conf.setDebug(true);
@@ -146,12 +147,6 @@ public class TickTest  {
             declarer.declare(new Fields("word", "count"));
         }
 
-        @Override
-        public Map<String, Object> getComponentConfiguration() {
-            Config conf = new Config();
-            conf.put(Config.TOPOLOGY_TICK_TUPLE_FREQ_SECS, 2);
-            return conf;
-        }
 
         private static boolean isTickTuple(Tuple tuple){
             return (tuple.getSourceComponent().equals(Constants.SYSTEM_COMPONENT_ID)
