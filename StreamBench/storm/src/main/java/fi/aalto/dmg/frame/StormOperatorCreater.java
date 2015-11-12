@@ -1,7 +1,6 @@
 package fi.aalto.dmg.frame;
 
 import backtype.storm.LocalCluster;
-import backtype.storm.StormSubmitter;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -9,8 +8,6 @@ import java.util.Properties;
 import java.util.UUID;
 
 import backtype.storm.Config;
-import backtype.storm.generated.AlreadyAliveException;
-import backtype.storm.generated.InvalidTopologyException;
 import backtype.storm.spout.SchemeAsMultiScheme;
 import backtype.storm.topology.TopologyBuilder;
 import storm.kafka.*;
@@ -44,7 +41,7 @@ public class StormOperatorCreater extends OperatorCreater implements Serializabl
         spoutConfig.forceFromStart = true;
 
         topologyBuilder.setSpout("spout", new KafkaSpout(spoutConfig));
-        return new StormWorkloadOperator<>(topologyBuilder, "spout");
+        return new StormOperator<>(topologyBuilder, "spout");
     }
 
     @Override

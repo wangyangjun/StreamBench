@@ -4,6 +4,9 @@ package fi.aalto.dmg.util;
  * Created by jun on 11/9/15.
  */
 public class Utils {
+
+
+
     public static long getSeconds(TimeDurations durations){
         long seconds = 0L;
         switch (durations.getUnit()){

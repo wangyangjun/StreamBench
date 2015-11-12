@@ -21,7 +21,9 @@ public class PairPrintBolt<T> extends BaseBasicBolt {
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
-        logger.error(input.getValue(0).toString() + "\t" + input.getValue(1).toString());
+        logger.error(input.getValue(0).toString()
+                + "\t" + input.getValue(1).toString()
+                + "\t" + input.getValue(2).toString());
     }
 
     @Override

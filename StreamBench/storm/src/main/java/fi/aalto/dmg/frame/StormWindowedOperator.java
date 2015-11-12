@@ -2,22 +2,26 @@ package fi.aalto.dmg.frame;
 
 import backtype.storm.topology.TopologyBuilder;
 import fi.aalto.dmg.exceptions.DurationException;
-import fi.aalto.dmg.frame.bolts.ReduceBolt;
-import fi.aalto.dmg.frame.bolts.WindowReduceBolt;
+import fi.aalto.dmg.frame.bolts.windowed.WindowReduceBolt;
 import fi.aalto.dmg.frame.functions.*;
 import fi.aalto.dmg.util.TimeDurations;
 
 /**
  * Created by jun on 11/9/15.
  */
-public class StormWindowedWorkloadOperator<T> implements WindowedWorkloadOperator<T>  {
+public class StormWindowedOperator<T> implements WindowedWorkloadOperator<T>  {
 
-    private TopologyBuilder topologyBuilder;
-    private String preComponentId;
+    protected TopologyBuilder topologyBuilder;
+    protected String preComponentId;
     private TimeDurations windowDuration;
     private TimeDurations slideDuration;
 
-    public StormWindowedWorkloadOperator(TopologyBuilder builder, String previousComponent, TimeDurations windowDuration, TimeDurations slideDuration) {
+    public StormWindowedOperator(TopologyBuilder builder, String previousComponent) {
+        this.topologyBuilder = builder;
+        this.preComponentId = previousComponent;
+    }
+
+    public StormWindowedOperator(TopologyBuilder builder, String previousComponent, TimeDurations windowDuration, TimeDurations slideDuration) {
         this.topologyBuilder = builder;
         this.preComponentId = previousComponent;
         this.windowDuration = windowDuration;
@@ -47,7 +51,7 @@ public class StormWindowedWorkloadOperator<T> implements WindowedWorkloadOperato
         } catch (DurationException e) {
             e.printStackTrace();
         }
-        return new StormWindowedWorkloadOperator<>(topologyBuilder, componentId, windowDuration, slideDuration);
+        return new StormWindowedOperator<>(topologyBuilder, componentId, windowDuration, slideDuration);
     }
 
     @Override

@@ -6,8 +6,11 @@ import backtype.storm.Constants;
 import backtype.storm.LocalCluster;
 import backtype.storm.StormSubmitter;
 import backtype.storm.generated.AlreadyAliveException;
+import backtype.storm.generated.GlobalStreamId;
+import backtype.storm.generated.Grouping;
 import backtype.storm.generated.InvalidTopologyException;
 import backtype.storm.spout.SchemeAsMultiScheme;
+import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.BasicOutputCollector;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.TopologyBuilder;
@@ -20,6 +23,7 @@ import fi.aalto.dmg.exceptions.WorkloadException;
 import storm.kafka.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -40,7 +44,7 @@ public class TickTest  {
 
         builder.setSpout("spout", new KafkaSpout(spoutConfig));
         builder.setBolt("split", new SplitSentence()).shuffleGrouping("spout");
-        builder.setBolt("counter", new CounterBolt(), 2).shuffleGrouping("split");
+        builder.setBolt("counter", new CounterBolt(), 3).shuffleGrouping("split");
         builder.setBolt("aggregator", new AggregatorBolt(), 1)
                 .fieldsGrouping("counter", Utils.DEFAULT_STREAM_ID, new Fields("word"))
                 .allGrouping("counter", "tick");
@@ -124,6 +128,17 @@ public class TickTest  {
 
     public static class AggregatorBolt extends BaseBasicBolt {
         Map<String, Integer> counts = new HashMap<String, Integer>();
+
+        @Override
+        public void prepare(Map stormConf, TopologyContext context){
+            Map<GlobalStreamId,Grouping> map = context.getThisSources();
+            for( Map.Entry<GlobalStreamId, Grouping> entry : map.entrySet()) {
+                if(entry.getKey().get_streamId().equals(Utils.DEFAULT_STREAM_ID)){
+                    List<Integer> list = context.getComponentTasks(entry.getKey().get_componentId());
+                    System.out.println(list.toString());
+                }
+            }
+        }
 
         @Override
         public void execute(Tuple tuple, BasicOutputCollector collector) {
