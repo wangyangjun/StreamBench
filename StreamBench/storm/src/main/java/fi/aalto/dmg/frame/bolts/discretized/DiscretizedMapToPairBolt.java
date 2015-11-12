@@ -7,9 +7,10 @@ import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import backtype.storm.utils.Utils;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
-import fi.aalto.dmg.frame.functions.MapFunction;
+import fi.aalto.dmg.frame.functions.MapPairFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import scala.Tuple2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,20 +18,20 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by jun on 11/12/15.
+ * Created by jun on 12/11/15.
  */
-public class DiscretizedMapBolt<T, R> extends DiscretizedBolt {
+public class DiscretizedMapToPairBolt<T, K, V> extends DiscretizedBolt {
     private static final Logger logger = LoggerFactory.getLogger(DiscretizedMapBolt.class);
 
-    private Map<Integer, List<R>> slideDataMap;
-    private MapFunction<T, R> fun;
+    private Map<Integer, List<Tuple2<K,V>>> slideDataMap;
+    private MapPairFunction<T, K, V> fun;
 
-    public DiscretizedMapBolt(MapFunction<T, R> function, String preComponentId) {
+    public DiscretizedMapToPairBolt(MapPairFunction<T, K, V> function, String preComponentId) {
         super(preComponentId);
         this.fun = function;
         slideDataMap = new HashMap<>(BUFFER_SLIDES_NUM);
         for(int i=0; i<BUFFER_SLIDES_NUM; ++i){
-            slideDataMap.put(i, new ArrayList<R>());
+            slideDataMap.put(i, new ArrayList<Tuple2<K, V>>());
         }
     }
 
@@ -43,19 +44,19 @@ public class DiscretizedMapBolt<T, R> extends DiscretizedBolt {
         int slideId = tuple.getInteger(0);
         slideId = slideId%BUFFER_SLIDES_NUM;
         T t = (T) tuple.getValue(1);
-        List<R> mapedList = slideDataMap.get(slideId);
-        if(null == mapedList){
-            mapedList = new ArrayList<>();
+        List<Tuple2<K,V>> pariList = slideDataMap.get(slideId);
+        if(null == pariList){
+            pariList = new ArrayList<>();
         }
-        mapedList.add(fun.map(t));
-        slideDataMap.put(slideId, mapedList);
+        pariList.add(fun.mapPair(t));
+        slideDataMap.put(slideId, pariList);
     }
 
     @Override
     public void processSlide(BasicOutputCollector collector, int slideIndex) {
-        List<R> list = slideDataMap.get(slideIndex);
-        for(R r : list) {
-            collector.emit(new Values(slideIndex, r));
+        List<Tuple2<K,V>> list = slideDataMap.get(slideIndex);
+        for(Tuple2<K,V> pair : list) {
+            collector.emit(new Values(slideIndex, pair._1(), pair._2()));
         }
         // clear data
         list.clear();
@@ -65,6 +66,6 @@ public class DiscretizedMapBolt<T, R> extends DiscretizedBolt {
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         super.declareOutputFields(declarer);
         declarer.declareStream(Utils.DEFAULT_STREAM_ID,
-                new Fields(BoltConstants.OutputSlideIdField, BoltConstants.OutputValueField));
+                new Fields(BoltConstants.OutputSlideIdField, BoltConstants.OutputKeyField, BoltConstants.OutputValueField));
     }
 }

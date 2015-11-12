@@ -15,6 +15,7 @@
     <spark.version>1.5.0</spark.version>
     <storm.version>0.9.5</storm.version>
     <flink.version>0.9.1</flink.version>
+    <junit.version>4.4</junit.version>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
   </properties>
@@ -28,7 +29,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

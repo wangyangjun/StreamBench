@@ -7,6 +7,7 @@ import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import backtype.storm.utils.Utils;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
+import fi.aalto.dmg.frame.functions.FilterFunction;
 import fi.aalto.dmg.frame.functions.MapFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,45 +18,48 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by jun on 11/12/15.
+ * Created by jun on 12/11/15.
  */
-public class DiscretizedMapBolt<T, R> extends DiscretizedBolt {
+public class DiscretizedFilterBolt<T> extends DiscretizedBolt {
     private static final Logger logger = LoggerFactory.getLogger(DiscretizedMapBolt.class);
 
-    private Map<Integer, List<R>> slideDataMap;
-    private MapFunction<T, R> fun;
+    private Map<Integer, List<T>> slideDataMap;
+    private FilterFunction<T> fun;
 
-    public DiscretizedMapBolt(MapFunction<T, R> function, String preComponentId) {
+    public DiscretizedFilterBolt(FilterFunction<T> function, String preComponentId) {
         super(preComponentId);
         this.fun = function;
         slideDataMap = new HashMap<>(BUFFER_SLIDES_NUM);
         for(int i=0; i<BUFFER_SLIDES_NUM; ++i){
-            slideDataMap.put(i, new ArrayList<R>());
+            slideDataMap.put(i, new ArrayList<T>());
         }
     }
 
-    /**
-     * determine which slide the tuple belongs to
-     * @param tuple
-     */
     @Override
     public void processTuple(Tuple tuple) {
-        int slideId = tuple.getInteger(0);
-        slideId = slideId%BUFFER_SLIDES_NUM;
-        T t = (T) tuple.getValue(1);
-        List<R> mapedList = slideDataMap.get(slideId);
-        if(null == mapedList){
-            mapedList = new ArrayList<>();
+        try{
+            int slideId = tuple.getInteger(0);
+            slideId = slideId%BUFFER_SLIDES_NUM;
+            T t = (T) tuple.getValue(1);
+            List<T> filterList = slideDataMap.get(slideId);
+            if(null == filterList){
+                filterList = new ArrayList<>();
+
+            }
+            if(fun.filter(t)){
+                filterList.add(t);
+            }
+            slideDataMap.put(slideId, filterList);
+        } catch (Exception e) {
+            logger.error(e.toString());
         }
-        mapedList.add(fun.map(t));
-        slideDataMap.put(slideId, mapedList);
     }
 
     @Override
     public void processSlide(BasicOutputCollector collector, int slideIndex) {
-        List<R> list = slideDataMap.get(slideIndex);
-        for(R r : list) {
-            collector.emit(new Values(slideIndex, r));
+        List<T> list = slideDataMap.get(slideIndex);
+        for(T t : list) {
+            collector.emit(new Values(slideIndex, t));
         }
         // clear data
         list.clear();

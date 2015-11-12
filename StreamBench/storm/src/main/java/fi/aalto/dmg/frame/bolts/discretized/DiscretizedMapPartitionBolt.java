@@ -7,7 +7,7 @@ import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import backtype.storm.utils.Utils;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
-import fi.aalto.dmg.frame.functions.MapFunction;
+import fi.aalto.dmg.frame.functions.MapPartitionFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,20 +17,23 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Map windowed stream in local node
+ * Cumulative or online calculate, MapPartition must be cumulative
  * Created by jun on 11/12/15.
  */
-public class DiscretizedMapBolt<T, R> extends DiscretizedBolt {
+public class DiscretizedMapPartitionBolt<T, R> extends DiscretizedBolt {
     private static final Logger logger = LoggerFactory.getLogger(DiscretizedMapBolt.class);
 
-    private Map<Integer, List<R>> slideDataMap;
-    private MapFunction<T, R> fun;
+    // store received data without any process
+    private Map<Integer, List<T>> slideDataMap;
+    private MapPartitionFunction<T, R> fun;
 
-    public DiscretizedMapBolt(MapFunction<T, R> function, String preComponentId) {
+    public DiscretizedMapPartitionBolt(MapPartitionFunction<T, R> function, String preComponentId) {
         super(preComponentId);
         this.fun = function;
         slideDataMap = new HashMap<>(BUFFER_SLIDES_NUM);
         for(int i=0; i<BUFFER_SLIDES_NUM; ++i){
-            slideDataMap.put(i, new ArrayList<R>());
+            slideDataMap.put(i, new ArrayList<T>());
         }
     }
 
@@ -43,18 +46,19 @@ public class DiscretizedMapBolt<T, R> extends DiscretizedBolt {
         int slideId = tuple.getInteger(0);
         slideId = slideId%BUFFER_SLIDES_NUM;
         T t = (T) tuple.getValue(1);
-        List<R> mapedList = slideDataMap.get(slideId);
+        List<T> mapedList = slideDataMap.get(slideId);
         if(null == mapedList){
             mapedList = new ArrayList<>();
         }
-        mapedList.add(fun.map(t));
+        mapedList.add(t);
         slideDataMap.put(slideId, mapedList);
     }
 
     @Override
     public void processSlide(BasicOutputCollector collector, int slideIndex) {
-        List<R> list = slideDataMap.get(slideIndex);
-        for(R r : list) {
+        List<T> list = slideDataMap.get(slideIndex);
+        Iterable<R> results = fun.mapPartition(list);
+        for(R r : results) {
             collector.emit(new Values(slideIndex, r));
         }
         // clear data
