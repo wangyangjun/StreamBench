@@ -26,7 +26,7 @@ public class SparkWindowedPairWorkloadOperator<K,V> implements WindowedPairWorkl
     }
 
     @Override
-    public PairWorkloadOperator<K, V> updateStateByKey(UpdateStateFunction<V> fun, String componentId) {
+    public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId) {
         JavaPairDStream<K, V> cumulateStream = this.pairDStream.updateStateByKey(new UpdateStateFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(cumulateStream);
     }

@@ -24,7 +24,7 @@ public interface WindowedPairWorkloadOperator<K,V> extends Serializable {
      * @param componentId
      * @return
      */
-    PairWorkloadOperator<K, V> updateStateByKey(UpdateStateFunction<V> fun, String componentId);
+    PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId);
 
     // return WorkloadOperator<R>
     <R> WindowedPairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K,V>, Tuple2<K,R>> fun, String componentId);

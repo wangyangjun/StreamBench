@@ -92,7 +92,7 @@ public class FlinkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
      * @param componentId
      * @return
      */
-    public PairWorkloadOperator<K, V> updateStateByKey(UpdateStateFunction<V> fun, String componentId) {
+    public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId) {
         return this;
     }
 

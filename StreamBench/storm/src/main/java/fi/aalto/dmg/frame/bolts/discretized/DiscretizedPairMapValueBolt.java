@@ -7,28 +7,35 @@ import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import backtype.storm.utils.Utils;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
-import fi.aalto.dmg.frame.functions.ReduceFunction;
+import fi.aalto.dmg.frame.functions.FilterFunction;
+import fi.aalto.dmg.frame.functions.MapFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Created by jun on 11/13/15.
  */
 
-public class DiscretizedPairReduceBolt<K,V> extends DiscretizedBolt {
-    private static final Logger logger = LoggerFactory.getLogger(DiscretizedPairReduceByKeyBolt.class);
-    private ReduceFunction<Tuple2<K, V>> fun;
-    // each slide has corresponding reduced tuple
-    private Map<Integer, Tuple2<K, V>> slideDataMap;
+public class DiscretizedPairMapValueBolt<K, V, R> extends DiscretizedBolt {
+    private static final Logger logger = LoggerFactory.getLogger(DiscretizedMapBolt.class);
 
-    public DiscretizedPairReduceBolt(ReduceFunction<Tuple2<K, V>> function, String preComponentId) {
+    // each slide has a corresponding List<Tuple2<K,R>>
+    private Map<Integer, List<Tuple2<K,R>>> slideDataMap;
+    private MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun;
+
+    public DiscretizedPairMapValueBolt(MapFunction<Tuple2<K, V>, Tuple2<K, R>> function, String preComponentId) {
         super(preComponentId);
         this.fun = function;
         slideDataMap = new HashMap<>(BUFFER_SLIDES_NUM);
+        for(int i=0; i<BUFFER_SLIDES_NUM; ++i){
+            slideDataMap.put(i, new ArrayList<Tuple2<K,R>>());
+        }
     }
 
     @Override
@@ -38,15 +45,13 @@ public class DiscretizedPairReduceBolt<K,V> extends DiscretizedBolt {
             slideId = slideId%BUFFER_SLIDES_NUM;
             K key = (K) tuple.getValue(1);
             V value = (V) tuple.getValue(2);
-            Tuple2<K,V> tuple2 = new Tuple2<>(key, value);
-
-            Tuple2<K, V> slideReducedTuple = slideDataMap.get(slideId);
-            if(null == slideReducedTuple){
-                slideReducedTuple = tuple2;
-            } else {
-                slideReducedTuple = fun.reduce(slideReducedTuple, tuple2);
+            List<Tuple2<K,R>> mapedList = slideDataMap.get(slideId);
+            if(null == mapedList){
+                mapedList = new ArrayList<>();
             }
-            slideDataMap.put(slideId, slideReducedTuple);
+            Tuple2<K,V> t = new Tuple2<>(key, value);
+            mapedList.add(fun.map(t));
+            slideDataMap.put(slideId, mapedList);
         } catch (Exception e) {
             logger.error(e.toString());
         }
@@ -54,10 +59,12 @@ public class DiscretizedPairReduceBolt<K,V> extends DiscretizedBolt {
 
     @Override
     public void processSlide(BasicOutputCollector collector, int slideIndex) {
-        Tuple2<K, V> slideReducedTuple = slideDataMap.get(slideIndex);
-        collector.emit(new Values(slideIndex, slideReducedTuple._1(), slideReducedTuple._2()));
+        List<Tuple2<K,R>> list = slideDataMap.get(slideIndex);
+        for(Tuple2<K,R> t : list) {
+            collector.emit(new Values(slideIndex, t._1(), t._2()));
+        }
         // clear data
-        slideDataMap.put(slideIndex, null);
+        list.clear();
     }
 
     @Override

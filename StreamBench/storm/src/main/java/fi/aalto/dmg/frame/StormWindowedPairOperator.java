@@ -4,7 +4,7 @@ import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.tuple.Fields;
 import fi.aalto.dmg.exceptions.DurationException;
 import fi.aalto.dmg.frame.bolts.*;
-import fi.aalto.dmg.frame.bolts.windowed.WindowPairReduceBolt;
+import fi.aalto.dmg.frame.bolts.windowed.*;
 import fi.aalto.dmg.frame.functions.*;
 import fi.aalto.dmg.util.TimeDurations;
 import scala.Tuple2;
@@ -36,46 +36,74 @@ public class StormWindowedPairOperator<K,V> implements WindowedPairWorkloadOpera
     @Override
     public WindowedPairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId) {
         try {
-            topologyBuilder.setBolt(componentId, new WindowPairReduceBolt<>(fun, windowDuration, slideDuration))
+            topologyBuilder.setBolt(componentId, new WindowPairReduceByKeyBolt<>(fun, windowDuration, slideDuration))
                     .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
         } catch (DurationException e) {
             e.printStackTrace();
         }
-        return new StormWindowedPairOperator<>(topologyBuilder, componentId, windowDuration, slideDuration);
+        return new StormDiscretizedPairOperator<>(topologyBuilder, componentId);
     }
 
+    /**
+     * It seems that no one will call this function
+     * @param fun
+     * @param componentId
+     * @return
+     */
     @Override
-    public PairWorkloadOperator<K, V> updateStateByKey(UpdateStateFunction<V> fun, String componentId) {
-        topologyBuilder.setBolt(componentId, new UpdateStateBolt<>(fun))
-                    .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
-        return new StormPairOperator<>(topologyBuilder, componentId);
+    public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId) {
+//        try {
+//            topologyBuilder.setBolt(componentId, new UpdateStateBolt<>(fun, windowDuration, slideDuration))
+//                    .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
+//        } catch (DurationException e) {
+//            e.printStackTrace();
+//        }
+//        return new StormPairOperator<>(topologyBuilder, componentId);
+        return null;
     }
 
     @Override
     public <R> WindowedPairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId) {
         // set bolt
-
+        try {
+            topologyBuilder.setBolt(componentId, new WindowPairMapPartitionBolt<>(fun, windowDuration, slideDuration))
+                    .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
+        } catch (DurationException e) {
+            e.printStackTrace();
+        }
         return new StormDiscretizedPairOperator<>(topologyBuilder, componentId);
     }
 
     @Override
     public <R> WindowedPairWorkloadOperator<K, R> mapValue(MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId) {
-        // set bolt
-
+        try {
+            topologyBuilder.setBolt(componentId, new WindowMapValueBolt<>(fun, windowDuration, slideDuration))
+                    .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
+        } catch (DurationException e) {
+            e.printStackTrace();
+        }
         return new StormDiscretizedPairOperator<>(topologyBuilder, componentId);
     }
 
     @Override
     public WindowedPairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId) {
-        // set bolt
-
+        try {
+            topologyBuilder.setBolt(componentId, new WindowPairFilterBolt<>(fun, windowDuration, slideDuration))
+                    .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
+        } catch (DurationException e) {
+            e.printStackTrace();
+        }
         return new StormDiscretizedPairOperator<>(topologyBuilder, componentId);
     }
 
     @Override
     public WindowedPairWorkloadOperator<K, V> reduce(ReduceFunction<Tuple2<K, V>> fun, String componentId) {
-        // set bolt
-
+        try {
+            topologyBuilder.setBolt(componentId, new WindowPairReduceBolt<>(fun, windowDuration, slideDuration))
+                    .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
+        } catch (DurationException e) {
+            e.printStackTrace();
+        }
         return new StormDiscretizedPairOperator<>(topologyBuilder, componentId);
     }
 

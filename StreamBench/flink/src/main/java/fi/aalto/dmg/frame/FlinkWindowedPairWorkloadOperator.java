@@ -36,14 +36,14 @@ public class FlinkWindowedPairWorkloadOperator<K,V> implements WindowedPairWorkl
         }).reduceWindow(new org.apache.flink.api.common.functions.ReduceFunction<Tuple2<K, V>>() {
             @Override
             public Tuple2<K, V> reduce(Tuple2<K, V> t1, Tuple2<K, V> t2) throws Exception {
-                return new Tuple2<K, V>(t1._1(), fun.reduce(t1._2(), t2._2()));
+                return new Tuple2<>(t1._1(), fun.reduce(t1._2(), t2._2()));
             }
         });
         return new FlinkWindowedPairWorkloadOperator<>(newDataStream);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> updateStateByKey(final UpdateStateFunction<V> fun, String componentId) {
+    public PairWorkloadOperator<K, V> updateStateByKey(final ReduceFunction<V> fun, String componentId) {
         DataStream<Tuple2<K,V>> newDataStream = this.dataStream.flatten().groupBy(new KeySelector<Tuple2<K, V>, K>() {
             public K getKey(Tuple2<K, V> tuple2) throws Exception {
                 return tuple2._1();
@@ -51,10 +51,7 @@ public class FlinkWindowedPairWorkloadOperator<K,V> implements WindowedPairWorkl
         }).reduce(new org.apache.flink.api.common.functions.ReduceFunction<Tuple2<K, V>>() {
             @Override
             public Tuple2<K, V> reduce(Tuple2<K, V> t0, Tuple2<K, V> t1) throws Exception {
-                Optional<V> optional = Optional.of(t1._2());
-                List<V> list = new ArrayList<V>();
-                list.add(t0._2());
-                return new Tuple2<>(t0._1(), fun.update(list, optional).get());
+                return new Tuple2<>(t0._1(), fun.reduce(t0._2(), t1._2()));
             }
         });
         return new FlinkPairWorkloadOperator<>(newDataStream);

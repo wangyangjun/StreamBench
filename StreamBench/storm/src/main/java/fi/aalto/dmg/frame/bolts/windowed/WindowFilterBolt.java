@@ -7,7 +7,7 @@ import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import fi.aalto.dmg.exceptions.DurationException;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
-import fi.aalto.dmg.frame.functions.ReduceFunction;
+import fi.aalto.dmg.frame.functions.FilterFunction;
 import fi.aalto.dmg.util.TimeDurations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,52 +16,55 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by jun on 11/9/15.
+ * Created by jun on 11/13/15.
  */
-public class WindowReduceBolt<T> extends WindowedBolt {
-    private static final Logger logger = LoggerFactory.getLogger(WindowReduceBolt.class);
+public class WindowFilterBolt<T> extends WindowedBolt {
+    private static final Logger logger = LoggerFactory.getLogger(WindowMapBolt.class);
 
-    // window data structure TODO: replace it with tree
-    private List<T> reduceList;
-    private ReduceFunction<T> fun;
+    // each slide has a corresponding List<R>
+    private List<List<T>> filteredList;
+    private FilterFunction<T> fun;
 
-    public WindowReduceBolt(ReduceFunction<T> function, TimeDurations windowDuration, TimeDurations slideDuration) throws DurationException {
+    public WindowFilterBolt(FilterFunction<T> function, TimeDurations windowDuration, TimeDurations slideDuration) throws DurationException {
         super(windowDuration, slideDuration);
         this.fun = function;
-        reduceList = new ArrayList<>(WINDOW_SIZE);
+        filteredList = new ArrayList<>(WINDOW_SIZE);
+        for(int i=0; i<WINDOW_SIZE; ++i){
+            filteredList.add(i, new ArrayList<T>());
+        }
     }
 
+    /**
+     * added filterd value to current slide
+     * @param tuple
+     */
     @Override
     public void processTuple(Tuple tuple) {
         try{
-            T reduceValue = reduceList.get(sildeInWindow);
+            List<T> list = filteredList.get(sildeInWindow);
             T value = (T)tuple.getValue(0);
-            if (null == reduceValue)
-                reduceList.set(sildeInWindow, value);
-            else{
-                reduceList.set(sildeInWindow, fun.reduce(reduceValue, value));
+            if(fun.filter(value)){
+                list.add(value);
             }
         } catch (Exception e) {
             logger.error(e.toString());
         }
-
     }
 
+    /**
+     * emit all the data(type R) in the current window to next component
+     * @param collector
+     */
     @Override
     public void processSlide(BasicOutputCollector collector) {
         try{
-            T reduceValue = null;
-            // TODO: implement window data structure with tree, no need to for loop
-            for(T t : reduceList){
-                if( null == reduceValue){
-                    reduceValue = t;
-                } else {
-                    reduceValue = fun.reduce(reduceValue, t);
+            for(List<T> list : filteredList){
+                for(T t : list){
+                    collector.emit(new Values(slideIndexInBuffer, t));
                 }
             }
-            collector.emit(new Values(slideIndexInBuffer, reduceValue));
             // clear data
-            reduceList.set((sildeInWindow +1)% WINDOW_SIZE, null);
+            filteredList.get((sildeInWindow + 1) % WINDOW_SIZE).clear();
         } catch (Exception e) {
             logger.error(e.toString());
         }
@@ -72,6 +75,4 @@ public class WindowReduceBolt<T> extends WindowedBolt {
         super.declareOutputFields(declarer);
         declarer.declare(new Fields(BoltConstants.OutputSlideIdField, BoltConstants.OutputValueField));
     }
-
-
 }

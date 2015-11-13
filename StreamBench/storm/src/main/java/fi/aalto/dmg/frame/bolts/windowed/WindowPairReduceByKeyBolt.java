@@ -11,26 +11,29 @@ import fi.aalto.dmg.frame.functions.ReduceFunction;
 import fi.aalto.dmg.util.TimeDurations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import scala.Tuple2;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Created by jun on 11/13/15.
+ * Online calculate(default)/ Cumulative data
+ * Created by jun on 11/9/15.
  */
-
-public class WindowPairReduceBolt<K,V> extends WindowedBolt {
+public class WindowPairReduceByKeyBolt<K,V> extends WindowedBolt {
 
     private static final Logger logger = LoggerFactory.getLogger(WindowPairReduceByKeyBolt.class);
-    // for each slide, there is a corresponding reduced Tuple2
-    private List<Tuple2<K,V>> reduceList;
-    private ReduceFunction<Tuple2<K, V>> fun;
+    private List<Map<K, V>> maps;
+    private ReduceFunction<V> fun;
 
-    public WindowPairReduceBolt(ReduceFunction<Tuple2<K, V>> function, TimeDurations windowDuration, TimeDurations slideDuration) throws DurationException {
+    public WindowPairReduceByKeyBolt(ReduceFunction<V> function, TimeDurations windowDuration, TimeDurations slideDuration) throws DurationException {
         super(windowDuration, slideDuration);
         this.fun = function;
-        reduceList = new ArrayList<>(WINDOW_SIZE);
+        maps = new ArrayList<>(WINDOW_SIZE);
+        for(int i=0; i<WINDOW_SIZE; ++i) {
+            maps.add(new HashMap<K, V>());
+        }
     }
 
     /**
@@ -40,16 +43,15 @@ public class WindowPairReduceBolt<K,V> extends WindowedBolt {
     @Override
     public void processTuple(Tuple tuple) {
         try {
-            Tuple2<K,V> reducedTuple = reduceList.get(sildeInWindow);
+            Map<K, V> map = maps.get(sildeInWindow);
             K key = (K)tuple.getValue(0);
             V value = (V)tuple.getValue(1);
-            Tuple2<K,V> tuple2 = new Tuple2<>(key, value);
-            if (null == reducedTuple)
-                reducedTuple = tuple2;
+            V reducedValue = map.get(key);
+            if (null == reducedValue)
+                map.put(key, value);
             else{
-                reducedTuple = fun.reduce(reducedTuple, tuple2);
+                map.put(key, fun.reduce(reducedValue, value));
             }
-            reduceList.add(sildeInWindow, reducedTuple);
         } catch (Exception e) {
             logger.error(e.toString());
         }
@@ -63,17 +65,22 @@ public class WindowPairReduceBolt<K,V> extends WindowedBolt {
     @Override
     public void processSlide(BasicOutputCollector collector) {
         try{
-            Tuple2<K,V> reducedWindowTuple = null;
-            for(Tuple2<K,V> tuple : reduceList){
-                if(null == reducedWindowTuple){
-                    reducedWindowTuple = tuple;
-                } else {
-                    reducedWindowTuple = fun.reduce(reducedWindowTuple, tuple);
+            Map<K, V> reduceMap = new HashMap<>();
+            for(Map<K,V> map : maps){
+                for(Map.Entry<K,V> entry : map.entrySet()){
+                    V reducedValue = reduceMap.get(entry.getKey());
+                    if(null == reducedValue){
+                        reduceMap.put(entry.getKey(), entry.getValue());
+                    } else {
+                        reduceMap.put(entry.getKey(), fun.reduce(reducedValue, entry.getValue()));
+                    }
                 }
             }
-            collector.emit(new Values(slideIndexInBuffer, reducedWindowTuple._1(), reducedWindowTuple._2()));
+            for(Map.Entry<K, V> entry: reduceMap.entrySet()){
+                collector.emit(new Values(slideIndexInBuffer, entry.getKey(), entry.getValue()));
+            }
             // clear data
-            reduceList.add((sildeInWindow + 1) % WINDOW_SIZE, null);
+            maps.get((sildeInWindow +1)% WINDOW_SIZE).clear();
         } catch (Exception e) {
             logger.error(e.toString());
         }

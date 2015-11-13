@@ -52,7 +52,7 @@ public class SparkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
     }
 
     @Override
-    public PairWorkloadOperator<K, V> updateStateByKey(final UpdateStateFunction<V> fun, String componentId) {
+    public PairWorkloadOperator<K, V> updateStateByKey(final ReduceFunction<V> fun, String componentId) {
         JavaPairDStream<K, V> cumulateStream = pairDStream.updateStateByKey(new UpdateStateFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(cumulateStream);
     }

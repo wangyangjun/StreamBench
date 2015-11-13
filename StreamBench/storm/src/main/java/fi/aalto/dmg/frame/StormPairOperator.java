@@ -4,8 +4,8 @@ import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.tuple.Fields;
 import fi.aalto.dmg.exceptions.DurationException;
 import fi.aalto.dmg.frame.bolts.*;
-import fi.aalto.dmg.frame.bolts.discretized.DiscretizedPairReduceBolt;
-import fi.aalto.dmg.frame.bolts.windowed.WindowPairReduceBolt;
+import fi.aalto.dmg.frame.bolts.discretized.DiscretizedPairReduceByKeyBolt;
+import fi.aalto.dmg.frame.bolts.windowed.WindowPairReduceByKeyBolt;
 import fi.aalto.dmg.frame.functions.*;
 import fi.aalto.dmg.util.TimeDurations;
 import scala.Tuple2;
@@ -59,7 +59,7 @@ public class StormPairOperator<K, V> implements PairWorkloadOperator<K,V> {
 
     // Set bolt with fieldsGrouping
     @Override
-    public PairWorkloadOperator<K, V> updateStateByKey(UpdateStateFunction<V> fun, String componentId) {
+    public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId) {
         return this;
     }
 
@@ -71,9 +71,9 @@ public class StormPairOperator<K, V> implements PairWorkloadOperator<K,V> {
     @Override
     public WindowedPairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration, TimeDurations slideDuration) {
         try {
-            topologyBuilder.setBolt(componentId + "-local", new WindowPairReduceBolt<>(fun, windowDuration, slideDuration))
+            topologyBuilder.setBolt(componentId + "-local", new WindowPairReduceByKeyBolt<>(fun, windowDuration, slideDuration))
                     .localOrShuffleGrouping(preComponentId);
-            topologyBuilder.setBolt(componentId, new DiscretizedPairReduceBolt<>(fun, componentId + "-local"))
+            topologyBuilder.setBolt(componentId, new DiscretizedPairReduceByKeyBolt<>(fun, componentId + "-local"))
                     .fieldsGrouping(componentId + "-local", new Fields(BoltConstants.OutputKeyField))
                     .allGrouping(componentId + "-local", BoltConstants.TICK_STREAM_ID);
         } catch (DurationException e) {

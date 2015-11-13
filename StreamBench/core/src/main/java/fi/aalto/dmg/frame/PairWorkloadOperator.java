@@ -22,7 +22,7 @@ public interface PairWorkloadOperator<K, V> extends Serializable{
 
     PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K,V>> fun, String componentId);
 
-    PairWorkloadOperator<K, V> updateStateByKey(UpdateStateFunction<V> fun, String componentId);
+    PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId);
 
     WindowedPairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration);
 

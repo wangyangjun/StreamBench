@@ -7,7 +7,7 @@ import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import fi.aalto.dmg.exceptions.DurationException;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
-import fi.aalto.dmg.frame.functions.ReduceFunction;
+import fi.aalto.dmg.frame.functions.FilterFunction;
 import fi.aalto.dmg.util.TimeDurations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,60 +20,55 @@ import java.util.List;
  * Created by jun on 11/13/15.
  */
 
-public class WindowPairReduceBolt<K,V> extends WindowedBolt {
+public class WindowPairFilterBolt<K,V> extends WindowedBolt {
+    private static final Logger logger = LoggerFactory.getLogger(WindowMapBolt.class);
 
-    private static final Logger logger = LoggerFactory.getLogger(WindowPairReduceByKeyBolt.class);
-    // for each slide, there is a corresponding reduced Tuple2
-    private List<Tuple2<K,V>> reduceList;
-    private ReduceFunction<Tuple2<K, V>> fun;
+    // each slide has a corresponding List<R>
+    private List<List<Tuple2<K,V>>> filteredList;
+    private FilterFunction<Tuple2<K, V>> fun;
 
-    public WindowPairReduceBolt(ReduceFunction<Tuple2<K, V>> function, TimeDurations windowDuration, TimeDurations slideDuration) throws DurationException {
+    public WindowPairFilterBolt(FilterFunction<Tuple2<K, V>> function, TimeDurations windowDuration, TimeDurations slideDuration) throws DurationException {
         super(windowDuration, slideDuration);
         this.fun = function;
-        reduceList = new ArrayList<>(WINDOW_SIZE);
+        filteredList = new ArrayList<>(WINDOW_SIZE);
+        for(int i=0; i<WINDOW_SIZE; ++i){
+            filteredList.add(i, new ArrayList<Tuple2<K, V>>());
+        }
     }
 
     /**
-     * called after receiving a normal tuple
+     * added filterd value to current slide
      * @param tuple
      */
     @Override
     public void processTuple(Tuple tuple) {
-        try {
-            Tuple2<K,V> reducedTuple = reduceList.get(sildeInWindow);
+        try{
+            List<Tuple2<K, V>> list = filteredList.get(sildeInWindow);
             K key = (K)tuple.getValue(0);
             V value = (V)tuple.getValue(1);
             Tuple2<K,V> tuple2 = new Tuple2<>(key, value);
-            if (null == reducedTuple)
-                reducedTuple = tuple2;
-            else{
-                reducedTuple = fun.reduce(reducedTuple, tuple2);
+            if(fun.filter(tuple2)){
+                list.add(tuple2);
             }
-            reduceList.add(sildeInWindow, reducedTuple);
         } catch (Exception e) {
             logger.error(e.toString());
         }
     }
 
     /**
-     * called after receiving a tick tuple
-     * reduce all data(slides) in current window
+     * emit all the data(type R) in the current window to next component
      * @param collector
      */
     @Override
     public void processSlide(BasicOutputCollector collector) {
         try{
-            Tuple2<K,V> reducedWindowTuple = null;
-            for(Tuple2<K,V> tuple : reduceList){
-                if(null == reducedWindowTuple){
-                    reducedWindowTuple = tuple;
-                } else {
-                    reducedWindowTuple = fun.reduce(reducedWindowTuple, tuple);
+            for(List<Tuple2<K, V>> list : filteredList){
+                for(Tuple2<K, V> t : list){
+                    collector.emit(new Values(slideIndexInBuffer, t._1(), t._2()));
                 }
             }
-            collector.emit(new Values(slideIndexInBuffer, reducedWindowTuple._1(), reducedWindowTuple._2()));
             // clear data
-            reduceList.add((sildeInWindow + 1) % WINDOW_SIZE, null);
+            filteredList.get((sildeInWindow + 1) % WINDOW_SIZE).clear();
         } catch (Exception e) {
             logger.error(e.toString());
         }
@@ -84,5 +79,4 @@ public class WindowPairReduceBolt<K,V> extends WindowedBolt {
         super.declareOutputFields(declarer);
         declarer.declare(new Fields(BoltConstants.OutputSlideIdField, BoltConstants.OutputKeyField, BoltConstants.OutputValueField));
     }
-
 }

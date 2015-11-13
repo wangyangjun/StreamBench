@@ -41,7 +41,7 @@ public class WordCountGrouping extends Workload implements Serializable {
                     operator.flatMap(UserFunctions.splitFlatMap, "spliter").
                             mapToPair(UserFunctions.mapToStringIntegerPair, "pair").
                             groupByKey().reduce(UserFunctions.sumReduce, "sum").
-                            updateStateByKey(UserFunctions.updateStateCount, "cumulate");
+                            updateStateByKey(UserFunctions.sumReduce, "cumulate");
             counts.print();
         }
         catch (Exception e){
