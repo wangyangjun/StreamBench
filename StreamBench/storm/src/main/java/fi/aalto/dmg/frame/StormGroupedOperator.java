@@ -2,6 +2,7 @@ package fi.aalto.dmg.frame;
 
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.tuple.Fields;
+import fi.aalto.dmg.frame.bolts.BoltConstants;
 import fi.aalto.dmg.frame.bolts.PairReduceBolt;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
 
@@ -21,7 +22,7 @@ public class StormGroupedOperator<K,V> implements GroupedWorkloadOperator<K,V>  
     @Override
     public PairWorkloadOperator<K, V> reduce(ReduceFunction<V> fun, String componentId) {
 
-        topologyBuilder.setBolt(componentId, new PairReduceBolt<K,V>(fun)).fieldsGrouping(preComponentId, new Fields("key"));
+        topologyBuilder.setBolt(componentId, new PairReduceBolt<K,V>(fun)).fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
         return new StormPairOperator<>(topologyBuilder, componentId);
     }
 }

@@ -3,6 +3,7 @@ package fi.aalto.dmg.frame;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.tuple.Fields;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
+import fi.aalto.dmg.frame.bolts.PairPrintBolt;
 import fi.aalto.dmg.frame.bolts.discretized.*;
 import fi.aalto.dmg.frame.functions.*;
 import scala.Tuple2;
@@ -70,6 +71,6 @@ public class StormDiscretizedPairOperator<K,V> implements WindowedPairWorkloadOp
 
     @Override
     public void print() {
-
+        topologyBuilder.setBolt("print", new PairPrintBolt<>(true)).localOrShuffleGrouping(preComponentId);
     }
 }

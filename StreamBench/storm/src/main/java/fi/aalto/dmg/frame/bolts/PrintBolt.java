@@ -17,27 +17,20 @@ import java.util.Map;
 public class PrintBolt<T> extends BaseBasicBolt {
 
     private static final Logger logger = LoggerFactory.getLogger(PrintBolt.class);
-    private ArrayList<T> collect;
-    public PrintBolt(){
-        collect = new ArrayList<>();
-    }
+
+    private boolean windowed;
+
+    public PrintBolt(){ }
+    public PrintBolt(boolean windowed) { this.windowed=windowed; }
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
         logger.error(input.getValue(0).toString());
-        collect.add((T) input.getValue(0));
     }
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
 
-    }
-
-    @Override
-    public void cleanup() {
-        for(T t : collect){
-            logger.error(t.toString());
-        }
     }
 
 }

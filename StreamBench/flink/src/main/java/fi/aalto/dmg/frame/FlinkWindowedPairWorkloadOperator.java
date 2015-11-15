@@ -112,6 +112,7 @@ public class FlinkWindowedPairWorkloadOperator<K,V> implements WindowedPairWorkl
 
     @Override
     public void print() {
+        System.out.println("------------------------------");
         dataStream.flatten().print();
     }
 }

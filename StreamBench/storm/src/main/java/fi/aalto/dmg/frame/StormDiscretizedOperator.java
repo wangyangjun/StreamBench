@@ -2,6 +2,7 @@ package fi.aalto.dmg.frame;
 
 import backtype.storm.topology.TopologyBuilder;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
+import fi.aalto.dmg.frame.bolts.PrintBolt;
 import fi.aalto.dmg.frame.bolts.discretized.*;
 import fi.aalto.dmg.frame.functions.*;
 
@@ -63,6 +64,6 @@ public class StormDiscretizedOperator<T> implements WindowedWorkloadOperator<T> 
 
     @Override
     public void print() {
-
+        topologyBuilder.setBolt("print", new PrintBolt<>(true)).localOrShuffleGrouping(preComponentId);
     }
 }

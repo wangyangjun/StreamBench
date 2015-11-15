@@ -109,6 +109,6 @@ public class StormWindowedPairOperator<K,V> implements WindowedPairWorkloadOpera
 
     @Override
     public void print() {
-        topologyBuilder.setBolt("print", new PairPrintBolt<>()).localOrShuffleGrouping(preComponentId);
+        topologyBuilder.setBolt("print", new PairPrintBolt<>(true)).localOrShuffleGrouping(preComponentId);
     }
 }

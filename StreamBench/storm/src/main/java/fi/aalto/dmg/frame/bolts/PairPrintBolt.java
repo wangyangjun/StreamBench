@@ -14,16 +14,23 @@ import java.util.ArrayList;
  */
 public class PairPrintBolt<T> extends BaseBasicBolt {
 
-    private static final Logger logger = LoggerFactory.getLogger(PairPrintBolt.class);
-    public PairPrintBolt(){
+    private boolean windowed;
 
-    }
+    private static final Logger logger = LoggerFactory.getLogger(PairPrintBolt.class);
+
+    public PairPrintBolt() { this.windowed = false; }
+    public PairPrintBolt(boolean windowed){ this.windowed = windowed; }
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
-        logger.error(input.getValue(0).toString()
-                + "\t" + input.getValue(1).toString()
-                + "\t" + input.getValue(2).toString());
+        if(windowed) {
+            logger.error(input.getValue(0).toString()
+                    + "\t" + input.getValue(1).toString()
+                    + "\t" + input.getValue(2).toString());
+        } else {
+            logger.error(input.getValue(0).toString()
+                    + "\t" + input.getValue(1).toString());
+        }
     }
 
     @Override

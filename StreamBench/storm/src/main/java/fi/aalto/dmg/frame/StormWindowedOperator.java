@@ -2,6 +2,7 @@ package fi.aalto.dmg.frame;
 
 import backtype.storm.topology.TopologyBuilder;
 import fi.aalto.dmg.exceptions.DurationException;
+import fi.aalto.dmg.frame.bolts.PrintBolt;
 import fi.aalto.dmg.frame.bolts.windowed.*;
 import fi.aalto.dmg.frame.functions.*;
 import fi.aalto.dmg.util.TimeDurations;
@@ -81,6 +82,6 @@ public class StormWindowedOperator<T> implements WindowedWorkloadOperator<T>  {
 
     @Override
     public void print() {
-
+        topologyBuilder.setBolt("print", new PrintBolt<>(true)).localOrShuffleGrouping(preComponentId);
     }
 }
