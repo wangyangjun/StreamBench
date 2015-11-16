@@ -34,12 +34,12 @@ public class WindowReduceBolt<T> extends WindowedBolt {
     @Override
     public void processTuple(Tuple tuple) {
         try{
-            T reduceValue = reduceList.get(sildeInWindow);
+            T reduceValue = reduceList.get(slideInWindow);
             T value = (T)tuple.getValue(0);
             if (null == reduceValue)
-                reduceList.set(sildeInWindow, value);
+                reduceList.set(slideInWindow, value);
             else{
-                reduceList.set(sildeInWindow, fun.reduce(reduceValue, value));
+                reduceList.set(slideInWindow, fun.reduce(reduceValue, value));
             }
         } catch (Exception e) {
             logger.error(e.toString());
@@ -61,7 +61,7 @@ public class WindowReduceBolt<T> extends WindowedBolt {
             }
             collector.emit(new Values(slideIndexInBuffer, reduceValue));
             // clear data
-            reduceList.set((sildeInWindow +1)% WINDOW_SIZE, null);
+            reduceList.set((slideInWindow +1)% WINDOW_SIZE, null);
         } catch (Exception e) {
             logger.error(e.toString());
         }

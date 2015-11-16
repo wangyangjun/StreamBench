@@ -43,7 +43,7 @@ public class WindowPairFilterBolt<K,V> extends WindowedBolt {
     @Override
     public void processTuple(Tuple tuple) {
         try{
-            List<Tuple2<K, V>> list = filteredList.get(sildeInWindow);
+            List<Tuple2<K, V>> list = filteredList.get(slideInWindow);
             K key = (K)tuple.getValue(0);
             V value = (V)tuple.getValue(1);
             Tuple2<K,V> tuple2 = new Tuple2<>(key, value);
@@ -68,7 +68,7 @@ public class WindowPairFilterBolt<K,V> extends WindowedBolt {
                 }
             }
             // clear data
-            filteredList.get((sildeInWindow + 1) % WINDOW_SIZE).clear();
+            filteredList.get((slideInWindow + 1) % WINDOW_SIZE).clear();
         } catch (Exception e) {
             logger.error(e.toString());
         }

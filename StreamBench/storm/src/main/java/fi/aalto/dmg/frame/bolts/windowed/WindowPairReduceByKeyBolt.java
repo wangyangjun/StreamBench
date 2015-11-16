@@ -43,7 +43,7 @@ public class WindowPairReduceByKeyBolt<K,V> extends WindowedBolt {
     @Override
     public void processTuple(Tuple tuple) {
         try {
-            Map<K, V> map = maps.get(sildeInWindow);
+            Map<K, V> map = maps.get(slideInWindow);
             K key = (K)tuple.getValue(0);
             V value = (V)tuple.getValue(1);
             V reducedValue = map.get(key);
@@ -80,7 +80,7 @@ public class WindowPairReduceByKeyBolt<K,V> extends WindowedBolt {
                 collector.emit(new Values(slideIndexInBuffer, entry.getKey(), entry.getValue()));
             }
             // clear data
-            maps.get((sildeInWindow +1)% WINDOW_SIZE).clear();
+            maps.get((slideInWindow +1)% WINDOW_SIZE).clear();
         } catch (Exception e) {
             logger.error(e.toString());
         }

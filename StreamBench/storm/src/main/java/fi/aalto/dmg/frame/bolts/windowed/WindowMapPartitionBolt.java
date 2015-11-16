@@ -43,7 +43,7 @@ public class WindowMapPartitionBolt<T, R> extends WindowedBolt {
     @Override
     public void processTuple(Tuple tuple) {
         try{
-            List<T> list = mapedList.get(sildeInWindow);
+            List<T> list = mapedList.get(slideInWindow);
             T value = (T)tuple.getValue(0);
             list.add(value);
         } catch (Exception e) {
@@ -67,7 +67,7 @@ public class WindowMapPartitionBolt<T, R> extends WindowedBolt {
                 collector.emit(new Values(slideIndexInBuffer, r));
             }
             // clear data
-            mapedList.get((sildeInWindow +1)% WINDOW_SIZE).clear();
+            mapedList.get((slideInWindow +1)% WINDOW_SIZE).clear();
         } catch (Exception e) {
             logger.error(e.toString());
         }

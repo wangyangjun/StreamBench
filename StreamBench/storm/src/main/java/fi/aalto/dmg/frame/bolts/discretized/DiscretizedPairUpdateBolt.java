@@ -8,6 +8,7 @@ import backtype.storm.tuple.Values;
 import backtype.storm.utils.Utils;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
+import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,17 +16,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Discretized update bolt, accumulate key-value pairs
  * Created by jun on 11/13/15.
+ * Tested
  */
 
 public class DiscretizedPairUpdateBolt<K,V> extends DiscretizedBolt {
     private static final Logger logger = LoggerFactory.getLogger(DiscretizedPairReduceByKeyBolt.class);
     private ReduceFunction<V> fun;
+    private Map<K,V> cumulatedDataMap;
     private Map<Integer, Map<K,V>> slideDataMap;
 
     public DiscretizedPairUpdateBolt(ReduceFunction<V> function, String preComponentId) {
         super(preComponentId);
         this.fun = function;
+        cumulatedDataMap = new HashMap<K,V>();
         slideDataMap = new HashMap<>(BUFFER_SLIDES_NUM);
         for(int i=0; i<BUFFER_SLIDES_NUM; ++i)
             slideDataMap.put(i, new HashMap<K, V>());
@@ -59,18 +64,29 @@ public class DiscretizedPairUpdateBolt<K,V> extends DiscretizedBolt {
 
     @Override
     public void processSlide(BasicOutputCollector collector, int slideIndex) {
-        Map<K, V> slideMap = slideDataMap.get(slideIndex);
-        for(Map.Entry<K, V> entry : slideMap.entrySet()) {
-            collector.emit(new Values(slideIndex, entry.getKey(), entry.getValue()));
+        try {
+            // accumulate data
+            Map<K, V> slideMap = slideDataMap.get(slideIndex);
+            for (Map.Entry<K, V> entry : slideMap.entrySet()) {
+                V accumulatedValue = cumulatedDataMap.get(entry.getKey());
+                if (null == accumulatedValue) {
+                    accumulatedValue = entry.getValue();
+                } else {
+                    accumulatedValue = fun.reduce(accumulatedValue, entry.getValue());
+                }
+                cumulatedDataMap.put(entry.getKey(), accumulatedValue);
+                collector.emit(new Values(entry.getKey(), accumulatedValue));
+            }
+            slideMap.clear();
+        } catch (Exception e){
+            logger.error(e.toString());
         }
-        // there is no need to clear data
-        // slideMap.clear();
     }
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         super.declareOutputFields(declarer);
         declarer.declareStream(Utils.DEFAULT_STREAM_ID,
-                new Fields(BoltConstants.OutputSlideIdField, BoltConstants.OutputKeyField, BoltConstants.OutputValueField));
+                new Fields( BoltConstants.OutputKeyField, BoltConstants.OutputValueField));
     }
 }

@@ -2,16 +2,13 @@ package fi.aalto.dmg.frame.bolts.windowed;
 
 import backtype.storm.topology.BasicOutputCollector;
 import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.topology.base.BaseBasicBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
-import com.google.common.base.Optional;
 import fi.aalto.dmg.exceptions.DurationException;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
 import fi.aalto.dmg.frame.bolts.PairReduceBolt;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
-import fi.aalto.dmg.frame.functions.UpdateStateFunction;
 import fi.aalto.dmg.util.TimeDurations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +40,7 @@ public class UpdateStateBolt<K,V> extends WindowedBolt  {
     @Override
     public void processTuple(Tuple tuple) {
         try {
-            Map<K, V> map = maps.get(sildeInWindow);
+            Map<K, V> map = maps.get(slideInWindow);
             K key = (K)tuple.getValue(0);
             V value = (V)tuple.getValue(1);
             V reducedValue = map.get(key);

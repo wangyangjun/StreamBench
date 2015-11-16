@@ -30,7 +30,7 @@ public abstract class WindowedBolt extends BaseBasicBolt {
     // Slides number in a window
     protected int WINDOW_SIZE;
     // slide index in the windowed data structure: (0, 1, ..., WINDOW_SIZE-1)
-    protected int sildeInWindow = 0;
+    protected int slideInWindow = 0;
 
     public WindowedBolt(TimeDurations windowDuration, TimeDurations slideDuration) throws DurationException {
         long window_tick_frequency_seconds = Utils.getSeconds(windowDuration);
@@ -50,7 +50,7 @@ public abstract class WindowedBolt extends BaseBasicBolt {
             processSlide(collector);
             collector.emit(BoltConstants.TICK_STREAM_ID, new Values(slideIndexInBuffer));
             slideIndexInBuffer = (slideIndexInBuffer +1)%BUFFER_SLIDES_NUM;
-            sildeInWindow = (sildeInWindow +1)% WINDOW_SIZE;
+            slideInWindow = (slideInWindow +1)% WINDOW_SIZE;
         } else {
             processTuple(tuple);
         }

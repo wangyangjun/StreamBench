@@ -41,7 +41,7 @@ public class WindowFilterBolt<T> extends WindowedBolt {
     @Override
     public void processTuple(Tuple tuple) {
         try{
-            List<T> list = filteredList.get(sildeInWindow);
+            List<T> list = filteredList.get(slideInWindow);
             T value = (T)tuple.getValue(0);
             if(fun.filter(value)){
                 list.add(value);
@@ -64,7 +64,7 @@ public class WindowFilterBolt<T> extends WindowedBolt {
                 }
             }
             // clear data
-            filteredList.get((sildeInWindow + 1) % WINDOW_SIZE).clear();
+            filteredList.get((slideInWindow + 1) % WINDOW_SIZE).clear();
         } catch (Exception e) {
             logger.error(e.toString());
         }

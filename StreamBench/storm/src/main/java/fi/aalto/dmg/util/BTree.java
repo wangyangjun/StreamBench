@@ -4,6 +4,7 @@ import scala.Tuple2;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Exchanger;
 
 /**
  * Binary tree for window data structure
@@ -11,7 +12,7 @@ import java.util.List;
  * Created by jun on 16/11/15.
  */
 public class BTree<T> {
-    public static class Children{
+    public class Children{
         private int child1;
         private int child2;
 
@@ -28,6 +29,9 @@ public class BTree<T> {
         public String toString(){
             return String.format("Child1:%d, Child2:%d", child1, child2);
         }
+
+        public int getChild1(){ return child1; }
+        public int getChild2(){ return child2; }
     }
 
     private List<T> dataContainer;
@@ -39,6 +43,18 @@ public class BTree<T> {
         this.size = size;
         dataContainer = new ArrayList<>(2*size-1);
     }
+
+    public T get(int index){
+        if(index<size) return dataContainer.get(index);
+        throw new IndexOutOfBoundsException("index should be less than size");
+    }
+
+    public void set(int index, T value){
+        if(index<size) dataContainer.set(index, value);
+        throw new IndexOutOfBoundsException("index should be less than size");
+    }
+
+    public int getSize(){ return this.size; }
 
     /**
      * @param nodeIndex the index of a node in dataContainer
@@ -150,5 +166,9 @@ public class BTree<T> {
 
     private boolean isRoot(int nodeIndex, int leavesSize) {
         return nodeIndex == 2 * leavesSize - 2;
+    }
+
+    public T getRoot() {
+        return dataContainer.get(2 * size - 2);
     }
 }

@@ -26,4 +26,18 @@ public class UtilsTest {
         List<Map<String, Integer>> maps = new ArrayList<>(3);
 
     }
+
+    @Test
+    public void doWhileTest(){
+        int i = 0;
+        int j = 0;
+        while (i<5){
+            System.out.println(i);
+            ++i;
+        }
+        do{
+            System.out.println(j);
+            ++j;
+        } while(j<5);
+    }
 }

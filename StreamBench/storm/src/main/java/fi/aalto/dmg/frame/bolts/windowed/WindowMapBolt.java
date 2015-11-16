@@ -41,7 +41,7 @@ public class WindowMapBolt<T, R> extends WindowedBolt {
     @Override
     public void processTuple(Tuple tuple) {
         try{
-            List<R> list = mapedList.get(sildeInWindow);
+            List<R> list = mapedList.get(slideInWindow);
             T value = (T)tuple.getValue(0);
             list.add(fun.map(value));
         } catch (Exception e) {
@@ -62,7 +62,7 @@ public class WindowMapBolt<T, R> extends WindowedBolt {
                 }
             }
             // clear data
-            mapedList.get((sildeInWindow +1)% WINDOW_SIZE).clear();
+            mapedList.get((slideInWindow +1)% WINDOW_SIZE).clear();
         } catch (Exception e) {
             logger.error(e.toString());
         }

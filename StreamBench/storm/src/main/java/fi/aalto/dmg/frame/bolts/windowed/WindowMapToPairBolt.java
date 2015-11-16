@@ -7,7 +7,6 @@ import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import fi.aalto.dmg.exceptions.DurationException;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
-import fi.aalto.dmg.frame.functions.MapFunction;
 import fi.aalto.dmg.frame.functions.MapPairFunction;
 import fi.aalto.dmg.util.TimeDurations;
 import org.slf4j.Logger;
@@ -43,7 +42,7 @@ public class WindowMapToPairBolt<T, K, V> extends WindowedBolt {
     @Override
     public void processTuple(Tuple tuple) {
         try{
-            List<Tuple2<K,V>> list = mapedList.get(sildeInWindow);
+            List<Tuple2<K,V>> list = mapedList.get(slideInWindow);
             T value = (T)tuple.getValue(0);
             list.add(fun.mapPair(value));
         } catch (Exception e) {
@@ -64,7 +63,7 @@ public class WindowMapToPairBolt<T, K, V> extends WindowedBolt {
                 }
             }
             // clear data
-            mapedList.get((sildeInWindow +1)% WINDOW_SIZE).clear();
+            mapedList.get((slideInWindow +1)% WINDOW_SIZE).clear();
         } catch (Exception e) {
             logger.error(e.toString());
         }
