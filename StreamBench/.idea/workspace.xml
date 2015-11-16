@@ -3,22 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="6d9a9d57-ef9e-4bb6-b667-e4deb25fdef8" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/workloads/WordCountWindowed.java" afterPath="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/workloads/WordCountWindowed.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/discretized/DiscretizedPairUpdateBolt.java" afterPath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/discretized/DiscretizedPairUpdateBolt.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/UpdateStateBolt.java" afterPath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/UpdateStateBolt.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowFilterBolt.java" afterPath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowFilterBolt.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowMapBolt.java" afterPath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowMapBolt.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowMapPartitionBolt.java" afterPath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowMapPartitionBolt.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowMapToPairBolt.java" afterPath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowMapToPairBolt.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowMapValueBolt.java" afterPath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowMapValueBolt.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowPairFilterBolt.java" afterPath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowPairFilterBolt.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowPairMapPartitionBolt.java" afterPath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowPairMapPartitionBolt.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowPairReduceBolt.java" afterPath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowPairReduceBolt.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowPairReduceByKeyBolt.java" afterPath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowPairReduceByKeyBolt.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowReduceBolt.java" afterPath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowReduceBolt.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowedBolt.java" afterPath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowedBolt.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/util/BTree.java" afterPath="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/util/BTree.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/storm/src/test/java/fi/aalto/dmg/UtilsTest.java" afterPath="$PROJECT_DIR$/storm/src/test/java/fi/aalto/dmg/UtilsTest.java" />
     </list>
     <ignored path="StreamBench.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -57,7 +44,7 @@
         <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/StormPairOperator.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="73" column="89" selection-start-line="73" selection-start-column="64" selection-end-line="73" selection-end-column="89" />
+              <caret line="73" column="76" selection-start-line="73" selection-start-column="64" selection-end-line="73" selection-end-column="89" />
               <folding />
             </state>
           </provider>
@@ -67,8 +54,22 @@
         <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowPairReduceByKeyBolt.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="23" column="38" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="38" />
+              <caret line="114" column="0" selection-start-line="114" selection-start-column="0" selection-end-line="114" selection-end-column="0" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BTree.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/util/BTree.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="131" column="32" selection-start-line="131" selection-start-column="32" selection-end-line="131" selection-end-column="32" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#6688#6689#0" expanded="true" />
+                <element signature="e#6742#6743#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -76,18 +77,18 @@
       <file leaf-file-name="App.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/App.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.31073445">
-              <caret line="15" column="42" selection-start-line="15" selection-start-column="42" selection-end-line="15" selection-end-column="42" />
+            <state vertical-scroll-proportion="0.37414965">
+              <caret line="15" column="51" selection-start-line="15" selection-start-column="51" selection-end-line="15" selection-end-column="51" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DiscretizedBolt.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/discretized/DiscretizedBolt.java">
+      <file leaf-file-name="StormOperatorCreater.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/StormOperatorCreater.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="20" column="59" selection-start-line="20" selection-start-column="46" selection-end-line="20" selection-end-column="59" />
+              <caret line="47" column="25" selection-start-line="47" selection-start-column="25" selection-end-line="47" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -97,7 +98,7 @@
         <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowPairReduceBolt.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="24" column="50" selection-start-line="24" selection-start-column="31" selection-end-line="24" selection-end-column="50" />
+              <caret line="65" column="61" selection-start-line="65" selection-start-column="13" selection-end-line="65" selection-end-column="61" />
               <folding />
             </state>
           </provider>
@@ -107,7 +108,7 @@
         <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/workloads/WordCountWindowed.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="68" column="73" selection-start-line="68" selection-start-column="73" selection-end-line="68" selection-end-column="73" />
+              <caret line="67" column="49" selection-start-line="67" selection-start-column="29" selection-end-line="67" selection-end-column="49" />
               <folding />
             </state>
           </provider>
@@ -118,16 +119,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="49" column="27" selection-start-line="49" selection-start-column="24" selection-end-line="49" selection-end-column="27" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="WindowReduceBolt.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowReduceBolt.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="41" column="56" selection-start-line="41" selection-start-column="50" selection-end-line="41" selection-end-column="56" />
               <folding />
             </state>
           </provider>
@@ -183,10 +174,8 @@
         <option value="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowPairMapPartitionBolt.java" />
         <option value="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowFilterBolt.java" />
         <option value="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowPairFilterBolt.java" />
-        <option value="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowPairReduceByKeyBolt.java" />
         <option value="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/discretized/DiscretizedPairMapValueBolt.java" />
         <option value="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/discretized/DiscretizedPairMapPartitionBolt.java" />
-        <option value="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/discretized/DiscretizedPairReduceByKeyBolt.java" />
         <option value="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/discretized/DiscretizedPairReduceBolt.java" />
         <option value="$PROJECT_DIR$/flink/src/main/java/fi/aalto/dmg/App.java" />
         <option value="$PROJECT_DIR$/flink/src/main/java/fi/aalto/dmg/frame/FlinkWindowedPairWorkloadOperator.java" />
@@ -200,11 +189,13 @@
         <option value="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/StormDiscretizedPairOperator.java" />
         <option value="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/StormDiscretizedOperator.java" />
         <option value="$PROJECT_DIR$/storm/src/test/java/fi/aalto/dmg/util/BTreeTest.java" />
-        <option value="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/util/BTree.java" />
         <option value="$PROJECT_DIR$/storm/src/test/java/fi/aalto/dmg/UtilsTest.java" />
-        <option value="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowPairReduceBolt.java" />
         <option value="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/discretized/DiscretizedPairUpdateBolt.java" />
         <option value="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/workloads/WordCountWindowed.java" />
+        <option value="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/discretized/DiscretizedPairReduceByKeyBolt.java" />
+        <option value="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowPairReduceBolt.java" />
+        <option value="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/util/BTree.java" />
+        <option value="$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowPairReduceByKeyBolt.java" />
       </list>
     </option>
   </component>
@@ -512,6 +503,48 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="windowed" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="StreamBench" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="StreamBench" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="storm" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dmg" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="frame" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bolts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="discretized" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1298,7 +1331,7 @@
       <option name="number" value="Default" />
       <updated>1445008603555</updated>
       <workItem from="1447357326069" duration="3572000" />
-      <workItem from="1447454403883" duration="36598000" />
+      <workItem from="1447454403883" duration="41932000" />
     </task>
     <servers />
   </component>
@@ -1335,7 +1368,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="40170000" />
+    <option name="totallyTimeSpent" value="45504000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1354,12 +1387,12 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329653" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.56058395" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32896653" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32846716" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27972028" sideWeight="0.50429183" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.106992416" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3280757" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1839416" sideWeight="0.49713877" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28467155" sideWeight="0.49570817" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31532848" sideWeight="0.49713877" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.37956205" sideWeight="0.49570817" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28306654" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20387532" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -1428,23 +1461,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/discretized/DiscretizedFilterBolt.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="74" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkWindowedPairWorkloadOperator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="29" column="89" selection-start-line="29" selection-start-column="89" selection-end-line="29" selection-end-column="89" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkPairWorkloadOperator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1582,14 +1598,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/discretized/DiscretizedPairReduceByKeyBolt.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8305085">
-          <caret line="75" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/discretized/DiscretizedPairReduceBolt.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.028248588">
@@ -1630,22 +1638,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/StormOperatorCreater.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="51" column="33" selection-start-line="51" selection-start-column="33" selection-end-line="51" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/src.zip!/java/util/ArrayList.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3325">
-          <caret line="138" column="40" selection-start-line="138" selection-start-column="25" selection-end-line="138" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/storm/src/test/java/fi/aalto/dmg/TickTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33333334">
@@ -1678,41 +1670,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/src.zip!/java/util/List.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8203463">
-          <caret line="475" column="9" selection-start-line="475" selection-start-column="9" selection-end-line="475" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowedBolt.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="59" column="37" selection-start-line="59" selection-start-column="25" selection-end-line="59" selection-end-column="37" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/util/BTree.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="33" column="47" selection-start-line="33" selection-start-column="47" selection-end-line="33" selection-end-column="47" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#678#679#0" expanded="true" />
-            <element signature="e#762#763#0" expanded="true" />
-            <element signature="e#1728#1729#0" expanded="true" />
-            <element signature="e#1778#1779#0" expanded="true" />
-            <element signature="e#3838#3839#0" expanded="true" />
-            <element signature="e#3890#3891#0" expanded="true" />
-            <element signature="e#6535#6536#0" expanded="true" />
-            <element signature="e#6581#6582#0" expanded="true" />
-            <element signature="e#6642#6643#0" expanded="true" />
-            <element signature="e#6696#6697#0" expanded="true" />
-            <element signature="e#6722#6723#0" expanded="true" />
-            <element signature="e#6776#6777#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1775,14 +1737,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/UpdateStateBolt.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="49" column="27" selection-start-line="49" selection-start-column="24" selection-end-line="49" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/frame/functions/ReduceFunction.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.28846154">
@@ -1801,34 +1755,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowReduceBolt.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="41" column="56" selection-start-line="41" selection-start-column="50" selection-end-line="41" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/App.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.59681696">
           <caret line="37" column="36" selection-start-line="37" selection-start-column="36" selection-end-line="37" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/discretized/DiscretizedBolt.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="20" column="59" selection-start-line="20" selection-start-column="46" selection-end-line="20" selection-end-column="59" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/discretized/DiscretizedPairUpdateBolt.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.7506632">
-          <caret line="27" column="48" selection-start-line="27" selection-start-column="48" selection-end-line="27" selection-end-column="48" />
           <folding />
         </state>
       </provider>
@@ -1843,10 +1773,50 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/discretized/DiscretizedBolt.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3324937">
+          <caret line="23" column="25" selection-start-line="23" selection-start-column="25" selection-end-line="23" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowReduceBolt.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.41561714">
+          <caret line="24" column="14" selection-start-line="24" selection-start-column="14" selection-end-line="24" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/discretized/DiscretizedPairReduceByKeyBolt.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.34005037">
+          <caret line="22" column="48" selection-start-line="22" selection-start-column="48" selection-end-line="22" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/discretized/DiscretizedPairUpdateBolt.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="27" column="48" selection-start-line="27" selection-start-column="48" selection-end-line="27" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/UpdateStateBolt.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="49" column="27" selection-start-line="49" selection-start-column="24" selection-end-line="49" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/StormPairOperator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="73" column="89" selection-start-line="73" selection-start-column="64" selection-end-line="73" selection-end-column="89" />
+          <caret line="73" column="76" selection-start-line="73" selection-start-column="64" selection-end-line="73" selection-end-column="89" />
           <folding />
         </state>
       </provider>
@@ -1854,15 +1824,15 @@
     <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowPairReduceBolt.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="24" column="50" selection-start-line="24" selection-start-column="31" selection-end-line="24" selection-end-column="50" />
+          <caret line="65" column="61" selection-start-line="65" selection-start-column="13" selection-end-line="65" selection-end-column="61" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowPairReduceByKeyBolt.java">
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/src.zip!/java/util/HashMap.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="23" column="38" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="38" />
+        <state vertical-scroll-proportion="0.3324937">
+          <caret line="292" column="11" selection-start-line="292" selection-start-column="11" selection-end-line="292" selection-end-column="11" />
           <folding />
         </state>
       </provider>
@@ -1870,15 +1840,69 @@
     <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/workloads/WordCountWindowed.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="68" column="73" selection-start-line="68" selection-start-column="73" selection-end-line="68" selection-end-column="73" />
+          <caret line="67" column="49" selection-start-line="67" selection-start-column="29" selection-end-line="67" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/src.zip!/java/util/ArrayList.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3316583">
+          <caret line="138" column="40" selection-start-line="138" selection-start-column="25" selection-end-line="138" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/src.zip!/java/util/List.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6708543">
+          <caret line="473" column="59" selection-start-line="473" selection-start-column="59" selection-end-line="473" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/apache/storm/storm-core/0.9.5/storm-core-0.9.5.jar!/backtype/storm/utils/Utils.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.35579515">
+          <caret line="70" column="0" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+          <folding>
+            <element signature="e#2438#2439#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/StormOperatorCreater.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="47" column="25" selection-start-line="47" selection-start-column="25" selection-end-line="47" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/util/BTree.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="131" column="32" selection-start-line="131" selection-start-column="32" selection-end-line="131" selection-end-column="32" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#6688#6689#0" expanded="true" />
+            <element signature="e#6742#6743#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/frame/bolts/windowed/WindowPairReduceByKeyBolt.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="114" column="0" selection-start-line="114" selection-start-column="0" selection-end-line="114" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/storm/src/main/java/fi/aalto/dmg/App.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.31073445">
-          <caret line="15" column="42" selection-start-line="15" selection-start-column="42" selection-end-line="15" selection-end-column="42" />
+        <state vertical-scroll-proportion="0.37414965">
+          <caret line="15" column="51" selection-start-line="15" selection-start-column="51" selection-end-line="15" selection-end-column="51" />
           <folding />
         </state>
       </provider>

@@ -63,10 +63,7 @@ public class WindowPairReduceBolt<K,V> extends WindowedBolt {
         try{
             // update slideInWindow node and its parents until root
             // single slide window
-            if(reduceDataContainer.isRoot(slideInWindow)){
-                collector.emit(new Values(slideIndexInBuffer,
-                        reduceDataContainer.get(slideInWindow)._1(), reduceDataContainer.get(slideInWindow)._2()));
-            } else {
+             if(!reduceDataContainer.isRoot(slideInWindow)) {
                 int updatedNode = slideInWindow;
                 // if latest updated node is not root, update its parent node
                 while (!reduceDataContainer.isRoot(updatedNode)){

@@ -2,6 +2,7 @@ package fi.aalto.dmg.util;
 
 import scala.Tuple2;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Exchanger;
@@ -11,7 +12,7 @@ import java.util.concurrent.Exchanger;
  * fixed size tree, doesn't need support add node, remove node
  * Created by jun on 16/11/15.
  */
-public class BTree<T> {
+public class BTree<T> implements Serializable {
     public class Children{
         private int child1;
         private int child2;
@@ -42,16 +43,17 @@ public class BTree<T> {
         // first size elements are leaves node
         this.size = size;
         dataContainer = new ArrayList<>(2*size-1);
+        for(int i=0; i<2*size-1; ++i){
+            dataContainer.add(i, null);
+        }
     }
 
     public T get(int index){
-        if(index<size) return dataContainer.get(index);
-        throw new IndexOutOfBoundsException("index should be less than size");
+        return dataContainer.get(index);
     }
 
     public void set(int index, T value){
-        if(index<size) dataContainer.set(index, value);
-        throw new IndexOutOfBoundsException("index should be less than size");
+        dataContainer.set(index, value);
     }
 
     public int getSize(){ return this.size; }
@@ -124,9 +126,9 @@ public class BTree<T> {
                 int tmpNodeIndex = nodeIndex-leavesSize;
                 Children tmpChildren = findChildren(tmpNodeIndex, tmpLeavesSize);
                 Children children = new Children(tmpChildren.child1+leavesSize, tmpChildren.child2+leavesSize);
-                System.out.println(String.format("Tmp tree: size=%d, index=%d", tmpLeavesSize, tmpNodeIndex));
-                System.out.println("Children in tmp tree:" + tmpChildren);
-                System.out.println("Children in tree:" + children);
+//                System.out.println(String.format("Tmp tree: size=%d, index=%d", tmpLeavesSize, tmpNodeIndex));
+//                System.out.println("Children in tmp tree:" + tmpChildren);
+//                System.out.println("Children in tree:" + children);
                 return children;
             } else { // remove leavesSize-1 leaves
                 // the last odd leave in old tree will be last leave in the new tree
@@ -134,8 +136,8 @@ public class BTree<T> {
                 // nodeIndex couldn't on the second floor here
                 int tmpNodeIndex = nodeIndex-leavesSize+1;
                 Children tmpChildren = findChildren(tmpNodeIndex, tmpLeavesSize);
-                System.out.println(String.format("Tmp tree: size=%d, index=%d", tmpLeavesSize, tmpNodeIndex));
-                System.out.println("Children in tmp tree:" + tmpChildren);
+//                System.out.println(String.format("Tmp tree: size=%d, index=%d", tmpLeavesSize, tmpNodeIndex));
+//                System.out.println("Children in tmp tree:" + tmpChildren);
 
                 // whether last odd node in children
                 if(tmpChildren.child1 > tmpLeavesSize-1){
@@ -153,7 +155,7 @@ public class BTree<T> {
                 } else {
                     tmpChildren.child2 = leavesSize-1;
                 }
-                System.out.println("Children in tree:" + tmpChildren);
+//                System.out.println("Children in tree:" + tmpChildren);
 
                 return tmpChildren;
             }
