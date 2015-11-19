@@ -3,6 +3,7 @@ package fi.aalto.dmg.frame;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.tuple.Fields;
 import fi.aalto.dmg.exceptions.DurationException;
+import fi.aalto.dmg.exceptions.WorkloadException;
 import fi.aalto.dmg.frame.bolts.*;
 import fi.aalto.dmg.frame.bolts.discretized.DiscretizedPairReduceByKeyBolt;
 import fi.aalto.dmg.frame.bolts.windowed.WindowPairReduceByKeyBolt;
@@ -64,12 +65,12 @@ public class StormPairOperator<K, V> implements PairWorkloadOperator<K,V> {
     }
 
     @Override
-    public WindowedPairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration) {
+    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration) {
         return reduceByKeyAndWindow(fun, componentId, windowDuration, windowDuration);
     }
 
     @Override
-    public WindowedPairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration, TimeDurations slideDuration) {
+    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration, TimeDurations slideDuration) {
         try {
             topologyBuilder.setBolt(componentId + "-local", new WindowPairReduceByKeyBolt<>(fun, windowDuration, slideDuration))
                     .localOrShuffleGrouping(preComponentId);
@@ -79,7 +80,7 @@ public class StormPairOperator<K, V> implements PairWorkloadOperator<K,V> {
         } catch (DurationException e) {
             e.printStackTrace();
         }
-        return new StormDiscretizedPairOperator<>(topologyBuilder, componentId);
+        return new StormPairOperator<>(topologyBuilder, componentId);
     }
 
     @Override
@@ -90,6 +91,19 @@ public class StormPairOperator<K, V> implements PairWorkloadOperator<K,V> {
     @Override
     public WindowedPairWorkloadOperator<K, V> window(TimeDurations windowDuration, TimeDurations slideDuration) {
         return new StormWindowedPairOperator<>(topologyBuilder, preComponentId, windowDuration, slideDuration);
+    }
+
+    @Override
+    public <R> PairWorkloadOperator<K, Tuple2<V, R>> join(String componentId, PairWorkloadOperator<K, R> joinStream, TimeDurations windowDuration1, TimeDurations windowDuration2) throws WorkloadException {
+
+        if(joinStream instanceof StormPairOperator){
+            StormPairOperator<K,R> joinStormStream = (StormPairOperator<K,R>)joinStream;
+            topologyBuilder.setBolt(componentId, new JoinBolt<>(componentId, windowDuration1, joinStormStream.preComponentId, windowDuration2))
+                    .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField))
+                    .fieldsGrouping(joinStormStream.preComponentId, new Fields(BoltConstants.OutputKeyField));
+            return new StormPairOperator<>(topologyBuilder, componentId);
+        }
+        throw new WorkloadException("Cast joinStrem to StormPairOperator failed");
     }
 
 

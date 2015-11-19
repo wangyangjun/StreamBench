@@ -1,6 +1,7 @@
 package fi.aalto.dmg.util;
 
 /**
+ * Utils
  * Created by jun on 11/3/15.
  */
 public class Utils {

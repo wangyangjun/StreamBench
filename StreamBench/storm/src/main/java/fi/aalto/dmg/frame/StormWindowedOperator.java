@@ -31,53 +31,53 @@ public class StormWindowedOperator<T> implements WindowedWorkloadOperator<T>  {
 
 
     @Override
-    public <R> WindowedWorkloadOperator<R> mapPartition(MapPartitionFunction<T, R> fun, String componentId) {
+    public <R> WorkloadOperator<R> mapPartition(MapPartitionFunction<T, R> fun, String componentId) {
         try {
             topologyBuilder.setBolt(componentId, new WindowMapPartitionBolt<>(fun, windowDuration, slideDuration)).localOrShuffleGrouping(preComponentId);
         } catch (DurationException e) {
             e.printStackTrace();
         }
-        return new StormDiscretizedOperator<>(topologyBuilder, componentId);
+        return new StormOperator<>(topologyBuilder, componentId);
     }
 
     @Override
-    public <R> WindowedWorkloadOperator<R> map(MapFunction<T, R> fun, String componentId) {
+    public <R> WorkloadOperator<R> map(MapFunction<T, R> fun, String componentId) {
         try {
             topologyBuilder.setBolt(componentId, new WindowMapBolt<>(fun, windowDuration, slideDuration)).localOrShuffleGrouping(preComponentId);
         } catch (DurationException e) {
             e.printStackTrace();
         }
-        return new StormDiscretizedOperator<>(topologyBuilder, componentId);
+        return new StormOperator<>(topologyBuilder, componentId);
     }
 
     @Override
-    public WindowedWorkloadOperator<T> filter(FilterFunction<T> fun, String componentId) {
+    public WorkloadOperator<T> filter(FilterFunction<T> fun, String componentId) {
         try {
             topologyBuilder.setBolt(componentId, new WindowFilterBolt<>(fun, windowDuration, slideDuration)).localOrShuffleGrouping(preComponentId);
         } catch (DurationException e) {
             e.printStackTrace();
         }
-        return new StormDiscretizedOperator<>(topologyBuilder, componentId);
+        return new StormOperator<>(topologyBuilder, componentId);
     }
 
     @Override
-    public WindowedWorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId) {
+    public WorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId) {
         try {
             topologyBuilder.setBolt(componentId, new WindowReduceBolt<>(fun, windowDuration, slideDuration)).localOrShuffleGrouping(preComponentId);
         } catch (DurationException e) {
             e.printStackTrace();
         }
-        return new StormDiscretizedOperator<>(topologyBuilder, componentId);
+        return new StormOperator<>(topologyBuilder, componentId);
     }
 
     @Override
-    public <K, V> WindowedPairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId) {
+    public <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId) {
         try {
             topologyBuilder.setBolt(componentId, new WindowMapToPairBolt<>(fun, windowDuration, slideDuration)).localOrShuffleGrouping(preComponentId);
         } catch (DurationException e) {
             e.printStackTrace();
         }
-        return new StormDiscretizedPairOperator<>(topologyBuilder, componentId);
+        return new StormPairOperator<>(topologyBuilder, componentId);
     }
 
     @Override

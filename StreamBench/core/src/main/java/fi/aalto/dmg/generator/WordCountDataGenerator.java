@@ -5,6 +5,7 @@ import org.apache.commons.math3.random.*;
 import org.apache.log4j.Logger;
 
 /**
+ * Generator for WordCount workload
  * Created by yangjun.wang on 26/10/15.
  */
 public class WordCountDataGenerator {

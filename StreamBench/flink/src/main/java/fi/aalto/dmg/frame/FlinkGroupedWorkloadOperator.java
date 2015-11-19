@@ -1,20 +1,17 @@
 package fi.aalto.dmg.frame;
 
 import fi.aalto.dmg.frame.functions.ReduceFunction;
-import fi.aalto.dmg.util.TimeDurations;
 import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.GroupedDataStream;
-import org.apache.flink.streaming.api.datastream.WindowedDataStream;
-import org.apache.flink.streaming.api.windowing.helper.Time;
+import org.apache.flink.streaming.api.datastream.KeyedStream;
 import scala.Tuple2;
 
 /**
  * Created by yangjun.wang on 25/10/15.
  */
 public class FlinkGroupedWorkloadOperator<K,V> implements GroupedWorkloadOperator<K,V> {
-    private GroupedDataStream<Tuple2<K,V>> groupedDataStream;
+    private KeyedStream<Tuple2<K,V>, Object> groupedDataStream;
 
-    public FlinkGroupedWorkloadOperator(GroupedDataStream<Tuple2<K, V>> groupedDataStream) {
+    public FlinkGroupedWorkloadOperator(KeyedStream<Tuple2<K,V>, Object> groupedDataStream) {
         this.groupedDataStream = groupedDataStream;
     }
 

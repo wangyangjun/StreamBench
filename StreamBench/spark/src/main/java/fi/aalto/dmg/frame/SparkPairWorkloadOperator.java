@@ -1,5 +1,6 @@
 package fi.aalto.dmg.frame;
 
+import fi.aalto.dmg.exceptions.WorkloadException;
 import fi.aalto.dmg.frame.functions.*;
 import fi.aalto.dmg.util.TimeDurations;
 import fi.aalto.dmg.util.Utils;
@@ -58,16 +59,16 @@ public class SparkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
     }
 
     @Override
-    public WindowedPairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration) {
+    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration) {
         return reduceByKeyAndWindow(fun, componentId, windowDuration, windowDuration);
     }
 
     @Override
-    public WindowedPairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration, TimeDurations slideDuration) {
+    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration, TimeDurations slideDuration) {
         Duration windowDurations = Utils.timeDurationsToSparkDuration(windowDuration);
         Duration slideDurations = Utils.timeDurationsToSparkDuration(slideDuration);
-        JavaPairDStream<K, V> cumulateStream = pairDStream.reduceByKeyAndWindow(new ReduceFunctionImpl<V>(fun), windowDurations, slideDurations);
-        return new SparkWindowedPairWorkloadOperator<>(cumulateStream);
+        JavaPairDStream<K, V> accumulateStream = pairDStream.reduceByKeyAndWindow(new ReduceFunctionImpl<V>(fun), windowDurations, slideDurations);
+        return new SparkPairWorkloadOperator<>(accumulateStream);
     }
 
 
@@ -82,6 +83,18 @@ public class SparkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
         Duration slideDurations = Utils.timeDurationsToSparkDuration(slideDuration);
         JavaPairDStream<K, V> windowedStream = pairDStream.window(windowDurations, slideDurations);
         return new SparkWindowedPairWorkloadOperator<>(windowedStream);
+    }
+
+    @Override
+    public <R> PairWorkloadOperator<K, Tuple2<V, R>> join(String componentId, PairWorkloadOperator<K, R> joinStream, TimeDurations windowDuration, TimeDurations joinWindowDuration) throws WorkloadException {
+        Duration windowDurations = Utils.timeDurationsToSparkDuration(windowDuration);
+        Duration joinWindowDurations = Utils.timeDurationsToSparkDuration(joinWindowDuration);
+        if(joinStream instanceof SparkPairWorkloadOperator) {
+            SparkPairWorkloadOperator<K, R> joinSparkStream = ((SparkPairWorkloadOperator<K, R>) joinStream);
+            JavaPairDStream<K, Tuple2<V, R>> joinedStream = pairDStream.window(windowDurations).join(joinSparkStream.pairDStream.window(joinWindowDurations));
+            return new SparkPairWorkloadOperator<>(joinedStream);
+        }
+        throw new WorkloadException("Cast joinStrem to SparkPairWorkloadOperator failed");
     }
 
     @Override

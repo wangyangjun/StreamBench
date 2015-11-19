@@ -62,7 +62,7 @@ public class WordCountWindowed  extends Workload implements Serializable {
             */
 
             WorkloadOperator<String> operator = kafkaStreamOperator();
-            WindowedPairWorkloadOperator<String, Integer> counts =
+            PairWorkloadOperator<String, Integer> counts =
                     operator.flatMap(UserFunctions.splitFlatMap, "spliter")
                             .mapToPair(UserFunctions.mapToStringIntegerPair, "pair")
                             .reduceByKeyAndWindow(UserFunctions.sumReduce, "counter",

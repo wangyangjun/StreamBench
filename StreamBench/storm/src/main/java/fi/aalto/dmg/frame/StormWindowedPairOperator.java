@@ -34,14 +34,14 @@ public class StormWindowedPairOperator<K,V> implements WindowedPairWorkloadOpera
 
 
     @Override
-    public WindowedPairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId) {
+    public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId) {
         try {
             topologyBuilder.setBolt(componentId, new WindowPairReduceByKeyBolt<>(fun, windowDuration, slideDuration))
                     .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
         } catch (DurationException e) {
             e.printStackTrace();
         }
-        return new StormDiscretizedPairOperator<>(topologyBuilder, componentId);
+        return new StormPairOperator<>(topologyBuilder, componentId);
     }
 
     /**
@@ -63,7 +63,7 @@ public class StormWindowedPairOperator<K,V> implements WindowedPairWorkloadOpera
     }
 
     @Override
-    public <R> WindowedPairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId) {
+    public <R> PairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId) {
         // set bolt
         try {
             topologyBuilder.setBolt(componentId, new WindowPairMapPartitionBolt<>(fun, windowDuration, slideDuration))
@@ -71,40 +71,40 @@ public class StormWindowedPairOperator<K,V> implements WindowedPairWorkloadOpera
         } catch (DurationException e) {
             e.printStackTrace();
         }
-        return new StormDiscretizedPairOperator<>(topologyBuilder, componentId);
+        return new StormPairOperator<>(topologyBuilder, componentId);
     }
 
     @Override
-    public <R> WindowedPairWorkloadOperator<K, R> mapValue(MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId) {
+    public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId) {
         try {
             topologyBuilder.setBolt(componentId, new WindowMapValueBolt<>(fun, windowDuration, slideDuration))
                     .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
         } catch (DurationException e) {
             e.printStackTrace();
         }
-        return new StormDiscretizedPairOperator<>(topologyBuilder, componentId);
+        return new StormPairOperator<>(topologyBuilder, componentId);
     }
 
     @Override
-    public WindowedPairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId) {
+    public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId) {
         try {
             topologyBuilder.setBolt(componentId, new WindowPairFilterBolt<>(fun, windowDuration, slideDuration))
                     .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
         } catch (DurationException e) {
             e.printStackTrace();
         }
-        return new StormDiscretizedPairOperator<>(topologyBuilder, componentId);
+        return new StormPairOperator<>(topologyBuilder, componentId);
     }
 
     @Override
-    public WindowedPairWorkloadOperator<K, V> reduce(ReduceFunction<Tuple2<K, V>> fun, String componentId) {
+    public PairWorkloadOperator<K, V> reduce(ReduceFunction<Tuple2<K, V>> fun, String componentId) {
         try {
             topologyBuilder.setBolt(componentId, new WindowPairReduceBolt<>(fun, windowDuration, slideDuration))
                     .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
         } catch (DurationException e) {
             e.printStackTrace();
         }
-        return new StormDiscretizedPairOperator<>(topologyBuilder, componentId);
+        return new StormPairOperator<>(topologyBuilder, componentId);
     }
 
     @Override

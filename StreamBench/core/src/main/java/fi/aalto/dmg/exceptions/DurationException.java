@@ -3,6 +3,8 @@ package fi.aalto.dmg.exceptions;
 import java.io.Serializable;
 
 /**
+ * Window time duration exception
+ * cast util.TimeDurations to duration in different platforms
  * Created by jun on 11/3/15.
  */
 

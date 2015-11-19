@@ -22,6 +22,7 @@ import java.util.Map;
 /**
  * Online calculate(default)/ Cumulative data
  * Created by jun on 11/9/15.
+ * Tested
  */
 public class WindowPairReduceByKeyBolt<K,V> extends WindowedBolt {
 

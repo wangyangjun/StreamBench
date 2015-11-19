@@ -1,11 +1,12 @@
 package fi.aalto.dmg;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
+import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;
-import org.apache.flink.streaming.api.datastream.WindowedDataStream;
-import org.apache.flink.streaming.api.datastream.temporal.StreamJoinOperator;
+import org.apache.flink.streaming.api.datastream.WindowedStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.windowing.helper.Time;
+import org.apache.flink.streaming.api.windowing.time.Time;
+import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
 
 import java.util.concurrent.TimeUnit;
@@ -18,18 +19,27 @@ public class Wordcount {
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        final WindowedDataStream<Tuple2<String, Integer>> counts = env
+        final WindowedStream<Tuple2<String, Integer>, String, TimeWindow> counts = env
                 .socketTextStream("localhost", 9999)
                 .flatMap(new Splitter())
-                .groupBy(0)
-                .window(Time.of(5, TimeUnit.SECONDS));
+                .keyBy(new KeySelector<Tuple2<String,Integer>, String>() {
+                    @Override
+                    public String getKey(Tuple2<String, Integer> value) throws Exception {
+                        return value.f0;
+                    }
+                })
+                .timeWindow(Time.of(5, TimeUnit.SECONDS));
 
-        final WindowedDataStream<Tuple2<String, Integer>> counts2 = env
+        final WindowedStream<Tuple2<String, Integer>, String, TimeWindow> counts2 = env
                 .socketTextStream("localhost", 9998)
                 .flatMap(new Splitter())
-                .groupBy(0)
-                .window(Time.of(5, TimeUnit.SECONDS));
-
+                .keyBy(new KeySelector<Tuple2<String,Integer>, String>() {
+                    @Override
+                    public String getKey(Tuple2<String, Integer> value) throws Exception {
+                        return value.f0;
+                    }
+                })
+                .timeWindow(Time.of(5, TimeUnit.SECONDS));
 
         env.execute("Socket Stream WordCount");
     }

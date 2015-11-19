@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.apache.kafka.clients.producer.KafkaProducer;
 
 /**
+ * Data generator for advertise click workload
  * Created by jun on 17/11/15.
  */
 public class AdvertiseClickDataGenerator {
@@ -18,9 +19,6 @@ public class AdvertiseClickDataGenerator {
     private static double LAMBDA = 1;
     private static double CLICK_LAMBDA = 0.33;
     private static int SENTENCE_NUM = 100;
-    private static double CLICK_PROBABILITY = 0.33;
-    private static int ZIPF_SIZE = 100000;
-    private static long ZIPF_EXPONENT = 1L;
     private static KafkaProducer<String, String> producer;
 
     private static KafkaProducer<String, String> createProducer(){

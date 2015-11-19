@@ -12,6 +12,10 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
 /**
+ * Word count workload
+ * Spark, Flink implement pre-aggregation
+ * Storm reduces on field grouping stream
+ * Spark streaming is a mini-batches model, which need call updateStateByKey to accumulate
  * Created by yangjun.wang on 27/10/15.
  */
 public class WordCount extends Workload implements Serializable{

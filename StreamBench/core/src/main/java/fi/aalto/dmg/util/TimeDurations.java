@@ -5,6 +5,7 @@ import fi.aalto.dmg.exceptions.DurationException;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * A common window/slide time duration class
  * Created by jun on 11/3/15.
  */
 public class TimeDurations {
@@ -32,5 +33,9 @@ public class TimeDurations {
 
     public long getLength() {
         return length;
+    }
+
+    public boolean equals(TimeDurations timeDurations){
+        return this.getLength()==timeDurations.getLength()&&this.getUnit().equals(timeDurations.getUnit());
     }
 }
