@@ -19,6 +19,7 @@ import java.lang.reflect.InvocationTargetException;
 public class WordCountGrouping extends Workload implements Serializable {
 
     private static final Logger logger = Logger.getLogger(WordCount.class);
+    private static final long serialVersionUID = 2835367895719829656L;
 
     public WordCountGrouping(OperatorCreater creater) throws WorkloadException {
         super(creater);

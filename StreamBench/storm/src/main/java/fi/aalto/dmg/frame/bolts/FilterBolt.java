@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 public class FilterBolt<T> extends BaseBasicBolt {
 
     private static final Logger logger = LoggerFactory.getLogger(FilterBolt.class);
+    private static final long serialVersionUID = 2401869900116259991L;
     FilterFunction<T> fun;
 
     public FilterBolt(FilterFunction<T> function){

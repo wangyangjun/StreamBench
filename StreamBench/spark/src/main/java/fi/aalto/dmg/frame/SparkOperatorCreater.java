@@ -20,6 +20,7 @@ import java.util.*;
  */
 public class SparkOperatorCreater extends OperatorCreater implements Serializable {
 
+    private static final long serialVersionUID = 6964020640199730722L;
     public JavaStreamingContext jssc;
     private Properties properties;
 

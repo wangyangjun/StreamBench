@@ -19,6 +19,7 @@ import java.util.Map;
  */
 public class DiscretizedPairReduceByKeyBolt<K,V> extends DiscretizedBolt {
     private static final Logger logger = LoggerFactory.getLogger(DiscretizedPairReduceByKeyBolt.class);
+    private static final long serialVersionUID = -786599395415377792L;
     private ReduceFunction<V> fun;
     private Map<Integer, Map<K,V>> slideDataMap;
 

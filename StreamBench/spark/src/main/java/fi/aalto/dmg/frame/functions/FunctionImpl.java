@@ -8,6 +8,7 @@ import java.io.Serializable;
  * Created by yangjun.wang on 28/10/15.
  */
 public class FunctionImpl<T,R> implements Function<T,R>, Serializable {
+    private static final long serialVersionUID = 372636029892640554L;
     private MapFunction<T,R> function;
 
     public FunctionImpl(MapFunction<T,R> fun){

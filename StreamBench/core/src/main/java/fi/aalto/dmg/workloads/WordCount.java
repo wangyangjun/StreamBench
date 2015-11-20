@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 public class WordCount extends Workload implements Serializable{
 
     private static final Logger logger = Logger.getLogger(WordCount.class);
+    private static final long serialVersionUID = -1558126580235739604L;
 
     public WordCount(OperatorCreater creater) throws WorkloadException {
         super(creater);

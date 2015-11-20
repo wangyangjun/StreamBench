@@ -12,6 +12,7 @@ import fi.aalto.dmg.util.TimeDurations;
  */
 public class StormWindowedOperator<T> implements WindowedWorkloadOperator<T>  {
 
+    private static final long serialVersionUID = -6227716871223564255L;
     protected TopologyBuilder topologyBuilder;
     protected String preComponentId;
     private TimeDurations windowDuration;

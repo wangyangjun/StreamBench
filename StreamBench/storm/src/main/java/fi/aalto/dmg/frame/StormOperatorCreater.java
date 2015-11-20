@@ -17,6 +17,7 @@ import storm.kafka.*;
  */
 public class StormOperatorCreater extends OperatorCreater implements Serializable {
 
+    private static final long serialVersionUID = 4498355837057651696L;
     private Properties properties;
     private Config conf;
     private TopologyBuilder topologyBuilder;

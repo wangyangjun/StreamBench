@@ -7,6 +7,7 @@ import org.apache.spark.api.java.function.Function;
  */
 public class FlatMapValuesFunctionImpl<V,R> implements Function<V, Iterable<R>> {
 
+    private static final long serialVersionUID = 8493339432309258384L;
     FlatMapFunction<V, R> fun;
 
     public FlatMapValuesFunctionImpl(FlatMapFunction<V, R> function) {

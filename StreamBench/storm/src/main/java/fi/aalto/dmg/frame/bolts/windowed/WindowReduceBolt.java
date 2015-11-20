@@ -20,6 +20,7 @@ import java.util.List;
  */
 public class WindowReduceBolt<T> extends WindowedBolt {
     private static final Logger logger = LoggerFactory.getLogger(WindowReduceBolt.class);
+    private static final long serialVersionUID = 865100279347059333L;
 
     // window data structure TODO: replace it with tree
     private List<T> reduceList;

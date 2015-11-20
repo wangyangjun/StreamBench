@@ -14,6 +14,7 @@ import java.util.ArrayList;
  */
 public class PairPrintBolt<T> extends BaseBasicBolt {
 
+    private static final long serialVersionUID = 5063888858772660110L;
     private boolean windowed;
 
     private static final Logger logger = LoggerFactory.getLogger(PairPrintBolt.class);

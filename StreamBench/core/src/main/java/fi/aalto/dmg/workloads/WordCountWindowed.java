@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class WordCountWindowed  extends Workload implements Serializable {
     private static final Logger logger = Logger.getLogger(WordCountWindowed.class);
+    private static final long serialVersionUID = 5131563712627441022L;
 
     public WordCountWindowed(OperatorCreater creater) throws WorkloadException {
         super(creater);

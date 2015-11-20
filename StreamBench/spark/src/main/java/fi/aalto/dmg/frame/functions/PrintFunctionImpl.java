@@ -14,6 +14,8 @@ import java.util.List;
 public class PrintFunctionImpl<T> implements Function2<JavaRDD<T>, Time, Void> {
 
     private static final Logger logger = LoggerFactory.getLogger(PrintFunctionImpl.class);
+    private static final long serialVersionUID = -5611847135852985415L;
+
     @Override
     public Void call(JavaRDD<T> tJavaRDD, Time time) throws Exception {
 

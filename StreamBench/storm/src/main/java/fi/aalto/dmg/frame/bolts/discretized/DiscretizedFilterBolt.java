@@ -22,6 +22,7 @@ import java.util.Map;
  */
 public class DiscretizedFilterBolt<T> extends DiscretizedBolt {
     private static final Logger logger = LoggerFactory.getLogger(DiscretizedMapBolt.class);
+    private static final long serialVersionUID = 1480952512955501243L;
 
     private Map<Integer, List<T>> slideDataMap;
     private FilterFunction<T> fun;

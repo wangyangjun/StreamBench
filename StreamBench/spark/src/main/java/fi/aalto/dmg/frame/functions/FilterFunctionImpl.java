@@ -6,6 +6,7 @@ import org.apache.spark.api.java.function.*;
  * Created by yangjun.wang on 28/10/15.
  */
 public class FilterFunctionImpl<T> implements Function<T, Boolean> {
+    private static final long serialVersionUID = -6809290167835550952L;
     private FilterFunction<T> fun;
 
     public FilterFunctionImpl(FilterFunction<T> function){

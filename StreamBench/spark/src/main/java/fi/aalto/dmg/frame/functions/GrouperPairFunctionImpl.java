@@ -8,6 +8,7 @@ import scala.Tuple2;
  */
 public class GrouperPairFunctionImpl<K,V> implements PairFunction<Tuple2<K,Iterable<V>>, K, V> {
 
+    private static final long serialVersionUID = 5274813120639433080L;
     private ReduceFunction<V> fun;
     public GrouperPairFunctionImpl(ReduceFunction<V> function){
         this.fun = function;

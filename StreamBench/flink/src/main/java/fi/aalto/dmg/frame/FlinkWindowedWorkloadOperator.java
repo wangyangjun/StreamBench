@@ -15,6 +15,7 @@ import scala.Tuple2;
  */
 public class FlinkWindowedWorkloadOperator<T, W extends Window> implements WindowedWorkloadOperator<T> {
 
+    private static final long serialVersionUID = -6316145102054759409L;
     private WindowedStream<T, T, W> windowStream;
 
     public FlinkWindowedWorkloadOperator(WindowedStream<T, T, W> stream) {

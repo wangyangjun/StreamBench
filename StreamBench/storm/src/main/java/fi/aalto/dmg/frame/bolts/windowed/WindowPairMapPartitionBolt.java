@@ -22,6 +22,7 @@ import java.util.List;
 
 public class WindowPairMapPartitionBolt<K, V, R> extends WindowedBolt {
     private static final Logger logger = LoggerFactory.getLogger(WindowMapBolt.class);
+    private static final long serialVersionUID = -8822616231904703668L;
 
     // each slide has a corresponding List<R>
     private List<List<Tuple2<K,V>>> mapedList;

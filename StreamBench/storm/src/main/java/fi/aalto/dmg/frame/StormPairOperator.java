@@ -16,6 +16,7 @@ import scala.Tuple2;
  */
 public class StormPairOperator<K, V> implements PairWorkloadOperator<K,V> {
 
+    private static final long serialVersionUID = -495651940753255655L;
     protected TopologyBuilder topologyBuilder;
     protected String preComponentId;
 

@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 public class ReduceBolt<T> extends BaseBasicBolt {
 
     private static final Logger logger = LoggerFactory.getLogger(ReduceBolt.class);
+    private static final long serialVersionUID = 6478439481824085537L;
     private T currentValue;
 
     ReduceFunction<T> fun;

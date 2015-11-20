@@ -20,6 +20,7 @@ import java.util.LinkedList;
  */
 public class JoinBolt<K,V,R> extends BaseBasicBolt {
 
+    private static final long serialVersionUID = 4820980147212849642L;
     private String component1;
     private String component2;
     private long component1_window_seconds;

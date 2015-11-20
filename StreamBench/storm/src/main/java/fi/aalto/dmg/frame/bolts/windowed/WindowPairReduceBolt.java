@@ -21,6 +21,7 @@ import scala.Tuple2;
 public class WindowPairReduceBolt<K,V> extends WindowedBolt {
 
     private static final Logger logger = LoggerFactory.getLogger(WindowPairReduceByKeyBolt.class);
+    private static final long serialVersionUID = -180584448506842278L;
     // for each slide, there is a corresponding reduced Tuple2
     private BTree<Tuple2<K,V>> reduceDataContainer;
     private ReduceFunction<Tuple2<K, V>> fun;

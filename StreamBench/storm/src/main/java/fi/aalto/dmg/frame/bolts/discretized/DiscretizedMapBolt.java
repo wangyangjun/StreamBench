@@ -21,6 +21,7 @@ import java.util.Map;
  */
 public class DiscretizedMapBolt<T, R> extends DiscretizedBolt {
     private static final Logger logger = LoggerFactory.getLogger(DiscretizedMapBolt.class);
+    private static final long serialVersionUID = 7646952300108809739L;
 
     private Map<Integer, List<R>> slideDataMap;
     private MapFunction<T, R> fun;

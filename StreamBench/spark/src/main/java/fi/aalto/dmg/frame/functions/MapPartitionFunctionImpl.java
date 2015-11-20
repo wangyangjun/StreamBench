@@ -10,6 +10,7 @@ import org.apache.spark.api.java.function.FlatMapFunction;
  */
 public class MapPartitionFunctionImpl<T,R> implements FlatMapFunction<Iterator<T>, R> {
 
+    private static final long serialVersionUID = 1330526225779542078L;
     private MapPartitionFunction<T, R> fun;
 
     public MapPartitionFunctionImpl(MapPartitionFunction<T, R> function){

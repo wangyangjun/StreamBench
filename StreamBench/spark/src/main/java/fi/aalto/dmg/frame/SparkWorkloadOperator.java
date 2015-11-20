@@ -17,6 +17,7 @@ import org.apache.spark.streaming.api.java.JavaPairDStream;
  * Created by yangjun.wang on 23/10/15.
  */
 public class SparkWorkloadOperator<T> extends OperatorBase implements WorkloadOperator<T> {
+    private static final long serialVersionUID = 1265982206392632383L;
     private JavaDStream<T> dStream;
 
     public SparkWorkloadOperator(JavaDStream<T> stream){

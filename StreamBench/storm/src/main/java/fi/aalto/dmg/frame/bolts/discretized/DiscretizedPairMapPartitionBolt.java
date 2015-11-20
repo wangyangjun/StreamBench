@@ -22,6 +22,7 @@ import java.util.Map;
  */
 public class DiscretizedPairMapPartitionBolt<K,V,R> extends DiscretizedBolt {
     private static final Logger logger = LoggerFactory.getLogger(DiscretizedMapBolt.class);
+    private static final long serialVersionUID = -7515076040626001607L;
 
     // store received data without any process
     private Map<Integer, List<Tuple2<K,V>>> slideDataMap;

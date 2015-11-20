@@ -8,6 +8,7 @@ import org.apache.spark.streaming.api.java.JavaPairDStream;
  * Created by yangjun.wang on 31/10/15.
  */
 public class SparkWindowedWorkloadOperator<T> implements WindowedWorkloadOperator<T> {
+    private static final long serialVersionUID = -6693062092516294209L;
     private JavaDStream<T> dStream;
 
     public SparkWindowedWorkloadOperator(JavaDStream<T> stream){

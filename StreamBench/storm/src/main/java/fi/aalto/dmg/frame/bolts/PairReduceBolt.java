@@ -19,6 +19,7 @@ import java.util.Map;
 public class PairReduceBolt<K,V> extends BaseBasicBolt {
 
     private static final Logger logger = LoggerFactory.getLogger(PairReduceBolt.class);
+    private static final long serialVersionUID = 3751131798984227211L;
     private Map<K, V> map;
 
     ReduceFunction<V> fun;

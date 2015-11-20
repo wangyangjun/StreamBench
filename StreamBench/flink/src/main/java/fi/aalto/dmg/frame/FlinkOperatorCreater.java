@@ -13,6 +13,7 @@ import java.util.Properties;
  */
 public class FlinkOperatorCreater extends OperatorCreater {
 
+    private static final long serialVersionUID = 4194701654519072721L;
     private Properties properties;
     final StreamExecutionEnvironment env;
 

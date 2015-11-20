@@ -27,6 +27,7 @@ import java.util.Map;
 public class WindowPairReduceByKeyBolt<K,V> extends WindowedBolt {
 
     private static final Logger logger = LoggerFactory.getLogger(WindowPairReduceByKeyBolt.class);
+    private static final long serialVersionUID = 3371879383220577120L;
     // for each slide, there is a corresponding reduced Tuple2
     private ReduceFunction<V> fun;
     private BTree<Map<K, V>> reduceDataContainer;

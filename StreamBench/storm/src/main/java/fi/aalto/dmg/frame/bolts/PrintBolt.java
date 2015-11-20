@@ -17,6 +17,7 @@ import java.util.Map;
 public class PrintBolt<T> extends BaseBasicBolt {
 
     private static final Logger logger = LoggerFactory.getLogger(PrintBolt.class);
+    private static final long serialVersionUID = -5688326702164269931L;
 
     private boolean windowed;
 

@@ -20,6 +20,7 @@ import java.util.Map;
  */
 public abstract class WindowedBolt extends BaseBasicBolt {
 
+    private static final long serialVersionUID = 1571515050457013114L;
     // topology tick tuple frequency in seconds
     private long TOPOLOGY_TICK_TUPLE_FREQ_SECS;
 

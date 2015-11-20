@@ -16,6 +16,7 @@ import scala.Tuple2;
  */
 public class SparkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V> {
 
+    private static final long serialVersionUID = 7879350341179747221L;
     private JavaPairDStream<K,V> pairDStream;
 
     public SparkPairWorkloadOperator(JavaPairDStream<K, V> stream){

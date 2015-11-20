@@ -20,6 +20,7 @@ import scala.Tuple2;
  * Created by yangjun.wang on 24/10/15.
  */
 public class FlinkWorkloadOperator<T> extends OperatorBase implements WorkloadOperator<T> {
+    private static final long serialVersionUID = -8568404720313488006L;
     protected DataStream<T> dataStream;
 
 

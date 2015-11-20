@@ -21,6 +21,7 @@ import java.util.Map;
 
 public class DiscretizedPairReduceBolt<K,V> extends DiscretizedBolt {
     private static final Logger logger = LoggerFactory.getLogger(DiscretizedPairReduceByKeyBolt.class);
+    private static final long serialVersionUID = -3392765120683897619L;
     private ReduceFunction<Tuple2<K, V>> fun;
     // each slide has corresponding reduced tuple
     private Map<Integer, Tuple2<K, V>> slideDataMap;

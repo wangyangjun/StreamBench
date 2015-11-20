@@ -26,6 +26,7 @@ import java.lang.reflect.TypeVariable;
  */
 public class FlinkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V> {
 
+    private static final long serialVersionUID = 6796359288214662089L;
     private DataStream<Tuple2<K, V>> dataStream;
 
     public FlinkPairWorkloadOperator(DataStream<Tuple2<K, V>> dataStream1) {

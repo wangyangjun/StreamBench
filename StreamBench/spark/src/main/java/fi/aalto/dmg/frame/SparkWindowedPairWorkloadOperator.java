@@ -13,6 +13,7 @@ import java.util.Iterator;
  */
 public class SparkWindowedPairWorkloadOperator<K,V> implements WindowedPairWorkloadOperator<K,V> {
 
+    private static final long serialVersionUID = 7216177060503270778L;
     private JavaPairDStream<K,V> pairDStream;
 
     public SparkWindowedPairWorkloadOperator(JavaPairDStream<K, V> stream) {

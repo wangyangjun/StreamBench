@@ -6,6 +6,7 @@ import org.apache.spark.api.java.function.Function2;
  */
 public class ReduceFunctionImpl<T> implements Function2<T,T,T>{
 
+    private static final long serialVersionUID = 2239722821222828275L;
     ReduceFunction<T> fun;
 
     public ReduceFunctionImpl(ReduceFunction<T> function){

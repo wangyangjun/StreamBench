@@ -12,6 +12,7 @@ import org.apache.spark.streaming.api.java.JavaPairDStream;
  */
 public class SparkGroupedWorkloadOperator<K,V> implements GroupedWorkloadOperator<K,V> {
 
+    private static final long serialVersionUID = 8638460461407972003L;
     private JavaPairDStream<K, Iterable<V>> pairDStream;
 
     public SparkGroupedWorkloadOperator(JavaPairDStream<K, Iterable<V>> stream){

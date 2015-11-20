@@ -9,6 +9,7 @@ import fi.aalto.dmg.util.TimeDurations;
  * Created by yangjun.wang on 31/10/15.
  */
 public class StormOperator<T> extends OperatorBase implements WorkloadOperator<T> {
+    private static final long serialVersionUID = 3305991729931748598L;
     protected TopologyBuilder topologyBuilder;
     protected String preComponentId;
 

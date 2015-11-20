@@ -10,6 +10,7 @@ import java.util.Iterator;
  * Created by jun on 11/4/15.
  */
 public class PairMapPartitionFunctionImpl<K,V,R> implements PairFlatMapFunction<Iterator<Tuple2<K, V>>, K, R> {
+    private static final long serialVersionUID = 415578217372418703L;
     MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun;
 
     public PairMapPartitionFunctionImpl(MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> function){

@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 public class MapValueBolt<V, R> extends BaseBasicBolt {
 
     private static final Logger logger = LoggerFactory.getLogger(MapBolt.class);
+    private static final long serialVersionUID = 8892670349365399357L;
 
     MapFunction<V, R> fun;
 

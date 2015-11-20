@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 public class FlatMapBolt<T, R> extends BaseBasicBolt {
 
     private static final Logger logger = LoggerFactory.getLogger(FlatMapBolt.class);
+    private static final long serialVersionUID = -1702029689864457150L;
     FlatMapFunction<T, R> fun;
 
     public FlatMapBolt(FlatMapFunction<T, R> function){

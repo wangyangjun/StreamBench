@@ -9,6 +9,7 @@ import scala.Tuple2;
  * Created by yangjun.wang on 25/10/15.
  */
 public class FlinkGroupedWorkloadOperator<K,V> implements GroupedWorkloadOperator<K,V> {
+    private static final long serialVersionUID = 6420040700673231100L;
     private KeyedStream<Tuple2<K,V>, Object> groupedDataStream;
 
     public FlinkGroupedWorkloadOperator(KeyedStream<Tuple2<K,V>, Object> groupedDataStream) {

@@ -14,6 +14,7 @@ import scala.Tuple2;
  */
 public class StormWindowedPairOperator<K,V> implements WindowedPairWorkloadOperator<K,V>{
 
+    private static final long serialVersionUID = -2953749652496717735L;
     private TopologyBuilder topologyBuilder;
     private String preComponentId;
     private TimeDurations windowDuration;

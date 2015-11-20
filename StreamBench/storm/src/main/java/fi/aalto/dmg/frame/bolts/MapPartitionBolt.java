@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 public class MapPartitionBolt<T,R> extends BaseBasicBolt {
 
     private static final Logger logger = LoggerFactory.getLogger(MapPartitionBolt.class);
+    private static final long serialVersionUID = -3273118129502437891L;
 
     MapPartitionFunction<T, R> fun;
 

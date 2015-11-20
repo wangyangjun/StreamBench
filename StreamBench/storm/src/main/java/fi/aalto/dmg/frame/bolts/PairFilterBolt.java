@@ -19,6 +19,7 @@ import scala.Tuple2;
 public class PairFilterBolt<K,V> extends BaseBasicBolt {
 
     private static final Logger logger = LoggerFactory.getLogger(FilterBolt.class);
+    private static final long serialVersionUID = -3959145878061949596L;
     FilterFunction<Tuple2<K,V>> fun;
 
     public PairFilterBolt(FilterFunction<Tuple2<K, V>> function){

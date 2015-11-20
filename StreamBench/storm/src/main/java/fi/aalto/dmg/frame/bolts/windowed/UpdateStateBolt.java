@@ -24,6 +24,7 @@ import java.util.Map;
 public class UpdateStateBolt<K,V> extends WindowedBolt  {
 
     private static final Logger logger = LoggerFactory.getLogger(PairReduceBolt.class);
+    private static final long serialVersionUID = -5859171958528281638L;
     private List<Map<K, V>> maps;
 
     ReduceFunction<V> fun;

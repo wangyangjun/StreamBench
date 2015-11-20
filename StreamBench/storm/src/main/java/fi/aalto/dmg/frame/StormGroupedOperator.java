@@ -11,6 +11,7 @@ import fi.aalto.dmg.frame.functions.ReduceFunction;
  */
 public class StormGroupedOperator<K,V> implements GroupedWorkloadOperator<K,V>  {
 
+    private static final long serialVersionUID = 3901262136572311573L;
     protected TopologyBuilder topologyBuilder;
     protected String preComponentId;
 

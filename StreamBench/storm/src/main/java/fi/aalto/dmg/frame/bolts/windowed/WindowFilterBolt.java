@@ -20,6 +20,7 @@ import java.util.List;
  */
 public class WindowFilterBolt<T> extends WindowedBolt {
     private static final Logger logger = LoggerFactory.getLogger(WindowMapBolt.class);
+    private static final long serialVersionUID = 2282056746485449714L;
 
     // each slide has a corresponding List<R>
     private List<List<T>> filteredList;
