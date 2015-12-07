@@ -33,6 +33,11 @@ public class AppTest
      */
     public void testApp()
     {
+        String str = "Hello";
+        System.out.println(str.hashCode());
+        Object o = str;
+        System.out.println(o.hashCode());
+
         assertTrue( true );
     }
 }

@@ -49,7 +49,7 @@ public class DiscretizedMapToPairBolt<T, K, V> extends DiscretizedBolt {
         if(null == pariList){
             pariList = new ArrayList<>();
         }
-        pariList.add(fun.mapPair(t));
+        pariList.add(fun.mapToPair(t));
         slideDataMap.put(slideId, pariList);
     }
 

@@ -7,6 +7,7 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import fi.aalto.dmg.frame.functions.MapPairFunction;
+import fi.aalto.dmg.statistics.Throughput;
 import scala.Tuple2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,16 +20,19 @@ public class MapToPairBolt<T, K, V> extends BaseBasicBolt {
     private static final long serialVersionUID = 713275144540880633L;
 
     MapPairFunction<T, K, V> fun;
+    Throughput throughput;
 
     public MapToPairBolt(MapPairFunction<T, K, V> function){
         this.fun = function;
+        throughput = new Throughput(logger);
     }
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
+        throughput.execute();
         Object o = input.getValue(0);
         try {
-            Tuple2<K,V> result = this.fun.mapPair((T) o);
+            Tuple2<K,V> result = this.fun.mapToPair((T) o);
             collector.emit(new Values(result._1(), result._2()));
         } catch (ClassCastException e){
             logger.error("Cast tuple[0] failed");

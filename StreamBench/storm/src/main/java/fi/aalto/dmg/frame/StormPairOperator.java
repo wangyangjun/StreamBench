@@ -59,6 +59,14 @@ public class StormPairOperator<K, V> implements PairWorkloadOperator<K,V> {
         return new StormPairOperator<>(topologyBuilder, componentId);
     }
 
+    @Override
+    public PairWorkloadOperator<K, V> iterative(MapFunction<V, V> mapFunction, FilterFunction<Tuple2<K, V>> iterativeFunction, String componentId) {
+        topologyBuilder.setBolt(componentId, new PairIteractiveBolt<>(mapFunction, iterativeFunction))
+                .localOrShuffleGrouping(preComponentId)
+                .shuffleGrouping(componentId, IteractiveBolt.ITERATIVE_STREAM);
+        return new StormPairOperator<>(topologyBuilder, componentId);
+    }
+
     // Set bolt with fieldsGrouping
     @Override
     public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId) {
@@ -95,13 +103,31 @@ public class StormPairOperator<K, V> implements PairWorkloadOperator<K,V> {
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, Tuple2<V, R>> join(String componentId, PairWorkloadOperator<K, R> joinStream, TimeDurations windowDuration1, TimeDurations windowDuration2) throws WorkloadException {
+    public <R> PairWorkloadOperator<K, Tuple2<V, R>> join(String componentId, PairWorkloadOperator<K, R> joinStream, TimeDurations windowDuration, TimeDurations joinWindowDuration) throws WorkloadException {
 
         if(joinStream instanceof StormPairOperator){
             StormPairOperator<K,R> joinStormStream = (StormPairOperator<K,R>)joinStream;
-            topologyBuilder.setBolt(componentId, new JoinBolt<>(componentId, windowDuration1, joinStormStream.preComponentId, windowDuration2))
+            topologyBuilder.setBolt(componentId, new JoinBolt<>(componentId, windowDuration, joinStormStream.preComponentId, joinWindowDuration))
                     .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField))
                     .fieldsGrouping(joinStormStream.preComponentId, new Fields(BoltConstants.OutputKeyField));
+            return new StormPairOperator<>(topologyBuilder, componentId);
+        }
+        throw new WorkloadException("Cast joinStrem to StormPairOperator failed");
+    }
+
+    // Event time join
+    @Override
+    public <R> PairWorkloadOperator<K, Tuple2<V, R>> join(String componentId, PairWorkloadOperator<K, R> joinStream,
+                                                          TimeDurations windowDuration, TimeDurations joinWindowDuration,
+                                                          AssignTimeFunction<V> eventTimeAssigner1, AssignTimeFunction<R> eventTimeAssigner2) throws WorkloadException {
+        if(joinStream instanceof StormPairOperator){
+            StormPairOperator<K,R> joinStormStream = (StormPairOperator<K,R>)joinStream;
+            topologyBuilder
+                .setBolt(componentId, new JoinBolt<>(componentId, windowDuration,
+                    joinStormStream.preComponentId, joinWindowDuration,
+                    eventTimeAssigner1, eventTimeAssigner2))
+                .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField))
+                .fieldsGrouping(joinStormStream.preComponentId, new Fields(BoltConstants.OutputKeyField));
             return new StormPairOperator<>(topologyBuilder, componentId);
         }
         throw new WorkloadException("Cast joinStrem to StormPairOperator failed");
@@ -111,6 +137,11 @@ public class StormPairOperator<K, V> implements PairWorkloadOperator<K,V> {
     @Override
     public void print() {
         topologyBuilder.setBolt("print", new PairPrintBolt<>()).localOrShuffleGrouping(preComponentId);
+    }
+
+    @Override
+    public void sink() {
+
     }
 
 }

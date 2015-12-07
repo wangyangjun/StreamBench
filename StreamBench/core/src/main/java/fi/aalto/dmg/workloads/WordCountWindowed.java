@@ -67,7 +67,7 @@ public class WordCountWindowed  extends Workload implements Serializable {
                     operator.flatMap(UserFunctions.splitFlatMap, "spliter")
                             .mapToPair(UserFunctions.mapToStringIntegerPair, "pair")
                             .reduceByKeyAndWindow(UserFunctions.sumReduce, "counter",
-                                    new TimeDurations(TimeUnit.SECONDS, 9), new TimeDurations(TimeUnit.SECONDS, 3));
+                                    new TimeDurations(TimeUnit.SECONDS, 1), new TimeDurations(TimeUnit.SECONDS, 1));
             counts.print();
 
             // cumulate counts

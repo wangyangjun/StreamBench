@@ -43,6 +43,14 @@ public class StormOperator<T> extends OperatorBase implements WorkloadOperator<T
     }
 
     @Override
+    public WorkloadOperator<T> iterative(MapFunction<T, T> mapFunction, FilterFunction<T> iterativeFunction, String componentId) {
+        topologyBuilder.setBolt(componentId, new IteractiveBolt<>(mapFunction, iterativeFunction))
+                .localOrShuffleGrouping(preComponentId)
+                .shuffleGrouping(componentId, IteractiveBolt.ITERATIVE_STREAM);
+        return new StormOperator<>(topologyBuilder, componentId);
+    }
+
+    @Override
     public <R> WorkloadOperator<R> flatMap(FlatMapFunction<T, R> fun, String componentId) {
         topologyBuilder.setBolt(componentId, new FlatMapBolt<>(fun)).localOrShuffleGrouping(preComponentId);
         return new StormOperator<>(topologyBuilder, componentId);
@@ -61,5 +69,10 @@ public class StormOperator<T> extends OperatorBase implements WorkloadOperator<T
     @Override
     public void print() {
         topologyBuilder.setBolt("print", new PrintBolt<T>()).localOrShuffleGrouping(preComponentId);
+    }
+
+    @Override
+    public void sink() {
+
     }
 }

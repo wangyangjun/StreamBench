@@ -30,6 +30,16 @@ public interface PairWorkloadOperator<K, V> extends Serializable{
 
     PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K,V>> fun, String componentId);
 
+    /**
+     * iterative operator,
+     * @param mapFunction
+     * @param iterativeFunction
+     *      if return yes, then iterator
+     * @param componentId
+     * @return
+     */
+    PairWorkloadOperator<K,V> iterative(MapFunction<V, V> mapFunction, FilterFunction<Tuple2<K,V>> iterativeFunction, String componentId);
+
     PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId);
 
     PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration);
@@ -42,6 +52,7 @@ public interface PairWorkloadOperator<K, V> extends Serializable{
 
     /**
      * Join two pair streams which have the same type of key -- K
+     *
      * @param joinStream
      *          the other stream<K,R>
      * @param windowDuration
@@ -56,6 +67,29 @@ public interface PairWorkloadOperator<K, V> extends Serializable{
             String componentId, PairWorkloadOperator<K,R> joinStream,
             TimeDurations windowDuration, TimeDurations joinWindowDuration) throws WorkloadException;
 
+    /**
+     * Join two pair streams which have the same type of key -- K base on event time
+     * @param stream2
+     *          the other stream<K,R>
+     * @param windowDuration
+     *          window length of this stream
+     * @param windowDuration2
+     *          window length of joinStream
+     * @param <R>
+     *          Value type of joinStream
+     * @param eventTimeAssigner1
+     *          event time assignment for this stream
+     * @param eventTimeAssigner2
+     *          event time assignment for joinStream
+     * @return joined stream
+     */
+    <R> PairWorkloadOperator<K, Tuple2<V,R>> join(
+            String componentId, PairWorkloadOperator<K,R> stream2,
+            TimeDurations windowDuration, TimeDurations windowDuration2,
+            AssignTimeFunction<V> eventTimeAssigner1, AssignTimeFunction<R> eventTimeAssigner2) throws WorkloadException;
+
     void print();
+
+    void sink();
 }
 

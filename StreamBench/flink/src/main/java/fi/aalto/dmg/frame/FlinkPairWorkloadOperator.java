@@ -1,25 +1,29 @@
 package fi.aalto.dmg.frame;
 
 import fi.aalto.dmg.exceptions.WorkloadException;
+import fi.aalto.dmg.frame.functions.*;
 import fi.aalto.dmg.frame.functions.FilterFunction;
 import fi.aalto.dmg.frame.functions.FlatMapFunction;
 import fi.aalto.dmg.frame.functions.MapFunction;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
 import fi.aalto.dmg.util.TimeDurations;
-import org.apache.flink.api.common.functions.JoinFunction;
+import org.apache.flink.api.common.functions.*;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.functions.KeySelector;
-import org.apache.flink.api.java.typeutils.GenericTypeInfo;
-import org.apache.flink.api.java.typeutils.ResultTypeQueryable;
+import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.typeutils.TypeExtractor;
+import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.*;
-import org.apache.flink.streaming.api.windowing.assigners.TumblingTimeWindows;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.AscendingTimestampExtractor;
+import org.apache.flink.streaming.api.operators.StreamJoinOperator;
+import org.apache.flink.streaming.api.transformations.TwoInputTransformation;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
 import scala.Tuple2;
 
-import java.lang.reflect.TypeVariable;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by yangjun.wang on 24/10/15.
@@ -32,7 +36,6 @@ public class FlinkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
     public FlinkPairWorkloadOperator(DataStream<Tuple2<K, V>> dataStream1) {
         this.dataStream = dataStream1;
     }
-
 
 
     public FlinkGroupedWorkloadOperator<K, V> groupByKey() {
@@ -97,6 +100,33 @@ public class FlinkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
         return new FlinkPairWorkloadOperator<>(newDataStream);
     }
 
+    @Override
+    public PairWorkloadOperator<K, V> iterative(MapFunction<V, V> mapFunction, final FilterFunction<Tuple2<K, V>> iterativeFunction, String componentId) {
+        IterativeStream<Tuple2<K,V>> iteration = dataStream.iterate();
+
+        DataStream<Tuple2<K,V>> mapedStream = iteration.map(new org.apache.flink.api.common.functions.MapFunction<Tuple2<K, V>, Tuple2<K, V>>() {
+            @Override
+            public Tuple2<K, V> map(Tuple2<K, V> value) throws Exception {
+                return null;
+            }
+        });
+        DataStream<Tuple2<K,V>> iterativeStream = mapedStream.filter(new org.apache.flink.api.common.functions.FilterFunction<Tuple2<K,V>>() {
+            @Override
+            public boolean filter(Tuple2<K,V> value) throws Exception {
+                return iterativeFunction.filter(value);
+            }
+        });
+        iteration.closeWith(iterativeStream);
+
+        DataStream<Tuple2<K,V>> outputStream = mapedStream.filter(new org.apache.flink.api.common.functions.FilterFunction<Tuple2<K,V>>() {
+            @Override
+            public boolean filter(Tuple2<K,V> value) throws Exception {
+                return !iterativeFunction.filter(value);
+            }
+        });
+        return new FlinkPairWorkloadOperator<>(outputStream);
+    }
+
     /**
      * Whether is windowed stream?
      * @param fun
@@ -136,8 +166,8 @@ public class FlinkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
     }
 
     /**
-     * Keyed stream window
-     * @param windowDuration window size
+     * Keyed stream window1
+     * @param windowDuration window1 size
      * @param slideDuration slide size
      * @return
      */
@@ -158,51 +188,111 @@ public class FlinkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
      * @param joinStream
      *          the other stream<K,R>
      * @param windowDuration
-     *          window length of this stream
+     *          window1 length of this stream
      * @param joinWindowDuration
-     *          window length of joinStream
+     *          window1 length of joinStream
      * @param <R>
      * @return
      */
     @Override
     public <R> PairWorkloadOperator<K, scala.Tuple2<V, R>> join(String componentId, PairWorkloadOperator<K, R> joinStream, TimeDurations windowDuration, TimeDurations joinWindowDuration) throws WorkloadException {
+        return join(componentId, joinStream, windowDuration, joinWindowDuration, null, null);
+    }
+
+    /**
+     * Event time join
+     * @param componentId
+     * @param joinStream
+     *          the other stream<K,R>
+     * @param windowDuration
+     *          window1 length of this stream
+     * @param joinWindowDuration
+     *          window1 length of joinStream
+     * @param eventTimeAssigner1
+     *          event time assignment for this stream
+     * @param eventTimeAssigner2
+     *          event time assignment for joinStream
+     * @param <R>
+     * @return
+     * @throws WorkloadException
+     */
+    @Override
+    public <R> PairWorkloadOperator<K, Tuple2<V, R>> join(String componentId, PairWorkloadOperator<K, R> joinStream, TimeDurations windowDuration, TimeDurations joinWindowDuration, final AssignTimeFunction<V> eventTimeAssigner1, final AssignTimeFunction<R> eventTimeAssigner2) throws WorkloadException {
+        StreamExecutionEnvironment env = this.dataStream.getExecutionEnvironment();
+        if(null != eventTimeAssigner1 && null != eventTimeAssigner2)
+            env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+        else
+            env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
+
         if(windowDuration.equals(joinWindowDuration)){
             if(joinStream instanceof FlinkPairWorkloadOperator){
                 FlinkPairWorkloadOperator<K,R> joinFlinkStream = ((FlinkPairWorkloadOperator<K,R>) joinStream);
-                DataStream<Tuple2<K, Tuple2<V, R>>> joinedStream = this.dataStream
-                        .join((joinFlinkStream.dataStream))
-                        .where(new KeySelector<Tuple2<K,V>, K>() {
+
+                final KeySelector<Tuple2<K,V>, K> keySelector1 = new KeySelector<Tuple2<K,V>, K>() {
+                    @Override
+                    public K getKey(Tuple2<K, V> kvTuple2) throws Exception {
+                        return kvTuple2._1();
+                    }
+                };
+                final KeySelector<Tuple2<K,R>, K> keySelector2 = new KeySelector<Tuple2<K,R>, K>() {
+                    @Override
+                    public K getKey(Tuple2<K, R> krTuple2) throws Exception {
+                        return krTuple2._1();
+                    }
+                };
+
+                DataStream<Tuple2<K,V>> dataStream1 = this.dataStream
+                    .keyBy(keySelector1);
+                if(null != eventTimeAssigner1)
+                    dataStream1 = dataStream1
+                    .assignTimestamps(new AscendingTimestampExtractor<Tuple2<K, V>>() {
+                        @Override
+                        public long extractAscendingTimestamp(Tuple2<K, V> element, long currentTimestamp) {
+                            return eventTimeAssigner1.assign(element._2());
+                        }
+                    });
+
+                DataStream<Tuple2<K, R>> dataStream2 = joinFlinkStream.dataStream
+                    .keyBy(keySelector2);
+                if(null != eventTimeAssigner2)
+                    dataStream2 = dataStream2
+                    .assignTimestamps(new AscendingTimestampExtractor<Tuple2<K, R>>() {
+                        @Override
+                        public long extractAscendingTimestamp(Tuple2<K, R> element, long currentTimestamp) {
+                            return eventTimeAssigner2.assign(element._2());
+                        }
+                    });
+
+                DataStream<Tuple2<K, Tuple2<V, R>>> joineStream =
+                        new NoWindowJoinedStreams<>(dataStream1, dataStream2)
+                        .where(keySelector1)
+                        .buffer(Time.of(30, TimeUnit.SECONDS))
+                        .equalTo(keySelector2)
+                        .buffer(Time.of(30, TimeUnit.SECONDS))
+                        .apply(new JoinFunction<Tuple2<K,V>, Tuple2<K,R>, Tuple2<K, Tuple2<V,R>>>() {
                             @Override
-                            public K getKey(Tuple2<K, V> kvTuple2) throws Exception {
-                                return kvTuple2._1();
-                            }
-                        })
-                        .equalTo(new KeySelector<Tuple2<K,R>, K>() {
-                            @Override
-                            public K getKey(Tuple2<K, R> krTuple2) throws Exception {
-                                return krTuple2._1();
-                            }
-                        })
-                        .window(TumblingTimeWindows.of(Time.of(windowDuration.getLength(), windowDuration.getUnit())))
-                        .apply(new JoinFunction<Tuple2<K, V>, Tuple2<K, R>, Tuple2<K, Tuple2<V, R>>>() {
-                            @Override
-                            public Tuple2<K, Tuple2<V, R>> join(Tuple2<K, V> kvTuple2, Tuple2<K, R> krTuple2) throws Exception {
-                                return new Tuple2<K, Tuple2<V, R>>(kvTuple2._1(), new Tuple2<V,R>(kvTuple2._2(), krTuple2._2()));
+                            public Tuple2<K, Tuple2<V, R>> join(Tuple2<K, V> first, Tuple2<K, R> second) throws Exception {
+                                return new Tuple2<>(first._1(), new Tuple2<V, R>(first._2(), second._2()));
                             }
                         });
-                return new FlinkPairWorkloadOperator<>(joinedStream);
+
+                return new FlinkPairWorkloadOperator<>(joineStream);
             } else {
                 throw new WorkloadException("Cast joinStrem to FlinkPairWorkloadOperator failed");
             }
         } else {
-            throw new WorkloadException("Flink only supports join operation on the same window");
+            throw new WorkloadException("Flink only supports join operation on the same window1");
         }
     }
 
-
     @Override
     public void print() {
-        this.dataStream.print();
+//        this.dataStream.print();
+    }
+
+    @Override
+    public void sink() {
+
     }
 }
 

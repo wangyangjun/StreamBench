@@ -50,6 +50,11 @@ public class SparkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
     }
 
     @Override
+    public WorkloadOperator<T> iterative(MapFunction<T, T> mapFunction, FilterFunction<T> iterativeFunction, String componentId) {
+        return null;
+    }
+
+    @Override
     public <R> WorkloadOperator<R> flatMap(final FlatMapFunction<T, R> fun, String componentId) {
         JavaDStream<R> newStream = dStream.flatMap(new FlatMapFunctionImpl<>(fun));
         return new SparkWorkloadOperator<>(newStream);
@@ -73,6 +78,16 @@ public class SparkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
     public void print() {
         this.dStream.print();
         // this.dStream.foreach(new PrintFunctionImpl<T>());
+    }
+
+    @Override
+    public void sink() {
+        this.dStream.foreach(new Function2<JavaRDD<T>, Time, Void>() {
+            @Override
+            public Void call(JavaRDD<T> tJavaRDD, Time time) throws Exception {
+                return null;
+            }
+        });
     }
 
 }

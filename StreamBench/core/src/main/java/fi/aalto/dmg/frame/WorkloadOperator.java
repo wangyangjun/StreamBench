@@ -21,11 +21,24 @@ public interface WorkloadOperator<T> extends Serializable {
     /** filter entity if fun(entity) is false */
     WorkloadOperator<T> filter(FilterFunction<T> fun, String componentId);
 
+    /**
+     * iterative operator,
+     * @param mapFunction
+     * @param iterativeFunction
+     *      if return yes, then iterator
+     * @param componentId
+     * @return
+     */
+    WorkloadOperator<T> iterative(MapFunction<T, T> mapFunction, FilterFunction<T> iterativeFunction, String componentId);
+
     /** Map T to iterable<R> */
     <R> WorkloadOperator<R> flatMap(FlatMapFunction<T, R> fun, String componentId);
+
 
     WindowedWorkloadOperator<T> window(TimeDurations windowDuration);
     WindowedWorkloadOperator<T> window(TimeDurations windowDuration, TimeDurations slideDuration);
 
     void print();
+
+    void sink();
 }

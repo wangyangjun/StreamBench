@@ -5,15 +5,20 @@ import fi.aalto.dmg.frame.functions.FilterFunction;
 import fi.aalto.dmg.frame.functions.FlatMapFunction;
 import fi.aalto.dmg.frame.functions.MapFunction;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
+import fi.aalto.dmg.statistics.Throughput;
 import fi.aalto.dmg.util.TimeDurations;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.typeutils.TypeExtractor;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.datastream.IterativeStream;
 import org.apache.flink.streaming.api.datastream.WindowedStream;
+import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
 /**
@@ -39,8 +44,12 @@ public class FlinkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
 
     public <K, V> PairWorkloadOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun, String componentId) {
         DataStream<Tuple2<K,V>> newDataStream = dataStream.map(new org.apache.flink.api.common.functions.MapFunction<T, Tuple2<K, V>>() {
+            private final Logger logger = LoggerFactory.getLogger(this.getClass());
+            Throughput throughput = new Throughput(logger);
+
             public Tuple2<K, V> map(T t) throws Exception {
-                scala.Tuple2<K,V> tuple2 = fun.mapPair(t);
+                throughput.execute();
+                scala.Tuple2<K,V> tuple2 = fun.mapToPair(t);
                 return new Tuple2<>(tuple2._1(), tuple2._2());
             }
         });
@@ -63,6 +72,33 @@ public class FlinkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
             }
         });
         return new FlinkWorkloadOperator<>(newDataStream);
+    }
+
+    @Override
+    public WorkloadOperator<T> iterative(final MapFunction<T, T> mapFunction, final FilterFunction<T> iterativeFunction, String componentId) {
+        IterativeStream<T> iteration = dataStream.iterate();
+
+        DataStream<T> mapedStream = iteration.map(new org.apache.flink.api.common.functions.MapFunction<T, T>() {
+            @Override
+            public T map(T value) throws Exception {
+                return mapFunction.map(value);
+            }
+        });
+        DataStream<T> iterativeStream = mapedStream.filter(new org.apache.flink.api.common.functions.FilterFunction<T>() {
+            @Override
+            public boolean filter(T value) throws Exception {
+                return iterativeFunction.filter(value);
+            }
+        });
+        iteration.closeWith(iterativeStream);
+
+        DataStream<T> outputStream = mapedStream.filter(new org.apache.flink.api.common.functions.FilterFunction<T>() {
+            @Override
+            public boolean filter(T value) throws Exception {
+                return !iterativeFunction.filter(value);
+            }
+        });
+        return new FlinkWorkloadOperator<>(outputStream);
     }
 
     public <R> WorkloadOperator<R> flatMap(final FlatMapFunction<T, R> fun, String componentId) {
@@ -97,5 +133,15 @@ public class FlinkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
 
     public void print() {
         this.dataStream.print();
+    }
+
+    @Override
+    public void sink() {
+        this.dataStream.addSink(new SinkFunction<T>() {
+            @Override
+            public void invoke(T value) throws Exception {
+
+            }
+        });
     }
 }

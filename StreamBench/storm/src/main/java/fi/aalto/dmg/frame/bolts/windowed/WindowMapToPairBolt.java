@@ -45,7 +45,7 @@ public class WindowMapToPairBolt<T, K, V> extends WindowedBolt {
         try{
             List<Tuple2<K,V>> list = mapedList.get(slideInWindow);
             T value = (T)tuple.getValue(0);
-            list.add(fun.mapPair(value));
+            list.add(fun.mapToPair(value));
         } catch (Exception e) {
             logger.error(e.toString());
         }

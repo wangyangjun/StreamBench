@@ -36,7 +36,7 @@ public class UserFunctions {
     };
 
     public static  MapPairFunction<String, String, Integer> mapToStringIntegerPair = new MapPairFunction<String, String, Integer>() {
-        public Tuple2<String, Integer> mapPair(String s) {
+        public Tuple2<String, Integer> mapToPair(String s) {
             return new Tuple2<String, Integer>(s, 1);
         }
     };

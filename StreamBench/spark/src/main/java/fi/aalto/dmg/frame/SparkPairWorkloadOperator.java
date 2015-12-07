@@ -4,6 +4,7 @@ import fi.aalto.dmg.exceptions.WorkloadException;
 import fi.aalto.dmg.frame.functions.*;
 import fi.aalto.dmg.util.TimeDurations;
 import fi.aalto.dmg.util.Utils;
+import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.Durations;
@@ -54,6 +55,11 @@ public class SparkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
     }
 
     @Override
+    public PairWorkloadOperator<K, V> iterative(MapFunction<V, V> mapFunction, FilterFunction<Tuple2<K, V>> iterativeFunction, String componentId) {
+        return null;
+    }
+
+    @Override
     public PairWorkloadOperator<K, V> updateStateByKey(final ReduceFunction<V> fun, String componentId) {
         JavaPairDStream<K, V> cumulateStream = pairDStream.updateStateByKey(new UpdateStateFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(cumulateStream);
@@ -86,21 +92,78 @@ public class SparkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
         return new SparkWindowedPairWorkloadOperator<>(windowedStream);
     }
 
+    /**
+     *
+     * @param componentId
+     * @param stream2
+     *          the other stream<K,R>
+     * @param windowDuration
+     *          window length of this stream
+     * @param windowDuration2
+     *          window length of joinStream
+     * @param <R>
+     * @return
+     * @throws WorkloadException
+     */
     @Override
-    public <R> PairWorkloadOperator<K, Tuple2<V, R>> join(String componentId, PairWorkloadOperator<K, R> joinStream, TimeDurations windowDuration, TimeDurations joinWindowDuration) throws WorkloadException {
+    public <R> PairWorkloadOperator<K, Tuple2<V, R>> join(String componentId, PairWorkloadOperator<K, R> stream2, TimeDurations windowDuration, TimeDurations windowDuration2) throws WorkloadException {
+        if(windowDuration.toMilliSeconds()%windowDuration.toMilliSeconds()!=0){
+            throw new WorkloadException("WindowDuration should be multi times of joinWindowDuration");
+        }
         Duration windowDurations = Utils.timeDurationsToSparkDuration(windowDuration);
-        Duration joinWindowDurations = Utils.timeDurationsToSparkDuration(joinWindowDuration);
-        if(joinStream instanceof SparkPairWorkloadOperator) {
-            SparkPairWorkloadOperator<K, R> joinSparkStream = ((SparkPairWorkloadOperator<K, R>) joinStream);
-            JavaPairDStream<K, Tuple2<V, R>> joinedStream = pairDStream.window(windowDurations).join(joinSparkStream.pairDStream.window(joinWindowDurations));
+        Duration windowDurations2 = Utils.timeDurationsToSparkDuration(windowDuration);
+
+        if(stream2 instanceof SparkPairWorkloadOperator) {
+            SparkPairWorkloadOperator<K, R> joinSparkStream = ((SparkPairWorkloadOperator<K, R>) stream2);
+            // It is possible that illegal joined data exists
+            JavaPairDStream<K, Tuple2<V, R>> joinedStream = pairDStream
+                    .window(windowDurations.plus(windowDurations2), windowDurations2)
+                    .join(joinSparkStream.pairDStream.window(windowDurations2));
             return new SparkPairWorkloadOperator<>(joinedStream);
         }
         throw new WorkloadException("Cast joinStrem to SparkPairWorkloadOperator failed");
     }
 
+    /**
+     * Spark doesn't support event time join yet
+     * @param componentId
+     * @param joinStream
+     *          the other stream<K,R>
+     * @param windowDuration
+     *          window length of this stream
+     * @param joinWindowDuration
+     *          window length of joinStream
+     * @param eventTimeAssigner1
+     *          event time assignment for this stream
+     * @param eventTimeAssigner2
+     *          event time assignment for joinStream
+     * @param <R>
+     * @return
+     * @throws WorkloadException
+     */
+    @Override
+    public <R> PairWorkloadOperator<K, Tuple2<V, R>> join(String componentId,
+                                                          PairWorkloadOperator<K, R> joinStream,
+                                                          TimeDurations windowDuration,
+                                                          TimeDurations joinWindowDuration,
+                                                          AssignTimeFunction<V> eventTimeAssigner1,
+                                                          AssignTimeFunction<R> eventTimeAssigner2) throws WorkloadException {
+        return join(componentId, joinStream, windowDuration, joinWindowDuration);
+    }
+
     @Override
     public void print() {
         this.pairDStream.print();
+    }
+
+    @Override
+    public void sink() {
+        this.pairDStream.foreachRDD(new Function<JavaPairRDD<K, V>, Void>() {
+            @Override
+            public Void call(JavaPairRDD<K, V> kvJavaPairRDD) throws Exception {
+                return null;
+            }
+        });
     }
 }
 

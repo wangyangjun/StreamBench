@@ -1,7 +1,6 @@
 package fi.aalto.dmg.frame;
 
 import fi.aalto.dmg.frame.functions.*;
-import fi.aalto.dmg.util.Utils;
 import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.WindowedStream;
@@ -80,7 +79,7 @@ public class FlinkWindowedWorkloadOperator<T, W extends Window> implements Windo
             @Override
             public void apply(T t, W window, Iterable<T> values, Collector<Tuple2<K, V>> collector) throws Exception {
                 for(T value : values){
-                    Tuple2<K,V> result = fun.mapPair(value);
+                    Tuple2<K,V> result = fun.mapToPair(value);
                     collector.collect(result);
                 }
             }

@@ -2,10 +2,12 @@ package fi.aalto.dmg;
 
 import com.google.common.base.Optional;
 import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.PairFunction;
 import org.apache.spark.streaming.Durations;
+import org.apache.spark.streaming.Time;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
 import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
@@ -32,28 +34,10 @@ public class StreamingWordCount {
                 return new Tuple2<>(w, 1L);
             }
         })
-                .window(Durations.seconds(5), Durations.seconds(5))
-                .mapPartitions(new FlatMapFunction<Iterator<Tuple2<String,Long>>, Tuple2<String, Long>>() {
+                .reduceByKey(new Function2<Long, Long, Long>() {
                     @Override
-                    public Iterable<Tuple2<String, Long>> call(Iterator<Tuple2<String, Long>> tuple2Iterator) throws Exception {
-                        Map<String, Tuple2<String, Long>> map = new HashMap<>();
-                        while(tuple2Iterator.hasNext()){
-                            Tuple2<String, Long> tuple2 = tuple2Iterator.next();
-                            String word = tuple2._1();
-                            Tuple2<String, Long> count = map.get(word);
-                            if (count == null){
-                                map.put(word, tuple2);
-                            } else {
-                                map.put(word, new Tuple2<>(word, count._2() + tuple2._2()));
-                            }
-                        }
-                        return map.values();
-                    }
-                })
-                .mapToPair(new PairFunction<Tuple2<String, Long>, String, Long>() {
-                    @Override
-                    public Tuple2<String, Long> call(Tuple2<String, Long> stringLongTuple2) throws Exception {
-                        return stringLongTuple2;
+                    public Long call(Long aLong, Long aLong2) throws Exception {
+                        return aLong+aLong2;
                     }
                 })
                 .updateStateByKey(new Function2<List<Long>, Optional<Long>, Optional<Long>>() {
@@ -84,7 +68,12 @@ public class StreamingWordCount {
 //                });
 
         wordCounts.print();
-
+        wordCounts.foreach(new Function2<JavaPairRDD<String, Long>, Time, Void>() {
+            @Override
+            public Void call(JavaPairRDD<String, Long> stringLongJavaPairRDD, Time time) throws Exception {
+                return null;
+            }
+        });
         ssc.start();
         ssc.awaitTermination();
     }

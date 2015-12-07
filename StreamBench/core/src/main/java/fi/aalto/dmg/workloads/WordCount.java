@@ -41,10 +41,10 @@ public class WordCount extends Workload implements Serializable{
         try {
             WorkloadOperator<String> operator = kafkaStreamOperator();
             PairWorkloadOperator<String, Integer> counts =
-                    operator.flatMap(UserFunctions.splitFlatMap, "spliter")
+                    operator.flatMap(UserFunctions.splitFlatMap, "splitter")
                             .mapToPair(UserFunctions.mapToStringIntegerPair, "pair")
                             .reduceByKey(UserFunctions.sumReduce, "sum")
-                            .updateStateByKey(UserFunctions.sumReduce, "cumulate");
+                            .updateStateByKey(UserFunctions.sumReduce, "accumulate");
             counts.print();
         }
         catch (Exception e){
