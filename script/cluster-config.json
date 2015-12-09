@@ -8,25 +8,25 @@
 		},{
 			"ip": "192.168.1.21",
 			"host": "worker1",
-			"hostname": "worknode1.novalocal",
+			"hostname": "workernode1.novalocal",
 			"master": false,
 			"borker_id": 1
 		},{
 			"ip": "192.168.1.22",
 			"host": "worker2",
-			"hostname": "worknode2.novalocal",
+			"hostname": "workernode2.novalocal",
 			"master": false,
 			"borker_id": 2
 		},{
 			"ip": "192.168.1.23",
 			"host": "worker3",
-			"hostname": "worknode3.novalocal",
+			"hostname": "workernode3.novalocal",
 			"master": false,
 			"borker_id": 3
 		},{
 			"ip": "192.168.1.24",
 			"host": "worker4",
-			"hostname": "worknode4.novalocal",
+			"hostname": "workernode4.novalocal",
 			"master": false,
 			"borker_id": 4
 		}
