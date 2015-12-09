@@ -29,8 +29,8 @@ public class PairPrintBolt<T> extends BaseBasicBolt {
                     + "\t" + input.getValue(1).toString()
                     + "\t" + input.getValue(2).toString());
         } else {
-//            logger.warn(input.getValue(0).toString()
-//                    + "\t" + input.getValue(1).toString());
+            logger.warn(input.getValue(0).toString()
+                    + "\t" + input.getValue(1).toString());
         }
     }
 

@@ -6,6 +6,7 @@ import fi.aalto.dmg.frame.OperatorCreater;
 import fi.aalto.dmg.frame.PairWorkloadOperator;
 import fi.aalto.dmg.frame.WorkloadOperator;
 import fi.aalto.dmg.frame.userfunctions.UserFunctions;
+import fi.aalto.dmg.util.WithTime;
 import org.apache.log4j.Logger;
 
 import java.io.Serializable;
@@ -25,7 +26,7 @@ public class WordCountGrouping extends Workload implements Serializable {
         super(creater);
     }
 
-    private WorkloadOperator<String> kafkaStreamOperator(){
+    private WorkloadOperator<WithTime<String>> kafkaStreamOperator(){
         String topic = this.getProperties().getProperty("topic");
         String groupId = this.getProperties().getProperty("group.id");
         String kafkaServers = this.getProperties().getProperty("bootstrap.servers");
@@ -37,12 +38,12 @@ public class WordCountGrouping extends Workload implements Serializable {
 
     public void Process() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         try {
-            WorkloadOperator<String> operator = kafkaStreamOperator();
-            PairWorkloadOperator<String, Integer> counts =
-                    operator.flatMap(UserFunctions.splitFlatMap, "spliter").
-                            mapToPair(UserFunctions.mapToStringIntegerPair, "pair").
-                            groupByKey().reduce(UserFunctions.sumReduce, "sum").
-                            updateStateByKey(UserFunctions.sumReduce, "cumulate");
+            WorkloadOperator<WithTime<String>> operator = kafkaStreamOperator();
+            PairWorkloadOperator<String, WithTime<Integer>> counts =
+                    operator.flatMap(UserFunctions.splitFlatMapWithTime, "spliter").
+                            mapToPair(UserFunctions.mapToStrIntPairWithTime, "pair").
+                            groupByKey().reduce(UserFunctions.sumReduceWithTime, "sum").
+                            updateStateByKey(UserFunctions.sumReduceWithTime, "cumulate");
             counts.print();
         }
         catch (Exception e){

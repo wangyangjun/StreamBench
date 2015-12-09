@@ -2,14 +2,16 @@ package fi.aalto.dmg.frame;
 
 import fi.aalto.dmg.exceptions.WorkloadException;
 import fi.aalto.dmg.frame.functions.*;
+import fi.aalto.dmg.statistics.Latency;
 import fi.aalto.dmg.util.TimeDurations;
 import fi.aalto.dmg.util.Utils;
+import fi.aalto.dmg.util.WithTime;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.streaming.Duration;
-import org.apache.spark.streaming.Durations;
-import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
 /**
@@ -158,12 +160,8 @@ public class SparkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
 
     @Override
     public void sink() {
-        this.pairDStream.foreachRDD(new Function<JavaPairRDD<K, V>, Void>() {
-            @Override
-            public Void call(JavaPairRDD<K, V> kvJavaPairRDD) throws Exception {
-                return null;
-            }
-        });
+//        this.pairDStream = this.pairDStream.filter(new PairLatencySinkFunction<K,V>());
+        this.pairDStream.print();
     }
 }
 

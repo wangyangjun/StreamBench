@@ -141,6 +141,7 @@ public class StormPairOperator<K, V> implements PairWorkloadOperator<K,V> {
 
     @Override
     public void sink() {
+//        topologyBuilder.setBolt("latency", new PairLatencyBolt<>()).localOrShuffleGrouping(preComponentId);
 
     }
 

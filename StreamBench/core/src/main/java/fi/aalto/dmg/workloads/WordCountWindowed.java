@@ -10,6 +10,7 @@ import fi.aalto.dmg.frame.functions.MapPartitionFunction;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
 import fi.aalto.dmg.frame.userfunctions.UserFunctions;
 import fi.aalto.dmg.util.TimeDurations;
+import fi.aalto.dmg.util.WithTime;
 import org.apache.log4j.Logger;
 import scala.Tuple2;
 
@@ -28,7 +29,7 @@ public class WordCountWindowed  extends Workload implements Serializable {
         super(creater);
     }
 
-    private WorkloadOperator<String> kafkaStreamOperator(){
+    private WorkloadOperator<WithTime<String>> kafkaStreamOperator(){
         String topic = this.getProperties().getProperty("topic");
         String groupId = this.getProperties().getProperty("group.id");
         String kafkaServers = this.getProperties().getProperty("bootstrap.servers");
@@ -62,11 +63,11 @@ public class WordCountWindowed  extends Workload implements Serializable {
             cumulateCounts.print();
             */
 
-            WorkloadOperator<String> operator = kafkaStreamOperator();
-            PairWorkloadOperator<String, Integer> counts =
-                    operator.flatMap(UserFunctions.splitFlatMap, "spliter")
-                            .mapToPair(UserFunctions.mapToStringIntegerPair, "pair")
-                            .reduceByKeyAndWindow(UserFunctions.sumReduce, "counter",
+            WorkloadOperator<WithTime<String>> operator = kafkaStreamOperator();
+            PairWorkloadOperator<String, WithTime<Integer>> counts =
+                    operator.flatMap(UserFunctions.splitFlatMapWithTime, "spliter")
+                            .mapToPair(UserFunctions.mapToStrIntPairWithTime, "pair")
+                            .reduceByKeyAndWindow(UserFunctions.sumReduceWithTime, "counter",
                                     new TimeDurations(TimeUnit.SECONDS, 1), new TimeDurations(TimeUnit.SECONDS, 1));
             counts.print();
 

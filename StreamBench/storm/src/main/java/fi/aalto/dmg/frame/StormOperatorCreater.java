@@ -9,7 +9,17 @@ import java.util.UUID;
 
 import backtype.storm.Config;
 import backtype.storm.spout.SchemeAsMultiScheme;
+import backtype.storm.topology.BasicOutputCollector;
+import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.TopologyBuilder;
+import backtype.storm.topology.base.BaseBasicBolt;
+import backtype.storm.tuple.Fields;
+import backtype.storm.tuple.Tuple;
+import backtype.storm.tuple.Values;
+import fi.aalto.dmg.frame.bolts.BoltConstants;
+import fi.aalto.dmg.frame.bolts.FlatMapBolt;
+import fi.aalto.dmg.frame.bolts.WithTimeBolt;
+import fi.aalto.dmg.util.WithTime;
 import storm.kafka.*;
 
 /**
@@ -35,14 +45,15 @@ public class StormOperatorCreater extends OperatorCreater implements Serializabl
     }
 
     @Override
-    public WorkloadOperator<String> createOperatorFromKafka(String zkConStr, String kafkaServers, String group, String topics, String offset) {
+    public WorkloadOperator<WithTime<String>> createOperatorFromKafka(String zkConStr, String kafkaServers, String group, String topics, String offset) {
         BrokerHosts hosts = new ZkHosts(zkConStr);
         SpoutConfig spoutConfig = new SpoutConfig(hosts, topics, "/" + topics, UUID.randomUUID().toString());
         spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
         spoutConfig.forceFromStart = true;
 
         topologyBuilder.setSpout("spout", new KafkaSpout(spoutConfig));
-        return new StormOperator<>(topologyBuilder, "spout");
+        topologyBuilder.setBolt("addTime", new WithTimeBolt<String>()).localOrShuffleGrouping("spout");
+        return new StormOperator<>(topologyBuilder, "addTime");
     }
 
     @Override

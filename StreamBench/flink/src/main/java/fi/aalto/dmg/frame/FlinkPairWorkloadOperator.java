@@ -6,7 +6,10 @@ import fi.aalto.dmg.frame.functions.FilterFunction;
 import fi.aalto.dmg.frame.functions.FlatMapFunction;
 import fi.aalto.dmg.frame.functions.MapFunction;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
+import fi.aalto.dmg.statistics.Latency;
+import fi.aalto.dmg.statistics.Throughput;
 import fi.aalto.dmg.util.TimeDurations;
+import fi.aalto.dmg.util.WithTime;
 import org.apache.flink.api.common.functions.*;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.functions.KeySelector;
@@ -16,11 +19,14 @@ import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.*;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.AscendingTimestampExtractor;
+import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 import org.apache.flink.streaming.api.operators.StreamJoinOperator;
 import org.apache.flink.streaming.api.transformations.TwoInputTransformation;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
 import java.util.concurrent.TimeUnit;
@@ -287,12 +293,20 @@ public class FlinkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
 
     @Override
     public void print() {
-//        this.dataStream.print();
+        this.dataStream.print();
     }
 
     @Override
     public void sink() {
+        this.dataStream.addSink(new SinkFunction<Tuple2<K, V>>() {
+            private final Logger logger = LoggerFactory.getLogger(this.getClass());
+            Latency latency = new Latency(logger);
 
+            @Override
+            public void invoke(Tuple2<K, V> value) throws Exception {
+//                latency.execute((WithTime<? extends Object>) value._2());
+            }
+        });
     }
 }
 

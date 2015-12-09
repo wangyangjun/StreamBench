@@ -5,7 +5,9 @@ import fi.aalto.dmg.exceptions.WorkloadException;
 import fi.aalto.dmg.frame.PairWorkloadOperator;
 import fi.aalto.dmg.frame.WorkloadOperator;
 import fi.aalto.dmg.frame.OperatorCreater;
+import fi.aalto.dmg.frame.functions.MapFunction;
 import fi.aalto.dmg.frame.userfunctions.UserFunctions;
+import fi.aalto.dmg.util.WithTime;
 import org.apache.log4j.Logger;
 
 import java.io.Serializable;
@@ -27,7 +29,7 @@ public class WordCount extends Workload implements Serializable{
         super(creater);
     }
 
-    private WorkloadOperator<String> kafkaStreamOperator(){
+    private WorkloadOperator<WithTime<String>> kafkaStreamOperator(){
         String topic = this.getProperties().getProperty("topic");
         String groupId = this.getProperties().getProperty("group.id");
         String kafkaServers = this.getProperties().getProperty("bootstrap.servers");
@@ -39,13 +41,20 @@ public class WordCount extends Workload implements Serializable{
 
     public void Process() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         try {
-            WorkloadOperator<String> operator = kafkaStreamOperator();
-            PairWorkloadOperator<String, Integer> counts =
-                    operator.flatMap(UserFunctions.splitFlatMap, "splitter")
-                            .mapToPair(UserFunctions.mapToStringIntegerPair, "pair")
-                            .reduceByKey(UserFunctions.sumReduce, "sum")
-                            .updateStateByKey(UserFunctions.sumReduce, "accumulate");
-            counts.print();
+            WorkloadOperator<WithTime<String>> operator = kafkaStreamOperator();
+            PairWorkloadOperator<String, WithTime<Integer>> counts =
+                    operator.flatMap(UserFunctions.splitFlatMapWithTime, "splitter")
+                            .mapToPair(UserFunctions.mapToStrIntPairWithTime, "pair")
+                            .reduceByKey(UserFunctions.sumReduceWithTime, "sum")
+                            .updateStateByKey(UserFunctions.sumReduceWithTime, "accumulate");
+            counts.sink();
+//            operator.flatMap(UserFunctions.splitFlatMapWithTime, "splitter")
+//                    .mapToPair(UserFunctions.mapToStrIntPairWithTime, "pair")
+//                    .reduceByKey(UserFunctions.sumReduceWithTime, "sum")
+//                    .updateStateByKey(UserFunctions.sumReduceWithTime, "accumulate")
+//                    .mapValue(UserFunctions.removeTimeMap, "map")
+//                    .sink();
+
         }
         catch (Exception e){
             logger.error(e.getMessage());

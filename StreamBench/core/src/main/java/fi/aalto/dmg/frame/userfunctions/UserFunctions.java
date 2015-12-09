@@ -2,12 +2,12 @@ package fi.aalto.dmg.frame.userfunctions;
 
 import com.google.common.base.Optional;
 import fi.aalto.dmg.frame.functions.*;
+import fi.aalto.dmg.util.WithTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by yangjun.wang on 21/10/15.
@@ -29,7 +29,8 @@ public class UserFunctions {
         }
     };
 
-    public static FlatMapFunction<String, String> splitFlatMap = new FlatMapFunction<String, String>() {
+    public static FlatMapFunction<String, String> splitFlatMap
+            = new FlatMapFunction<String, String>() {
         public Iterable<String> flatMap(String var1) throws Exception {
             return Arrays.asList(var1.toLowerCase().split("\\W+"));
         }
@@ -44,6 +45,30 @@ public class UserFunctions {
     public static ReduceFunction<Integer> sumReduce = new ReduceFunction<Integer>() {
         public Integer reduce(Integer var1, Integer var2) throws Exception {
             return var1 + var2;
+        }
+    };
+
+    public static FlatMapFunction<WithTime<String>, WithTime<String>> splitFlatMapWithTime
+            = new FlatMapFunction<WithTime<String>, WithTime<String>>() {
+        public Iterable<WithTime<String>> flatMap(WithTime<String> var1) throws Exception {
+            List<WithTime<String>> list = new ArrayList<>();
+            for(String str : var1.getValue().toLowerCase().split("\\W+")) {
+                list.add(new WithTime<>(str, var1.getTime()));
+            }
+            return list;
+        }
+    };
+
+    public static  MapPairFunction<WithTime<String>, String, WithTime<Integer>> mapToStrIntPairWithTime
+            = new MapPairFunction<WithTime<String>, String, WithTime<Integer>>() {
+        public Tuple2<String, WithTime<Integer>> mapToPair(WithTime<String> s) {
+            return new Tuple2<>(s.getValue(), new WithTime<>(1, s.getTime()));
+        }
+    };
+
+    public static ReduceFunction<WithTime<Integer>> sumReduceWithTime = new ReduceFunction<WithTime<Integer>>() {
+        public WithTime<Integer> reduce(WithTime<Integer> var1, WithTime<Integer> var2) throws Exception {
+            return new WithTime<>(var1.getValue()+var2.getValue(), Math.max(var1.getTime(), var2.getTime()));
         }
     };
 
@@ -73,4 +98,15 @@ public class UserFunctions {
             return map.values();
         }
     };
+
+    public static MapFunction<WithTime<Integer>, Integer> removeTimeMap = new MapFunction<WithTime<Integer>, Integer>() {
+        private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+        @Override
+        public Integer map(WithTime<Integer> var1) {
+            logger.warn(var1.toString());
+            return var1.getValue();
+        }
+    };
+
 }

@@ -1,5 +1,6 @@
 package fi.aalto.dmg.frame;
 
+import fi.aalto.dmg.util.WithTime;
 import kafka.serializer.StringDecoder;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.function.Function;
@@ -24,10 +25,11 @@ public class SparkOperatorCreater extends OperatorCreater implements Serializabl
     public JavaStreamingContext jssc;
     private Properties properties;
 
-    private static Function<Tuple2<String, String>, String> mapFunction = new Function<Tuple2<String, String>, String>() {
+    private static Function<Tuple2<String, String>, WithTime<String>> mapFunction
+            = new Function<Tuple2<String, String>, WithTime<String>>() {
         @Override
-        public String call(Tuple2<String, String> stringStringTuple2) throws Exception {
-            return stringStringTuple2._2();
+        public WithTime<String> call(Tuple2<String, String> stringStringTuple2) throws Exception {
+            return new WithTime<>(stringStringTuple2._2(), System.currentTimeMillis());
         }
     };
 
@@ -40,7 +42,7 @@ public class SparkOperatorCreater extends OperatorCreater implements Serializabl
     }
 
     @Override
-    public SparkWorkloadOperator<String> createOperatorFromKafka(String zkConStr, String kafkaServers, String group, String topics, String offset) {
+    public SparkWorkloadOperator<WithTime<String>> createOperatorFromKafka(String zkConStr, String kafkaServers, String group, String topics, String offset) {
 
         HashSet<String> topicsSet = new HashSet<>(Arrays.asList(topics.split(",")));
         HashMap<String, String> kafkaParams = new HashMap<>();
@@ -58,7 +60,8 @@ public class SparkOperatorCreater extends OperatorCreater implements Serializabl
                 topicsSet
         );
 
-        JavaDStream<String> lines = messages.map(mapFunction);
+        JavaDStream<WithTime<String>> lines = messages.map(mapFunction);
+
         return new SparkWorkloadOperator<>(lines);
     }
 

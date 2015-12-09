@@ -1,5 +1,7 @@
 package fi.aalto.dmg.frame;
 
+import fi.aalto.dmg.util.WithTime;
+import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.util.serialization.SimpleStringSchema;
@@ -32,7 +34,7 @@ public class FlinkOperatorCreater extends OperatorCreater {
      * @return
      */
     @Override
-    public WorkloadOperator<String> createOperatorFromKafka(String zkConStr, String kafkaServers, String group, String topics, String offset) {
+    public WorkloadOperator<WithTime<String>> createOperatorFromKafka(String zkConStr, String kafkaServers, String group, String topics, String offset) {
         /*
         * Note that the Kafka source is expecting the following parameters to be set
         *  - "bootstrap.servers" (comma separated list of kafka brokers)
@@ -50,7 +52,13 @@ public class FlinkOperatorCreater extends OperatorCreater {
 
         DataStream<String> stream = env
                 .addSource(new FlinkKafkaConsumer082<String>(topics, new SimpleStringSchema(), properties));
-        return new FlinkWorkloadOperator<String>(stream);
+        DataStream<WithTime<String>> withTimeDataStream = stream.map(new MapFunction<String, WithTime<String>>() {
+            @Override
+            public WithTime<String> map(String value) throws Exception {
+                return new WithTime<String>(value, System.currentTimeMillis());
+            }
+        });
+        return new FlinkWorkloadOperator<>(withTimeDataStream);
     }
 
     @Override
