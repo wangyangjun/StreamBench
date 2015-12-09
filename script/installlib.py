@@ -20,7 +20,7 @@ def install_jdk6():
 		print("JDK 1.6 is already installed.")
 	
 def install_jdk7():
-	if 'java-1.7.0-openjdk-amd64' not in subprocess.check_output(['ls', '/usr/lib/jvm']):
+	if  'jvm' not in subprocess.check_output(['ls', '/usr/lib']) or 'java-1.7.0-openjdk-amd64' not in subprocess.check_output(['ls', '/usr/lib/jvm']):
 		update = subprocess.Popen(["sudo", "apt-get", "update"])
 		if update.wait() == 0:
 			jdk_installed = subprocess.check_call(["sudo", "apt-get", "install", "-y", "openjdk-7-jdk"])
