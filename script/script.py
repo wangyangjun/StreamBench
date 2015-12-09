@@ -17,7 +17,7 @@ if __name__ == "__main__":
 		# clone repository
 		files = subprocess.check_output(["ssh", "cloud-user@"+node['ip'], 'ls /home/cloud-user'])
 		if 'RealtimeStreamBenchmark' not in files:
-			p = subprocess.call(["ssh", "cloud-user@"+node['ip'], "git clone https://github.com/wangyangjun/RealtimeStreamBenchmark.git"])
+			p = subprocess.Popen('ssh cloud-user@'+node['ip']+' "git clone https://github.com/wangyangjun/RealtimeStreamBenchmark.git"', shell=True)
 		else:
 			p = subprocess.Popen('ssh cloud-user@'+node['ip']+' "cd /home/cloud-user/RealtimeStreamBenchmark;git checkout .;git pull;"', shell=True)
 
