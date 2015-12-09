@@ -170,7 +170,15 @@ def install_kafka(broker_id):
 	subprocess.call(['cp', '-r', path+'/kafka/config', '/usr/local/kafka/config'])
 	# remove modification in config
 	subprocess.call('cd ' + path + '; git checkout .', shell=True)
-	if 'kafka-logs' not in subprocess.check_output(['ls', '/mnt']):
-		subprocess.call(['sudo', 'mkdir', '/mnt/kafka-logs'])
-		subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/mnt/kafka-logs'])
+	if 'kafka' not in subprocess.check_output(['ls', '/mnt']):
+		subprocess.call(['sudo', 'mkdir', '/mnt/kafka'])
+		subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/mnt/kafka'])
+
+		if 'logs' not in subprocess.check_output(['ls', '/mnt/kafka']):
+			subprocess.call(['sudo', 'mkdir', '/mnt/kafka/logs'])
+			subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/mnt/kafka/logs'])
+		if 'data' not in subprocess.check_output(['ls', '/mnt/kafka']):
+			subprocess.call(['sudo', 'mkdir', '/mnt/kafka/data'])
+			subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/mnt/kafka/data'])
+
 
