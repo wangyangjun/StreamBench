@@ -98,12 +98,12 @@ def install_flink():
 
 	# download flink 
 	if 'flink' not in subprocess.check_output(['ls']):
-		p = subprocess.Popen(['wget', 'http://mirror.netinch.com/pub/apache/flink/flink-0.9.1/flink-0.9.1-bin-hadoop26.tgz'])
+		p = subprocess.Popen(['wget', 'http://mirror.netinch.com/pub/apache/flink/flink-0.10.1/flink-0.10.1-bin-hadoop26-scala_2.10.tgz'])
 		if 0 == p.wait():
 			# exact
-			p = subprocess.Popen(['tar', '-zvxf', 'flink-0.9.1-bin-hadoop26.tgz'])
+			p = subprocess.Popen(['tar', '-zvxf', 'flink-0.10.1-bin-hadoop26-scala_2.10.tgz'])
 			p.wait()
-			subprocess.call(['mv', 'flink-0.9.1', 'flink'])
+			subprocess.call(['mv', 'flink-0.10.1', 'flink'])
 	# cp flink
 	subprocess.call(['sudo', 'rm', '-rf', '/usr/local/flink'])
 	subprocess.call(['sudo', 'cp', '-r', 'flink', '/usr/local/flink'])

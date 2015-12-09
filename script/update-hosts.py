@@ -13,6 +13,3 @@ if __name__ == "__main__":
 		appendline('/etc/hosts', node['ip']+'\t'+node['host'] + '\t'+node['hostname'])
 
 	appendline('/etc/hosts', '192.168.1.4\t'+'zoo1')
-
-	subprocess.call(['sudo', 'mkdir', '-p', '/mnt/anis-logs'])
-	subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/mnt/anis-logs'])
