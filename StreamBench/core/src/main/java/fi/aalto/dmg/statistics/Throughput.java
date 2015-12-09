@@ -1,6 +1,6 @@
 package fi.aalto.dmg.statistics;
 
-import org.slf4j.Logger;
+import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 
@@ -35,7 +35,10 @@ public class Throughput implements Serializable{
             long elementDiff = received - lastLogEle;
             double ex = (1000 / (double) timeDiff);
 
-            logger.warn("Throughput:\t{}\t{}\t{}\tms,elements,elements/second", timeDiff, elementDiff, Double.valueOf(elementDiff * ex).longValue());
+            logger.warn(String.format("Throughput:\t{}\t{}\t{}\tms,elements,elements/second",
+                    timeDiff,
+                    elementDiff,
+                    Double.valueOf(elementDiff * ex).longValue()));
             // reinit
             lastLogEle = received;
             lastLogTime = now;

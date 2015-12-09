@@ -6,8 +6,7 @@ import org.apache.commons.math3.random.*;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import java.util.Properties;
 
@@ -16,7 +15,7 @@ import java.util.Properties;
  * Created by yangjun.wang on 26/10/15.
  */
 public class WordCountDataGenerator {
-    private static final Logger logger = LoggerFactory.getLogger(WordCountDataGenerator.class);
+    private static final Logger logger = Logger.getLogger(WordCountDataGenerator.class);
     private static int SENTENCE_NUM = 100000;
     private static int ZIPF_SIZE = 100000;
     private static double ZIPF_EXPONENT = 1;

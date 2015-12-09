@@ -1,7 +1,7 @@
 package fi.aalto.dmg.statistics;
 
 import fi.aalto.dmg.util.WithTime;
-import org.slf4j.Logger;
+import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 
@@ -32,8 +32,8 @@ public class Latency implements Serializable{
         long timeDiff = now - lastLogTime;
         long elementDiff = received - lastLogEle;
         if (timeDiff > 100 || elementDiff > 1000) {
-            logger.warn("Latency:\t{}\t{}\t{}\tms,elements,ms/ele",
-                    timeDiff, elementDiff, Double.valueOf(acumulateLatency/elementDiff).longValue());
+            logger.warn(String.format("Latency:\t{}\t{}\t{}\tms,elements,ms/ele",
+                    timeDiff, elementDiff, Double.valueOf(acumulateLatency/elementDiff).longValue()));
             // reinit
             lastLogEle = received;
             lastLogTime = now;
