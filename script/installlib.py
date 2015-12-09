@@ -5,19 +5,6 @@ import sys
 import os
 import json
 from util import appendline, get_ip_address
-
-def install_jdk6():
-	# Install JDK 1.6
-	if 'java-1.6.0-openjdk-amd64' not in subprocess.check_output(['ls', '/usr/lib/jvm']):
-		update = subprocess.Popen(["sudo", "apt-get", "update"])
-		if update.wait() == 0:
-			jdk_installed = subprocess.check_call(["sudo", "apt-get", "install", "-y", "openjdk-6-jdk"])
-			if jdk_installed == 0:
-				print("JDK 1.6 installed successfully")
-		else:
-			print("apt-get update failed on server")
-	else:
-		print("JDK 1.6 is already installed.")
 	
 def install_jdk7():
 	if  'jvm' not in subprocess.check_output(['ls', '/usr/lib']) or 'java-1.7.0-openjdk-amd64' not in subprocess.check_output(['ls', '/usr/lib/jvm']):
@@ -34,19 +21,19 @@ def install_jdk7():
 	appendline('/home/cloud-user/.profile', 'export PATH=$JAVA_HOME/bin:$PATH')
 
 def install_zookeeper():
-	# /var/zookeeper/data chown
+	# /mnt/zookeeper/data chown
 	config = json.load(open('zookeeper-config.json'));
-	data_dir_maked = subprocess.check_call(["sudo", "mkdir", "-p", "/var/zookeeper/data"])
+	data_dir_maked = subprocess.check_call(["sudo", "mkdir", "-p", "/mnt/zookeeper/data"])
 	if 0 == data_dir_maked:
-		subprocess.call(["sudo", "chown", "-R", "cloud-user", "/var/zookeeper"])
+		subprocess.call(["sudo", "chown", "-R", "cloud-user", "/mnt/zookeeper"])
 	else:
-		print("Create dirctory /var/zookeeper/data failed")
+		print("Create dirctory /mnt/zookeeper/data failed")
 		sys.exist(1)
-	print("Create dirctory /var/zookeeper/data successfully")
+	print("Create dirctory /mnt/zookeeper/data successfully")
 	# myid
 	myip = get_ip_address()
 	mynode = [node for node in config['nodes'] if node['ip'] == myip][0]
-	open("/var/zookeeper/data/myid", "w").write(str(mynode['id']))
+	open("/mnt/zookeeper/data/myid", "w").write(str(mynode['id']))
 	print("Set myid for zookeeper successfully")
 	# cp zookeeper
 	subprocess.call(['sudo', 'rm', '-rf', '/usr/local/zookeeper'])

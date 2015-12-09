@@ -5,7 +5,7 @@ import sys
 from util import appendline
 from installlib import *
 
-softwares = ['jdk6', 'jdk7', 'zookeeper', 'storm', 'spark', 'flink', 'kafka', 'hadoop']
+softwares = ['jdk7', 'zookeeper', 'storm', 'spark', 'flink', 'kafka', 'hadoop']
 
 if __name__ == "__main__":
 
@@ -14,9 +14,7 @@ if __name__ == "__main__":
 		sys.exit(1)
 	else:
 		print("Start install %s \n" % sys.argv[1])
-		if 'jdk6' == sys.argv[1]: # set JAVA_HOME
-			install_jdk6()
-		elif 'jdk7' == sys.argv[1]:
+		if 'jdk7' == sys.argv[1]:
 			install_jdk7()
 		elif 'zookeeper' == sys.argv[1]:
 			install_zookeeper()
