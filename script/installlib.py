@@ -7,7 +7,8 @@ import json
 from util import appendline, get_ip_address
 	
 def install_jdk7():
-	if  'jvm' not in subprocess.check_output(['ls', '/usr/lib']) or 'java-1.7.0-openjdk-amd64' not in subprocess.check_output(['ls', '/usr/lib/jvm']):
+	if  'jvm' not in subprocess.check_output(['ls', '/usr/lib']).split('\n') \
+	 or 'java-1.7.0-openjdk-amd64' not in subprocess.check_output(['ls', '/usr/lib/jvm']).split('\n'):
 		update = subprocess.Popen(["sudo", "apt-get", "update"])
 		if update.wait() == 0:
 			jdk_installed = subprocess.check_call(["sudo", "apt-get", "install", "-y", "openjdk-7-jdk"])
@@ -63,7 +64,7 @@ def install_spark():
 	config = json.load(open(path+'/cluster-config.json'));
 
 	# download sprk http://mirror.netinch.com/pub/apache/spark/spark-1.5.0/spark-1.5.0-bin-hadoop2.6.tgz
-	if 'spark' not in subprocess.check_output(['ls']):
+	if 'spark' not in subprocess.check_output(['ls']).split('\n'):
 		p = subprocess.Popen(['wget', 'http://mirror.netinch.com/pub/apache/spark/spark-1.5.0/spark-1.5.0-bin-hadoop2.6.tgz'])
 		if 0 == p.wait():
 			# exact
@@ -84,7 +85,7 @@ def install_flink():
 	config = json.load(open(path+'/cluster-config.json'));
 
 	# download flink 
-	if 'flink' not in subprocess.check_output(['ls']):
+	if 'flink' not in subprocess.check_output(['ls']).split('\n'):
 		p = subprocess.Popen(['wget', 'http://mirror.netinch.com/pub/apache/flink/flink-0.10.1/flink-0.10.1-bin-hadoop26-scala_2.10.tgz'])
 		if 0 == p.wait():
 			# exact
@@ -99,9 +100,9 @@ def install_flink():
 	subprocess.call(['rm', '-rf', '/usr/local/flink/conf'])
 	subprocess.call(['cp', '-r', path+'/flink/conf', '/usr/local/flink/conf'])
 	# mkdir flink tmp dir
-	if 'flink' not in subprocess.check_output(['ls', '/mnt']):
+	if 'flink' not in subprocess.check_output(['ls', '/mnt']).split('\n'):
 		subprocess.call(['sudo', 'mkdir', '-p', '/mnt/flink'])
-		if 'tmp' not in subprocess.check_output(['ls', '/mnt/flink']):
+		if 'tmp' not in subprocess.check_output(['ls', '/mnt/flink']).split('\n'):
 			subprocess.call(['sudo', 'mkdir', '-p', '/mnt/flink/tmp'])
 		subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/mnt/flink'])
 
@@ -123,12 +124,12 @@ def install_hadoop():
 	subprocess.call(['rm', '-rf', '/usr/local/hadoop/etc'])
 	subprocess.call(['cp', '-r', path+'/hadoop/etc', '/usr/local/hadoop/etc'])
 	# mkdir hadoop tmp dir
-	if 'hadoop' not in subprocess.check_output(['ls', '/mnt']):
+	if 'hadoop' not in subprocess.check_output(['ls', '/mnt']).split('\n'):
 		subprocess.call(['sudo', 'mkdir', '-p', '/mnt/hadoop'])
-		if 'namenode' not in subprocess.check_output(['ls', '/mnt/hadoop']):
+		if 'namenode' not in subprocess.check_output(['ls', '/mnt/hadoop']).split('\n'):
 			if 0 == subprocess.call(['sudo', 'mkdir', '-p', '/mnt/hadoop/namenode']):
 				print("/mnt/hadoop/namenode created successfully")
-		if 'datanode' not in subprocess.check_output(['ls', '/mnt/hadoop']):
+		if 'datanode' not in subprocess.check_output(['ls', '/mnt/hadoop']).split('\n'):
 			if 0 == subprocess.call(['sudo', 'mkdir', '-p', '/mnt/hadoop/datanode']):
 				print("/mnt/hadoop/datanode created successfully")
 		subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/mnt/hadoop'])
@@ -153,7 +154,7 @@ def install_kafka(broker_id):
 	config = json.load(open(path+'/cluster-config.json'));
 
 	# download kafka http://www.nic.funet.fi/pub/mirrors/apache.org/kafka/0.8.2.1/kafka_2.10-0.8.2.1.tgz
-	if 'kafka' not in subprocess.check_output(['ls']):
+	if 'kafka' not in subprocess.check_output(['ls']).split('\n'):
 		p = subprocess.Popen(['wget', 'http://www.nic.funet.fi/pub/mirrors/apache.org/kafka/0.8.2.1/kafka_2.10-0.8.2.1.tgz'])
 		if 0 == p.wait():
 			# exact
@@ -170,14 +171,14 @@ def install_kafka(broker_id):
 	subprocess.call(['cp', '-r', path+'/kafka/config', '/usr/local/kafka/config'])
 	# remove modification in config
 	subprocess.call('cd ' + path + '; git checkout .', shell=True)
-	if 'kafka' not in subprocess.check_output(['ls', '/mnt']):
+	if 'kafka' not in subprocess.check_output(['ls', '/mnt']).split('\n'):
 		subprocess.call(['sudo', 'mkdir', '/mnt/kafka'])
 		subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/mnt/kafka'])
 
-		if 'logs' not in subprocess.check_output(['ls', '/mnt/kafka']):
+		if 'logs' not in subprocess.check_output(['ls', '/mnt/kafka']).split('\n'):
 			subprocess.call(['sudo', 'mkdir', '/mnt/kafka/logs'])
 			subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/mnt/kafka/logs'])
-		if 'data' not in subprocess.check_output(['ls', '/mnt/kafka']):
+		if 'data' not in subprocess.check_output(['ls', '/mnt/kafka']).split('\n'):
 			subprocess.call(['sudo', 'mkdir', '/mnt/kafka/data'])
 			subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/mnt/kafka/data'])
 
