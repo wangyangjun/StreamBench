@@ -24,7 +24,7 @@ public class WordCountDataGenerator {
 
     private static KafkaProducer<String, String> createProducer(){
         Properties props = new Properties();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "zoo1:9092");
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ProducerConfig.RETRIES_CONFIG, "3");
         props.put(ProducerConfig.ACKS_CONFIG, "0"); // "all"
         props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "lz4");

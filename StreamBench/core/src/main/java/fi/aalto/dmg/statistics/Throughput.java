@@ -21,7 +21,6 @@ public class Throughput implements Serializable{
         this.logger = logger;
         this.received = 0;
         this.lastLogTime = 0;
-        logger.warn("New throughput!!!");
     }
 
     public void execute(){
@@ -35,7 +34,7 @@ public class Throughput implements Serializable{
             long elementDiff = received - lastLogEle;
             double ex = (1000 / (double) timeDiff);
 
-            logger.warn(String.format("Throughput:\t{}\t{}\t{}\tms,elements,elements/second",
+            logger.warn(String.format("Throughput:\t%d\t%d\t%d\tms,elements,elements/second",
                     timeDiff,
                     elementDiff,
                     Double.valueOf(elementDiff * ex).longValue()));

@@ -32,7 +32,7 @@ public class Latency implements Serializable{
         long timeDiff = now - lastLogTime;
         long elementDiff = received - lastLogEle;
         if (timeDiff > 100 || elementDiff > 1000) {
-            logger.warn(String.format("Latency:\t{}\t{}\t{}\tms,elements,ms/ele",
+            logger.warn(String.format("Latency:\t%d\t%d\t%d\tms,elements,ms/ele",
                     timeDiff, elementDiff, Double.valueOf(acumulateLatency/elementDiff).longValue()));
             // reinit
             lastLogEle = received;
