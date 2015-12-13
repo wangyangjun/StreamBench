@@ -45,16 +45,9 @@ public class WordCount extends Workload implements Serializable{
             PairWorkloadOperator<String, WithTime<Integer>> counts =
                     operator.flatMap(UserFunctions.splitFlatMapWithTime, "splitter")
                             .mapToPair(UserFunctions.mapToStrIntPairWithTime, "pair")
-                            .reduceByKey(UserFunctions.sumReduceWithTime, "sum")
+                            .reduceByKey(UserFunctions.sumReduceWithTime, "sum", true)
                             .updateStateByKey(UserFunctions.sumReduceWithTime, "accumulate");
-            counts.print();
-//            operator.flatMap(UserFunctions.splitFlatMapWithTime, "splitter")
-//                    .mapToPair(UserFunctions.mapToStrIntPairWithTime, "pair")
-//                    .reduceByKey(UserFunctions.sumReduceWithTime, "sum")
-//                    .updateStateByKey(UserFunctions.sumReduceWithTime, "accumulate")
-//                    .mapValue(UserFunctions.removeTimeMap, "map")
-//                    .sink();
-
+            counts.sink();
         }
         catch (Exception e){
             logger.error(e.getMessage());
