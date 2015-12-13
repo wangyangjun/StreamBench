@@ -1,11 +1,8 @@
 package fi.aalto.dmg.frame.functions;
 
 import com.google.common.base.Optional;
-import fi.aalto.dmg.statistics.Latency;
-import fi.aalto.dmg.util.WithTime;
+import org.apache.log4j.Logger;
 import org.apache.spark.api.java.function.Function2;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -15,13 +12,12 @@ import java.util.List;
 public class UpdateStateFunctionImpl<V> implements Function2<List<V>, Optional<V>, Optional<V>> {
 
     private static final long serialVersionUID = -7713561370480802413L;
+    private static Logger logger = Logger.getLogger(ReduceFunctionImpl.class);
+
     private ReduceFunction<V> fun;
-    private final Logger logger = LoggerFactory.getLogger(ReduceFunctionImpl.class);
-    private Latency latency;
 
     public UpdateStateFunctionImpl(ReduceFunction<V> function){
         this.fun = function;
-        latency = new Latency(logger);
     }
 
     @Override
@@ -33,7 +29,6 @@ public class UpdateStateFunctionImpl<V> implements Function2<List<V>, Optional<V
             } else {
                 reducedValue = fun.reduce(reducedValue, value);
             }
-            latency.execute((WithTime)reducedValue);
         }
         if(null != reducedValue)
             return Optional.of(reducedValue);

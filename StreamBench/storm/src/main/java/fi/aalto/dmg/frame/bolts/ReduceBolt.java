@@ -7,27 +7,37 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import fi.aalto.dmg.statistics.Throughput;
+import org.apache.log4j.Logger;
 
 /**
  * Created by yangjun.wang on 31/10/15.
  */
 public class ReduceBolt<T> extends BaseBasicBolt {
 
-    private static final Logger logger = LoggerFactory.getLogger(ReduceBolt.class);
+    private static final Logger logger = Logger.getLogger(ReduceBolt.class);
     private static final long serialVersionUID = 6478439481824085537L;
     private T currentValue;
 
     ReduceFunction<T> fun;
+    Throughput throughput;
 
     public ReduceBolt(ReduceFunction<T> function){
         this.fun = function;
         this.currentValue = null;
     }
 
+    public ReduceBolt(ReduceFunction<T> function, Logger logger){
+        this(function);
+        this.throughput = new Throughput(logger);
+    }
+
+
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
+        if(null != throughput) {
+            throughput.execute();
+        }
         Object o = input.getValue(0);
         try {
             if(null != currentValue){

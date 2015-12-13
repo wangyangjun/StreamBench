@@ -8,9 +8,9 @@ import backtype.storm.tuple.Values;
 import fi.aalto.dmg.exceptions.DurationException;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
 import fi.aalto.dmg.frame.functions.MapFunction;
+import fi.aalto.dmg.statistics.Throughput;
 import fi.aalto.dmg.util.TimeDurations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
  * Created by jun on 11/13/15.
  */
 public class WindowMapBolt<T, R> extends WindowedBolt {
-    private static final Logger logger = LoggerFactory.getLogger(WindowMapBolt.class);
+    private static final Logger logger = Logger.getLogger(WindowMapBolt.class);
     private static final long serialVersionUID = -3447173615967432931L;
 
     // each slide has a corresponding List<R>
@@ -33,6 +33,14 @@ public class WindowMapBolt<T, R> extends WindowedBolt {
         for(int i=0; i<WINDOW_SIZE; ++i){
             mapedList.add(i, new ArrayList<R>());
         }
+    }
+
+    public WindowMapBolt(MapFunction<T, R> function,
+                         TimeDurations windowDuration,
+                         TimeDurations slideDuration,
+                         Logger logger) throws DurationException {
+        this(function, windowDuration, slideDuration);
+        this.throughput = new Throughput(logger);
     }
 
     /**

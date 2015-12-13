@@ -1,12 +1,14 @@
 package fi.aalto.dmg.frame;
 
 import fi.aalto.dmg.frame.functions.*;
+import fi.aalto.dmg.statistics.Throughput;
 import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.WindowedStream;
 import org.apache.flink.streaming.api.functions.windowing.WindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.Window;
 import org.apache.flink.util.Collector;
+import org.apache.log4j.Logger;
 import scala.Tuple2;
 
 /**
@@ -21,10 +23,16 @@ public class FlinkWindowedWorkloadOperator<T, W extends Window> implements Windo
         windowStream = stream;
     }
 
-    public <R> WorkloadOperator<R> mapPartition(final MapPartitionFunction<T, R> fun, String componentId) {
+    @Override
+    public <R> WorkloadOperator<R> mapPartition(final MapPartitionFunction<T, R> fun, final String componentId, final boolean logThroughput) {
         DataStream<R> newDataStream = this.windowStream.apply(new WindowFunction<T, R, T, W>() {
+            Throughput throughput = new Throughput(Logger.getLogger(componentId));
+
             @Override
             public void apply(T t, W window, Iterable<T> values, Collector<R> collector) throws Exception {
+                if(logThroughput) {
+                    throughput.execute();
+                }
                 Iterable<R> results = fun.mapPartition(values);
                 for (R r : results) {
                     collector.collect(r);
@@ -34,11 +42,20 @@ public class FlinkWindowedWorkloadOperator<T, W extends Window> implements Windo
         return new FlinkWorkloadOperator<>(newDataStream);
     }
 
+    public <R> WorkloadOperator<R> mapPartition(final MapPartitionFunction<T, R> fun, String componentId) {
+        return mapPartition(fun, componentId, false);
+    }
+
     @Override
-    public <R> WorkloadOperator<R> map(final MapFunction<T, R> fun, String componentId) {
+    public <R> WorkloadOperator<R> map(final MapFunction<T, R> fun, final String componentId, final boolean logThroughput) {
         DataStream<R> newDataStream = this.windowStream.apply(new WindowFunction<T, R, T, W>() {
+            Throughput throughput = new Throughput(Logger.getLogger(componentId));
+
             @Override
             public void apply(T t, W window, Iterable<T> values, Collector<R> collector) throws Exception {
+                if(logThroughput) {
+                    throughput.execute();
+                }
                 for(T value : values){
                     R result = fun.map(value);
                     collector.collect(result);
@@ -49,11 +66,21 @@ public class FlinkWindowedWorkloadOperator<T, W extends Window> implements Windo
     }
 
     @Override
-    public WorkloadOperator<T> filter(final FilterFunction<T> fun, String componentId) {
+    public <R> WorkloadOperator<R> map(final MapFunction<T, R> fun, String componentId) {
+        return map(fun, componentId, false);
+    }
+
+    @Override
+    public WorkloadOperator<T> filter(final FilterFunction<T> fun, final String componentId, final boolean logThroughput) {
         DataStream<T> newDataStream = this.windowStream.apply(new WindowFunction<T, T, T, W>() {
+            Throughput throughput = new Throughput(Logger.getLogger(componentId));
+
             @Override
             public void apply(T t, W window, Iterable<T> values, Collector<T> collector) throws Exception {
                 for(T value : values){
+                    if(logThroughput) {
+                        throughput.execute();
+                    }
                     if(fun.filter(value))
                         collector.collect(value);
                 }
@@ -63,10 +90,20 @@ public class FlinkWindowedWorkloadOperator<T, W extends Window> implements Windo
     }
 
     @Override
-    public WorkloadOperator<T> reduce(final fi.aalto.dmg.frame.functions.ReduceFunction<T> fun, String componentId) {
+    public WorkloadOperator<T> filter(final FilterFunction<T> fun, String componentId) {
+        return filter(fun, componentId, false);
+    }
+
+    @Override
+    public WorkloadOperator<T> reduce(final fi.aalto.dmg.frame.functions.ReduceFunction<T> fun, final String componentId, final boolean logThroughput) {
         DataStream<T> newDataStream = this.windowStream.reduce(new ReduceFunction<T>() {
+            Throughput throughput = new Throughput(Logger.getLogger(componentId));
+
             @Override
             public T reduce(T t, T t1) throws Exception {
+                if(logThroughput) {
+                    throughput.execute();
+                }
                 return fun.reduce(t, t1);
             }
         });
@@ -74,17 +111,32 @@ public class FlinkWindowedWorkloadOperator<T, W extends Window> implements Windo
     }
 
     @Override
-    public <K, V> PairWorkloadOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun, String componentId) {
+    public WorkloadOperator<T> reduce(final fi.aalto.dmg.frame.functions.ReduceFunction<T> fun, String componentId) {
+        return reduce(fun, componentId, false);
+    }
+
+    @Override
+    public <K, V> PairWorkloadOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun, final String componentId, final boolean logThroughput) {
         DataStream<Tuple2<K,V>> newDataStream = this.windowStream.apply(new WindowFunction<T, Tuple2<K, V>, T, W>() {
+            Throughput throughput = new Throughput(Logger.getLogger(componentId));
+
             @Override
             public void apply(T t, W window, Iterable<T> values, Collector<Tuple2<K, V>> collector) throws Exception {
                 for(T value : values){
+                    if(logThroughput){
+                        throughput.execute();
+                    }
                     Tuple2<K,V> result = fun.mapToPair(value);
                     collector.collect(result);
                 }
             }
         });
         return new FlinkPairWorkloadOperator<K,V>(newDataStream);
+    }
+
+    @Override
+    public <K, V> PairWorkloadOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun, String componentId) {
+        return mapToPair(fun, componentId, false);
     }
 
     @Override

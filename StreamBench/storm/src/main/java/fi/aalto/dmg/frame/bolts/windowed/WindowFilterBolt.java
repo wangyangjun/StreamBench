@@ -8,9 +8,9 @@ import backtype.storm.tuple.Values;
 import fi.aalto.dmg.exceptions.DurationException;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
 import fi.aalto.dmg.frame.functions.FilterFunction;
+import fi.aalto.dmg.statistics.Throughput;
 import fi.aalto.dmg.util.TimeDurations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +19,13 @@ import java.util.List;
  * Created by jun on 11/13/15.
  */
 public class WindowFilterBolt<T> extends WindowedBolt {
-    private static final Logger logger = LoggerFactory.getLogger(WindowMapBolt.class);
+    private static final Logger logger = Logger.getLogger(WindowMapBolt.class);
     private static final long serialVersionUID = 2282056746485449714L;
 
     // each slide has a corresponding List<R>
     private List<List<T>> filteredList;
     private FilterFunction<T> fun;
+
 
     public WindowFilterBolt(FilterFunction<T> function, TimeDurations windowDuration, TimeDurations slideDuration) throws DurationException {
         super(windowDuration, slideDuration);
@@ -33,6 +34,14 @@ public class WindowFilterBolt<T> extends WindowedBolt {
         for(int i=0; i<WINDOW_SIZE; ++i){
             filteredList.add(i, new ArrayList<T>());
         }
+    }
+
+    public WindowFilterBolt(FilterFunction<T> function,
+                            TimeDurations windowDuration,
+                            TimeDurations slideDuration,
+                            Logger logger) throws DurationException {
+        this(function, windowDuration, slideDuration);
+        this.throughput = new Throughput(logger);
     }
 
     /**

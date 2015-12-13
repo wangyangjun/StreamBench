@@ -9,6 +9,7 @@ import fi.aalto.dmg.frame.bolts.discretized.DiscretizedPairReduceByKeyBolt;
 import fi.aalto.dmg.frame.bolts.windowed.WindowPairReduceByKeyBolt;
 import fi.aalto.dmg.frame.functions.*;
 import fi.aalto.dmg.util.TimeDurations;
+import org.apache.log4j.Logger;
 import scala.Tuple2;
 
 /**
@@ -30,33 +31,73 @@ public class StormPairOperator<K, V> implements PairWorkloadOperator<K,V> {
         return new StormGroupedOperator<>(topologyBuilder, this.preComponentId);
     }
 
+    @Override
+    public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput) {
+        if(logThroughput){
+            topologyBuilder.setBolt(componentId, new PairReduceBolt<K, V>(fun, Logger.getLogger(componentId)))
+                    .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
+        } else {
+            topologyBuilder.setBolt(componentId, new PairReduceBolt<K, V>(fun))
+                    .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
+        }
+        return new StormPairOperator<>(topologyBuilder, componentId);
+    }
+
     // Set bolt with fieldsGrouping
     @Override
     public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId) {
-        topologyBuilder.setBolt(componentId, new PairReduceBolt<K,V>(fun))
-                .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
+        return reduceByKey(fun, componentId, false);
+    }
+
+    @Override
+    public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<V, R> fun, String componentId, boolean logThroughput) {
+        if(logThroughput){
+            topologyBuilder.setBolt(componentId, new MapValueBolt<>(fun, Logger.getLogger(componentId)))
+                    .localOrShuffleGrouping(preComponentId);
+        } else {
+            topologyBuilder.setBolt(componentId, new MapValueBolt<>(fun))
+                    .localOrShuffleGrouping(preComponentId);
+        }
         return new StormPairOperator<>(topologyBuilder, componentId);
     }
 
     @Override
     public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<V, R> fun, String componentId) {
-        topologyBuilder.setBolt(componentId, new MapValueBolt<>(fun))
-                .localOrShuffleGrouping(preComponentId);
+        return mapValue(fun, componentId, false);
+    }
+
+    @Override
+    public <R> PairWorkloadOperator<K, R> flatMapValue(FlatMapFunction<V, R> fun, String componentId, boolean logThroughput) {
+        if(logThroughput){
+            topologyBuilder.setBolt(componentId, new FlatMapValueBolt<>(fun, Logger.getLogger(componentId)))
+                    .localOrShuffleGrouping(preComponentId);
+        } else {
+            topologyBuilder.setBolt(componentId, new FlatMapValueBolt<>(fun))
+                    .localOrShuffleGrouping(preComponentId);
+        }
         return new StormPairOperator<>(topologyBuilder, componentId);
     }
 
     @Override
     public <R> PairWorkloadOperator<K, R> flatMapValue(FlatMapFunction<V, R> fun, String componentId) {
-        topologyBuilder.setBolt(componentId, new FlatMapValueBolt<>(fun))
-                .localOrShuffleGrouping(preComponentId);
+        return flatMapValue(fun, componentId, false);
+    }
+
+    @Override
+    public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId, boolean logThroughput) {
+        if(logThroughput){
+            topologyBuilder.setBolt(componentId, new PairFilterBolt<K,V>(fun, Logger.getLogger(componentId)))
+                    .localOrShuffleGrouping(preComponentId);
+        } else {
+            topologyBuilder.setBolt(componentId, new PairFilterBolt<K,V>(fun))
+                    .localOrShuffleGrouping(preComponentId);
+        }
         return new StormPairOperator<>(topologyBuilder, componentId);
     }
 
     @Override
     public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId) {
-        topologyBuilder.setBolt(componentId, new PairFilterBolt<K,V>(fun))
-                .localOrShuffleGrouping(preComponentId);
-        return new StormPairOperator<>(topologyBuilder, componentId);
+        return filter(fun, componentId, false);
     }
 
     @Override
@@ -67,6 +108,11 @@ public class StormPairOperator<K, V> implements PairWorkloadOperator<K,V> {
         return new StormPairOperator<>(topologyBuilder, componentId);
     }
 
+    @Override
+    public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput) {
+        return null;
+    }
+
     // Set bolt with fieldsGrouping
     @Override
     public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId) {
@@ -74,8 +120,18 @@ public class StormPairOperator<K, V> implements PairWorkloadOperator<K,V> {
     }
 
     @Override
+    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration, boolean logThroughput) {
+        return null;
+    }
+
+    @Override
     public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration) {
         return reduceByKeyAndWindow(fun, componentId, windowDuration, windowDuration);
+    }
+
+    @Override
+    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration, TimeDurations slideDuration, boolean logThroughput) {
+        return null;
     }
 
     @Override
@@ -141,7 +197,7 @@ public class StormPairOperator<K, V> implements PairWorkloadOperator<K,V> {
 
     @Override
     public void sink() {
-//        topologyBuilder.setBolt("latency", new PairLatencyBolt<>()).localOrShuffleGrouping(preComponentId);
+        topologyBuilder.setBolt("latency", new PairLatencyBolt<>()).localOrShuffleGrouping(preComponentId);
 
     }
 

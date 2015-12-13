@@ -8,7 +8,6 @@ import backtype.storm.tuple.Values;
 import backtype.storm.utils.Utils;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
-import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -2,7 +2,6 @@ package fi.aalto.dmg.frame;
 
 import fi.aalto.dmg.exceptions.WorkloadException;
 import fi.aalto.dmg.frame.functions.*;
-import fi.aalto.dmg.statistics.Latency;
 import fi.aalto.dmg.util.TimeDurations;
 import fi.aalto.dmg.util.Utils;
 import fi.aalto.dmg.util.WithTime;
@@ -33,9 +32,19 @@ public class SparkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
     }
 
     @Override
+    public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput) {
+        return reduceByKey(fun, componentId);
+    }
+
+    @Override
     public PairWorkloadOperator<K, V> reduceByKey(final ReduceFunction<V> fun, String componentId) {
         JavaPairDStream<K,V> newStream = pairDStream.reduceByKey(new ReduceFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(newStream);
+    }
+
+    @Override
+    public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<V, R> fun, String componentId, boolean logThroughput) {
+        return mapValue(fun, componentId);
     }
 
     @Override
@@ -45,9 +54,19 @@ public class SparkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
     }
 
     @Override
+    public <R> PairWorkloadOperator<K, R> flatMapValue(FlatMapFunction<V, R> fun, String componentId, boolean logThroughput) {
+        return flatMapValue(fun, componentId);
+    }
+
+    @Override
     public <R> PairWorkloadOperator<K, R> flatMapValue(FlatMapFunction<V, R> fun, String componentId) {
         JavaPairDStream<K,R> newStream = pairDStream.flatMapValues(new FlatMapValuesFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(newStream);
+    }
+
+    @Override
+    public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId, boolean logThroughput) {
+        return filter(fun, componentId);
     }
 
     @Override
@@ -62,14 +81,29 @@ public class SparkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
     }
 
     @Override
+    public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput) {
+        return updateStateByKey(fun, componentId);
+    }
+
+    @Override
     public PairWorkloadOperator<K, V> updateStateByKey(final ReduceFunction<V> fun, String componentId) {
         JavaPairDStream<K, V> cumulateStream = pairDStream.updateStateByKey(new UpdateStateFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(cumulateStream);
     }
 
     @Override
+    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration, boolean logThroughput) {
+        return reduceByKeyAndWindow(fun, componentId, windowDuration);
+    }
+
+    @Override
     public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration) {
         return reduceByKeyAndWindow(fun, componentId, windowDuration, windowDuration);
+    }
+
+    @Override
+    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration, TimeDurations slideDuration, boolean logThroughput) {
+        return reduceByKeyAndWindow(fun, componentId, windowDuration, slideDuration);
     }
 
     @Override

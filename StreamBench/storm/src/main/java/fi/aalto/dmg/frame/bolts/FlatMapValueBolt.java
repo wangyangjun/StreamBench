@@ -7,24 +7,34 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import fi.aalto.dmg.frame.functions.FlatMapFunction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import fi.aalto.dmg.statistics.Throughput;
+import org.apache.log4j.Logger;
 
 /**
  * Created by jun on 11/9/15.
  */
 public class FlatMapValueBolt<V, R> extends BaseBasicBolt {
 
-    private static final Logger logger = LoggerFactory.getLogger(FlatMapValueBolt.class);
+    private static final Logger logger = Logger.getLogger(FlatMapValueBolt.class);
     private static final long serialVersionUID = 8601926877987440101L;
-    FlatMapFunction<V, R> fun;
+
+    private FlatMapFunction<V, R> fun;
+    private Throughput throughput;
 
     public FlatMapValueBolt(FlatMapFunction<V, R> function){
         this.fun = function;
     }
 
+    public FlatMapValueBolt(FlatMapFunction<V, R> function, Logger logger){
+        this(function);
+        this.throughput = new Throughput(logger);
+    }
+
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
+        if(null != throughput){
+            throughput.execute();
+        }
         Object o = input.getValue(1);
         try {
             Iterable<R> results = this.fun.flatMap((V) o);

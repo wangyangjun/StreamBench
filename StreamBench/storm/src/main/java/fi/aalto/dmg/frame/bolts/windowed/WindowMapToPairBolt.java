@@ -8,9 +8,9 @@ import backtype.storm.tuple.Values;
 import fi.aalto.dmg.exceptions.DurationException;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
 import fi.aalto.dmg.frame.functions.MapPairFunction;
+import fi.aalto.dmg.statistics.Throughput;
 import fi.aalto.dmg.util.TimeDurations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import scala.Tuple2;
 
 import java.util.ArrayList;
@@ -20,14 +20,16 @@ import java.util.List;
  * Created by jun on 11/13/15.
  */
 public class WindowMapToPairBolt<T, K, V> extends WindowedBolt {
-    private static final Logger logger = LoggerFactory.getLogger(WindowMapBolt.class);
+    private static final Logger logger = Logger.getLogger(WindowMapBolt.class);
     private static final long serialVersionUID = -287565768441900556L;
 
     // each slide has a corresponding List<R>
     private List<List<Tuple2<K,V>>> mapedList;
     private MapPairFunction<T, K, V> fun;
 
-    public WindowMapToPairBolt(MapPairFunction<T, K, V> function, TimeDurations windowDuration, TimeDurations slideDuration) throws DurationException {
+    public WindowMapToPairBolt(MapPairFunction<T, K, V> function,
+                               TimeDurations windowDuration,
+                               TimeDurations slideDuration) throws DurationException {
         super(windowDuration, slideDuration);
         this.fun = function;
         mapedList = new ArrayList<>(WINDOW_SIZE);
@@ -35,6 +37,15 @@ public class WindowMapToPairBolt<T, K, V> extends WindowedBolt {
             mapedList.add(i, new ArrayList<Tuple2<K, V>>());
         }
     }
+
+    public WindowMapToPairBolt(MapPairFunction<T, K, V> function,
+                               TimeDurations windowDuration,
+                               TimeDurations slideDuration,
+                               Logger logger) throws DurationException {
+        this(function, windowDuration, slideDuration);
+        this.throughput = new Throughput(logger);
+    }
+
 
     /**
      * Map T(t) to R(r) and added it to current slide

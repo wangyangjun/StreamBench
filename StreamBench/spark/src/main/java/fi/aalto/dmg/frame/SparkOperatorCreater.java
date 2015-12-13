@@ -38,6 +38,7 @@ public class SparkOperatorCreater extends OperatorCreater implements Serializabl
         properties = new Properties();
         properties.load(this.getClass().getClassLoader().getResourceAsStream("spark-cluster.properties"));
         SparkConf conf = new SparkConf().setMaster(this.getMaster()).setAppName(appName);
+        conf.set("spark.streaming.ui.retainedBatches", "2000");
         jssc = new JavaStreamingContext(conf, Durations.milliseconds(this.getDurationsMilliseconds()));
     }
 

@@ -1,6 +1,5 @@
 package fi.aalto.dmg.frame.bolts.windowed;
 
-import backtype.storm.metric.SystemBolt;
 import backtype.storm.topology.BasicOutputCollector;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Fields;
@@ -9,10 +8,10 @@ import backtype.storm.tuple.Values;
 import fi.aalto.dmg.exceptions.DurationException;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
+import fi.aalto.dmg.statistics.Throughput;
 import fi.aalto.dmg.util.BTree;
 import fi.aalto.dmg.util.TimeDurations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import scala.Tuple2;
 
 import java.util.ArrayList;
@@ -26,19 +25,29 @@ import java.util.Map;
  */
 public class WindowPairReduceByKeyBolt<K,V> extends WindowedBolt {
 
-    private static final Logger logger = LoggerFactory.getLogger(WindowPairReduceByKeyBolt.class);
+    private static final Logger logger = Logger.getLogger(WindowPairReduceByKeyBolt.class);
     private static final long serialVersionUID = 3371879383220577120L;
     // for each slide, there is a corresponding reduced Tuple2
     private ReduceFunction<V> fun;
     private BTree<Map<K, V>> reduceDataContainer;
 
-    public WindowPairReduceByKeyBolt(ReduceFunction<V> function, TimeDurations windowDuration, TimeDurations slideDuration) throws DurationException {
+    public WindowPairReduceByKeyBolt(ReduceFunction<V> function,
+                                     TimeDurations windowDuration,
+                                     TimeDurations slideDuration) throws DurationException {
         super(windowDuration, slideDuration);
         this.fun = function;
         reduceDataContainer = new BTree<>(WINDOW_SIZE);
         for(int i=0; i<WINDOW_SIZE; ++i) {
             reduceDataContainer.set(i, new HashMap<K, V>());
         }
+    }
+
+    public WindowPairReduceByKeyBolt(ReduceFunction<V> function,
+                                     TimeDurations windowDuration,
+                                     TimeDurations slideDuration,
+                                     Logger logger) throws DurationException {
+        this(function, windowDuration, slideDuration);
+        this.throughput = new Throughput(logger);
     }
 
     /**

@@ -26,9 +26,19 @@ public class SparkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
 
 
     @Override
+    public <R> WorkloadOperator<R> map(MapFunction<T, R> fun, String componentId, boolean logThroughput) {
+        return map(fun, componentId);
+    }
+
+    @Override
     public <R> WorkloadOperator<R> map(final MapFunction<T, R> fun, String componentId) {
         JavaDStream<R> newStream = dStream.map(new FunctionImpl<>(fun));
         return new SparkWorkloadOperator<R>(newStream);
+    }
+
+    @Override
+    public <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId, boolean logThroughput) {
+        return mapToPair(fun, componentId);
     }
 
     @Override
@@ -38,9 +48,19 @@ public class SparkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
     }
 
     @Override
+    public WorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId, boolean logThroughput) {
+        return reduce(fun, componentId);
+    }
+
+    @Override
     public WorkloadOperator<T> reduce(final ReduceFunction<T> fun, String componentId) {
         JavaDStream<T> newStream = dStream.reduce(new ReduceFunctionImpl<>(fun));
         return new SparkWorkloadOperator<>(newStream);
+    }
+
+    @Override
+    public WorkloadOperator<T> filter(FilterFunction<T> fun, String componentId, boolean logThroughput) {
+        return filter(fun, componentId);
     }
 
     @Override
@@ -52,6 +72,11 @@ public class SparkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
     @Override
     public WorkloadOperator<T> iterative(MapFunction<T, T> mapFunction, FilterFunction<T> iterativeFunction, String componentId) {
         return null;
+    }
+
+    @Override
+    public <R> WorkloadOperator<R> flatMap(FlatMapFunction<T, R> fun, String componentId, boolean logThroughput) {
+        return flatMap(fun, componentId);
     }
 
     @Override
@@ -82,12 +107,7 @@ public class SparkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
 
     @Override
     public void sink() {
-        this.dStream.foreach(new Function2<JavaRDD<T>, Time, Void>() {
-            @Override
-            public Void call(JavaRDD<T> tJavaRDD, Time time) throws Exception {
-                return null;
-            }
-        });
+        this.dStream.print();
     }
 
 }

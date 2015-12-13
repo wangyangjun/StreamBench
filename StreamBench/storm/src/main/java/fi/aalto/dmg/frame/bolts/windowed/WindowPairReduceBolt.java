@@ -8,10 +8,10 @@ import backtype.storm.tuple.Values;
 import fi.aalto.dmg.exceptions.DurationException;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
+import fi.aalto.dmg.statistics.Throughput;
 import fi.aalto.dmg.util.BTree;
 import fi.aalto.dmg.util.TimeDurations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import scala.Tuple2;
 
 /**
@@ -20,16 +20,26 @@ import scala.Tuple2;
 
 public class WindowPairReduceBolt<K,V> extends WindowedBolt {
 
-    private static final Logger logger = LoggerFactory.getLogger(WindowPairReduceByKeyBolt.class);
+    private static final Logger logger = Logger.getLogger(WindowPairReduceByKeyBolt.class);
     private static final long serialVersionUID = -180584448506842278L;
     // for each slide, there is a corresponding reduced Tuple2
     private BTree<Tuple2<K,V>> reduceDataContainer;
     private ReduceFunction<Tuple2<K, V>> fun;
 
-    public WindowPairReduceBolt(ReduceFunction<Tuple2<K, V>> function, TimeDurations windowDuration, TimeDurations slideDuration) throws DurationException {
+    public WindowPairReduceBolt(ReduceFunction<Tuple2<K, V>> function,
+                                TimeDurations windowDuration,
+                                TimeDurations slideDuration) throws DurationException {
         super(windowDuration, slideDuration);
         this.fun = function;
         reduceDataContainer = new BTree<>(WINDOW_SIZE);
+    }
+
+    public WindowPairReduceBolt(ReduceFunction<Tuple2<K, V>> function,
+                                TimeDurations windowDuration,
+                                TimeDurations slideDuration,
+                                Logger logger) throws DurationException {
+        this(function, windowDuration, slideDuration);
+        this.throughput = new Throughput(logger);
     }
 
     /**

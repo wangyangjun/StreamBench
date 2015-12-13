@@ -16,5 +16,7 @@ public class SetTest {
         for(String str : set){
             System.out.println(str);
         }
+
+        System.out.println(String.format("%05d", 123));
     }
 }

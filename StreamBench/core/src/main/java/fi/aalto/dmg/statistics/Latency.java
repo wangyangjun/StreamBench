@@ -11,33 +11,15 @@ import java.io.Serializable;
 public class Latency implements Serializable{
 
     private static final long serialVersionUID = -8124631262741665559L;
-    private Logger logger;
-    private long received;
+    private static Logger logger;
 
-    private long lastLogTime;
-    private long lastLogEle;
-    private long acumulateLatency;
-
-    public Latency(Logger logger) {
-        this.logger = logger;
-        this.received = 0;
-        this.acumulateLatency = 0;
-        this.lastLogTime = System.currentTimeMillis();
+    public Latency(Logger log) {
+        logger = log;
     }
 
     public void execute(WithTime<? extends Object> withTime){
-        long now = System.currentTimeMillis();
-        received++;
-        acumulateLatency += now-withTime.getTime();
-        long timeDiff = now - lastLogTime;
-        long elementDiff = received - lastLogEle;
-        if (timeDiff > 100 || elementDiff > 1000) {
-            logger.warn(String.format("Latency:\t%d\t%d\t%d\tms,elements,ms/ele",
-                    timeDiff, elementDiff, Double.valueOf(acumulateLatency/elementDiff).longValue()));
-            // reinit
-            lastLogEle = received;
-            lastLogTime = now;
-            acumulateLatency = 0;
-        }
+        long latency = System.currentTimeMillis() - withTime.getTime();
+        // probability to log 0.001
+        logger.warn(String.format("Latency:\t%d", latency));
     }
 }

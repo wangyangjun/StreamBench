@@ -7,24 +7,33 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import fi.aalto.dmg.frame.functions.FilterFunction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import fi.aalto.dmg.statistics.Throughput;
+import org.apache.log4j.Logger;
 
 /**
  * Created by yangjun.wang on 01/11/15.
  */
 public class FilterBolt<T> extends BaseBasicBolt {
 
-    private static final Logger logger = LoggerFactory.getLogger(FilterBolt.class);
+    private static final Logger logger = Logger.getLogger(FilterBolt.class);
     private static final long serialVersionUID = 2401869900116259991L;
     FilterFunction<T> fun;
+    Throughput throughput;
 
     public FilterBolt(FilterFunction<T> function){
         this.fun = function;
     }
 
+    public FilterBolt(FilterFunction<T> function, Logger logger){
+        this.fun = function;
+        this.throughput = new Throughput(logger);
+    }
+
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
+        if(null != throughput) {
+            throughput.execute();
+        }
         Object o = input.getValue(0);
         try {
             if(this.fun.filter((T) o)){

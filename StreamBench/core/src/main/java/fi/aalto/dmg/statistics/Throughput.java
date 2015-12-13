@@ -11,26 +11,30 @@ import java.io.Serializable;
 public class Throughput implements Serializable{
 
     private static final long serialVersionUID = -4968905648218161496L;
-    private Logger logger;
+    private static Logger logger;
     private long received;
 
     private long lastLogTime;
     private long lastLogEle;
 
-    public Throughput(Logger logger) {
-        this.logger = logger;
+    public Throughput(Logger log) {
+        logger = log;
         this.received = 0;
         this.lastLogTime = 0;
     }
 
     public void execute(){
+        execute(500);
+    }
+
+    public void execute(int logFrequency){
         long now = System.currentTimeMillis();
         received++;
         if(0 == lastLogTime) {
             this.lastLogTime = now;
         }
         long timeDiff = now - lastLogTime;
-        if (timeDiff > 100) {
+        if (timeDiff > logFrequency) {
             long elementDiff = received - lastLogEle;
             double ex = (1000 / (double) timeDiff);
 

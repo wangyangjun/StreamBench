@@ -7,6 +7,6 @@ package fi.aalto.dmg.util;
 public class Utils {
 
     public static String intToString(int n){
-        return String.format("%010d", n);
+        return String.format("%05d", n);
     }
 }

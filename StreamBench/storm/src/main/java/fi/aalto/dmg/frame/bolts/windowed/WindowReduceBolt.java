@@ -8,9 +8,9 @@ import backtype.storm.tuple.Values;
 import fi.aalto.dmg.exceptions.DurationException;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
+import fi.aalto.dmg.statistics.Throughput;
 import fi.aalto.dmg.util.TimeDurations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
  * Created by jun on 11/9/15.
  */
 public class WindowReduceBolt<T> extends WindowedBolt {
-    private static final Logger logger = LoggerFactory.getLogger(WindowReduceBolt.class);
+    private static final Logger logger = Logger.getLogger(WindowReduceBolt.class);
     private static final long serialVersionUID = 865100279347059333L;
 
     // window data structure TODO: replace it with tree
@@ -30,6 +30,14 @@ public class WindowReduceBolt<T> extends WindowedBolt {
         super(windowDuration, slideDuration);
         this.fun = function;
         reduceList = new ArrayList<>(WINDOW_SIZE);
+    }
+
+    public WindowReduceBolt(ReduceFunction<T> function,
+                            TimeDurations windowDuration,
+                            TimeDurations slideDuration,
+                            Logger logger) throws DurationException {
+        this(function, windowDuration, slideDuration);
+        this.throughput = new Throughput(logger);
     }
 
     @Override

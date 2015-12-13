@@ -6,8 +6,7 @@ import backtype.storm.topology.base.BaseBasicBolt;
 import backtype.storm.tuple.Tuple;
 import fi.aalto.dmg.statistics.Latency;
 import fi.aalto.dmg.util.WithTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 /**
  * Created by jun on 08/12/15.
@@ -16,7 +15,7 @@ public class PairLatencyBolt<T> extends BaseBasicBolt {
 
     private static final long serialVersionUID = 5063888858772660110L;
 
-    private static final Logger logger = LoggerFactory.getLogger(PairLatencyBolt.class);
+    private static final Logger logger = Logger.getLogger(PairLatencyBolt.class);
     private Latency latency;
 
     public PairLatencyBolt() {

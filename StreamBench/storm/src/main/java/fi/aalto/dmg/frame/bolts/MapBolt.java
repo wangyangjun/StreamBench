@@ -7,25 +7,34 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import fi.aalto.dmg.frame.functions.MapFunction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import fi.aalto.dmg.statistics.Throughput;
+import org.apache.log4j.Logger;
 
 /**
  * Created by yangjun.wang on 31/10/15.
  */
 public class MapBolt<T, R> extends BaseBasicBolt {
 
-    private static final Logger logger = LoggerFactory.getLogger(MapBolt.class);
+    private static final Logger logger = Logger.getLogger(MapBolt.class);
     private static final long serialVersionUID = -8469210976959462079L;
 
-    MapFunction<T, R> fun;
+    private MapFunction<T, R> fun;
+    private Throughput throughput;
 
     public MapBolt(MapFunction<T, R> function){
         this.fun = function;
     }
 
+    public MapBolt(MapFunction<T, R> function, Logger logger){
+        this.fun = function;
+        this.throughput = new Throughput(logger);
+    }
+
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
+        if(null != throughput) {
+            throughput.execute();
+        }
         Object o = input.getValue(0);
         try {
             R result = this.fun.map((T) o);

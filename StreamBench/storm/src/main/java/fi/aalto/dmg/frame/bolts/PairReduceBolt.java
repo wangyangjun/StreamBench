@@ -7,8 +7,8 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import fi.aalto.dmg.statistics.Throughput;
+import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,19 +18,28 @@ import java.util.Map;
  */
 public class PairReduceBolt<K,V> extends BaseBasicBolt {
 
-    private static final Logger logger = LoggerFactory.getLogger(PairReduceBolt.class);
+    private static final Logger logger = Logger.getLogger(PairReduceBolt.class);
     private static final long serialVersionUID = 3751131798984227211L;
     private Map<K, V> map;
 
-    ReduceFunction<V> fun;
+    private ReduceFunction<V> fun;
+    private Throughput throughput;
 
     public PairReduceBolt(ReduceFunction<V> function){
         this.fun = function;
         map = new HashMap<>();
     }
 
+    public PairReduceBolt(ReduceFunction<V> function, Logger logger){
+        this(function);
+        this.throughput = new Throughput(logger);
+    }
+
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
+        if(null != throughput){
+            throughput.execute();
+        }
         Object k = input.getValue(0);
         Object v = input.getValue(1);
         V currentValue = map.get(k);

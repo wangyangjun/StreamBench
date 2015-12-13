@@ -2,10 +2,9 @@ package fi.aalto.dmg.frame.functions;
 
 import fi.aalto.dmg.statistics.Latency;
 import fi.aalto.dmg.util.WithTime;
+import org.apache.log4j.Logger;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.function.Function;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
 /**
@@ -13,7 +12,7 @@ import scala.Tuple2;
  */
 public class PairLatencySinkFunction<K,V> implements Function<Tuple2<K, V>, Boolean> {
 
-    private final Logger logger = LoggerFactory.getLogger(PairLatencySinkFunction.class);
+    private static Logger logger = Logger.getLogger(PairLatencySinkFunction.class);
     private Latency latency;
 
     public PairLatencySinkFunction(){

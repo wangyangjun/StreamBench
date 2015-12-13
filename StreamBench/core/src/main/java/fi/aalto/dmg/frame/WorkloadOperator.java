@@ -10,15 +10,19 @@ import java.io.Serializable;
 public interface WorkloadOperator<T> extends Serializable {
 
     /** Map T to R for each entity */
+    <R> WorkloadOperator<R> map(MapFunction<T, R> fun, String componentId, boolean logThroughput);
     <R> WorkloadOperator<R> map(MapFunction<T, R> fun, String componentId);
 
     /** Map T to Pair<K,V>, return PairWorkloadOperator */
+    <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId, boolean logThroughput);
     <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId);
 
     /** reduce on whole stream */
+    WorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId, boolean logThroughput);
     WorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId);
 
     /** filter entity if fun(entity) is false */
+    WorkloadOperator<T> filter(FilterFunction<T> fun, String componentId, boolean logThroughput);
     WorkloadOperator<T> filter(FilterFunction<T> fun, String componentId);
 
     /**
@@ -32,6 +36,7 @@ public interface WorkloadOperator<T> extends Serializable {
     WorkloadOperator<T> iterative(MapFunction<T, T> mapFunction, FilterFunction<T> iterativeFunction, String componentId);
 
     /** Map T to iterable<R> */
+    <R> WorkloadOperator<R> flatMap(FlatMapFunction<T, R> fun, String componentId, boolean logThroughput);
     <R> WorkloadOperator<R> flatMap(FlatMapFunction<T, R> fun, String componentId);
 
 

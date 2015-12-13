@@ -8,9 +8,9 @@ import backtype.storm.tuple.Values;
 import fi.aalto.dmg.exceptions.DurationException;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
 import fi.aalto.dmg.frame.functions.FilterFunction;
+import fi.aalto.dmg.statistics.Throughput;
 import fi.aalto.dmg.util.TimeDurations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import scala.Tuple2;
 
 import java.util.ArrayList;
@@ -21,20 +21,30 @@ import java.util.List;
  */
 
 public class WindowPairFilterBolt<K,V> extends WindowedBolt {
-    private static final Logger logger = LoggerFactory.getLogger(WindowMapBolt.class);
+    private static final Logger logger = Logger.getLogger(WindowMapBolt.class);
     private static final long serialVersionUID = 1946088053712015357L;
 
     // each slide has a corresponding List<R>
     private List<List<Tuple2<K,V>>> filteredList;
     private FilterFunction<Tuple2<K, V>> fun;
 
-    public WindowPairFilterBolt(FilterFunction<Tuple2<K, V>> function, TimeDurations windowDuration, TimeDurations slideDuration) throws DurationException {
+    public WindowPairFilterBolt(FilterFunction<Tuple2<K, V>> function,
+                                TimeDurations windowDuration,
+                                TimeDurations slideDuration) throws DurationException {
         super(windowDuration, slideDuration);
         this.fun = function;
         filteredList = new ArrayList<>(WINDOW_SIZE);
         for(int i=0; i<WINDOW_SIZE; ++i){
             filteredList.add(i, new ArrayList<Tuple2<K, V>>());
         }
+    }
+
+    public WindowPairFilterBolt(FilterFunction<Tuple2<K, V>> function,
+                                TimeDurations windowDuration,
+                                TimeDurations slideDuration,
+                                Logger logger) throws DurationException {
+        this(function, windowDuration, slideDuration);
+        this.throughput = new Throughput(logger);
     }
 
     /**

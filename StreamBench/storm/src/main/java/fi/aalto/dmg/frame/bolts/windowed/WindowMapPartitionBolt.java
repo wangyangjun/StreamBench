@@ -8,9 +8,9 @@ import backtype.storm.tuple.Values;
 import fi.aalto.dmg.exceptions.DurationException;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
 import fi.aalto.dmg.frame.functions.MapPartitionFunction;
+import fi.aalto.dmg.statistics.Throughput;
 import fi.aalto.dmg.util.TimeDurations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,14 +21,16 @@ import java.util.List;
  */
 
 public class WindowMapPartitionBolt<T, R> extends WindowedBolt {
-    private static final Logger logger = LoggerFactory.getLogger(WindowMapBolt.class);
+    private static final Logger logger = Logger.getLogger(WindowMapBolt.class);
     private static final long serialVersionUID = -6275962856140019227L;
 
     // each slide has a corresponding List<R>
     private List<List<T>> mapedList;
     private MapPartitionFunction<T, R> fun;
 
-    public WindowMapPartitionBolt(MapPartitionFunction<T, R> function, TimeDurations windowDuration, TimeDurations slideDuration) throws DurationException {
+    public WindowMapPartitionBolt(MapPartitionFunction<T, R> function,
+                                  TimeDurations windowDuration,
+                                  TimeDurations slideDuration) throws DurationException {
         super(windowDuration, slideDuration);
         this.fun = function;
         mapedList = new ArrayList<>(WINDOW_SIZE);
@@ -36,6 +38,16 @@ public class WindowMapPartitionBolt<T, R> extends WindowedBolt {
             mapedList.add(i, new ArrayList<T>());
         }
     }
+
+    public WindowMapPartitionBolt(MapPartitionFunction<T, R> function,
+                                  TimeDurations windowDuration,
+                                  TimeDurations slideDuration,
+                                  Logger logger) throws DurationException {
+        this(function, windowDuration, slideDuration);
+        this.throughput = new Throughput(logger);
+    }
+
+
 
     /**
      * Map T(t) to R(r) and added it to current slide

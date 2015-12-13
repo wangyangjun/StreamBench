@@ -1,9 +1,8 @@
 package fi.aalto.dmg.frame.functions;
 
 import fi.aalto.dmg.statistics.Throughput;
+import org.apache.log4j.Logger;
 import org.apache.spark.api.java.function.PairFunction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 
 /**
@@ -11,7 +10,7 @@ import scala.Tuple2;
  */
 public class PairFunctionImpl<T,K,V> implements PairFunction<T,K,V>  {
     private static final long serialVersionUID = -1342161519291972356L;
-    private static final Logger logger = LoggerFactory.getLogger(PairFunctionImpl.class);
+    private static final Logger logger = Logger.getLogger(PairFunctionImpl.class);
 
     private MapPairFunction<T,K,V> fun;
     Throughput throughput;

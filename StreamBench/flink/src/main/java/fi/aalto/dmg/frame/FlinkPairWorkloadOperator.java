@@ -20,13 +20,10 @@ import org.apache.flink.streaming.api.datastream.*;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.AscendingTimestampExtractor;
 import org.apache.flink.streaming.api.functions.sink.SinkFunction;
-import org.apache.flink.streaming.api.operators.StreamJoinOperator;
-import org.apache.flink.streaming.api.transformations.TwoInputTransformation;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import scala.Tuple2;
 
 import java.util.concurrent.TimeUnit;
@@ -54,28 +51,42 @@ public class FlinkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
         return new FlinkGroupedWorkloadOperator<>(keyedStream);
     }
 
-    // TODO: reduceByKey - reduce first then groupByKey, at last reduce again
-    // ReduceFunction is always combinable
-    public PairWorkloadOperator<K, V> reduceByKey(final ReduceFunction<V> fun, String componentId) {
+    @Override
+    public PairWorkloadOperator<K, V> reduceByKey(final ReduceFunction<V> fun, final String componentId, final boolean logThroughput) {
         DataStream<Tuple2<K, V>> newDataStream = this.dataStream.keyBy(new KeySelector<Tuple2<K,V>, Object>() {
             @Override
             public Object getKey(Tuple2<K, V> value) throws Exception {
                 return value._1();
             }
         }).reduce(new org.apache.flink.api.common.functions.ReduceFunction<Tuple2<K, V>>() {
+            Throughput throughput = new Throughput(Logger.getLogger(componentId));
+
             @Override
             public Tuple2<K, V> reduce(Tuple2<K, V> t1, Tuple2<K, V> t2) throws Exception {
+                if(logThroughput) {
+                    throughput.execute();
+                }
                 return new Tuple2<>(t1._1(), fun.reduce(t1._2(), t2._2()));
             }
         });
         return new FlinkPairWorkloadOperator<>(newDataStream);
     }
 
+    // TODO: reduceByKey - reduce first then groupByKey, at last reduce again
+    public PairWorkloadOperator<K, V> reduceByKey(final ReduceFunction<V> fun, String componentId) {
+        return reduceByKey(fun, componentId, false);
+    }
+
     @Override
-    public <R> PairWorkloadOperator<K, R> mapValue(final MapFunction<V, R> fun, String componentId) {
+    public <R> PairWorkloadOperator<K, R> mapValue(final MapFunction<V, R> fun, final String componentId, final boolean logThroughput) {
         DataStream<Tuple2<K,R>> newDataStream = dataStream.map(new org.apache.flink.api.common.functions.MapFunction<Tuple2<K, V>, Tuple2<K, R>>() {
+            Throughput throughput = new Throughput(Logger.getLogger(componentId));
+
             @Override
             public Tuple2<K, R> map(Tuple2<K, V> tuple2) throws Exception {
+                if(logThroughput) {
+                    throughput.execute();
+                }
                 return new Tuple2<>(tuple2._1(), fun.map(tuple2._2()));
             }
         });
@@ -83,10 +94,20 @@ public class FlinkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> flatMapValue(final FlatMapFunction<V, R> fun, String componentId) {
+    public <R> PairWorkloadOperator<K, R> mapValue(final MapFunction<V, R> fun, String componentId) {
+        return mapValue(fun, componentId, false);
+    }
+
+    @Override
+    public <R> PairWorkloadOperator<K, R> flatMapValue(final FlatMapFunction<V, R> fun, final String componentId, final boolean logThroughput) {
         DataStream<Tuple2<K,R>> newDataStream = dataStream.flatMap(new org.apache.flink.api.common.functions.FlatMapFunction<Tuple2<K, V>, Tuple2<K, R>>() {
+            Throughput throughput = new Throughput(Logger.getLogger(componentId));
+
             @Override
             public void flatMap(Tuple2<K, V> tuple2, Collector<Tuple2<K, R>> collector) throws Exception {
+                if(logThroughput) {
+                    throughput.execute();
+                }
                 Iterable<R> rIterable = fun.flatMap(tuple2._2());
                 for (R r : rIterable)
                     collector.collect(new Tuple2<>(tuple2._1(), r));
@@ -96,14 +117,29 @@ public class FlinkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
     }
 
     @Override
-    public PairWorkloadOperator<K, V> filter(final FilterFunction<scala.Tuple2<K, V>> fun, String componentId) {
+    public <R> PairWorkloadOperator<K, R> flatMapValue(final FlatMapFunction<V, R> fun, String componentId) {
+        return flatMapValue(fun, componentId, false);
+    }
+
+    @Override
+    public PairWorkloadOperator<K, V> filter(final FilterFunction<Tuple2<K, V>> fun, final String componentId, final boolean logThroughput) {
         DataStream<Tuple2<K,V>> newDataStream = dataStream.filter(new org.apache.flink.api.common.functions.FilterFunction<Tuple2<K, V>>() {
+            Throughput throughput = new Throughput(Logger.getLogger(componentId));
+
             @Override
             public boolean filter(Tuple2<K, V> kvTuple2) throws Exception {
+                if(logThroughput) {
+                    throughput.execute();
+                }
                 return fun.filter(kvTuple2);
             }
         });
         return new FlinkPairWorkloadOperator<>(newDataStream);
+    }
+
+    @Override
+    public PairWorkloadOperator<K, V> filter(final FilterFunction<scala.Tuple2<K, V>> fun, String componentId) {
+        return filter(fun, componentId, false);
     }
 
     @Override
@@ -133,23 +169,33 @@ public class FlinkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
         return new FlinkPairWorkloadOperator<>(outputStream);
     }
 
+    @Override
+    public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput) {
+        return updateStateByKey(fun, componentId);
+    }
+
     /**
      * Whether is windowed stream?
-     * @param fun
-     * @param componentId
-     * @return
+     * @param fun reduce function
+     * @param componentId current component id
+     * @return PairWorkloadOperator
      */
     public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId) {
         return this;
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration) {
-        return reduceByKeyAndWindow(fun, componentId, windowDuration, windowDuration);
+    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration, boolean logThroughput) {
+        return reduceByKeyAndWindow(fun, componentId, windowDuration, windowDuration, logThroughput);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(final ReduceFunction<V> fun, String componentId, TimeDurations windowDuration, TimeDurations slideDuration) {
+    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration) {
+        return reduceByKeyAndWindow(fun, componentId, windowDuration, false);
+    }
+
+    @Override
+    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(final ReduceFunction<V> fun, final String componentId, TimeDurations windowDuration, TimeDurations slideDuration, final boolean logThroughput) {
         DataStream<Tuple2<K, V>> newDataStream = dataStream.keyBy(new KeySelector<Tuple2<K,V>, Object>() {
             @Override
             public K getKey(Tuple2<K, V> value) throws Exception {
@@ -157,13 +203,23 @@ public class FlinkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
             }
         }).timeWindow(Time.of(windowDuration.getLength(), windowDuration.getUnit()), Time.of(slideDuration.getLength(), slideDuration.getUnit()))
                 .reduce(new org.apache.flink.api.common.functions.ReduceFunction<Tuple2<K, V>>() {
+                    Throughput throughput = new Throughput(Logger.getLogger(componentId));
+
                     @Override
                     public Tuple2<K, V> reduce(Tuple2<K, V> t1, Tuple2<K, V> t2) throws Exception {
+                        if(logThroughput) {
+                            throughput.execute();
+                        }
                         V result = fun.reduce(t1._2(), t2._2());
                         return new Tuple2<K, V>(t1._1(), result);
                     }
                 });
         return new FlinkPairWorkloadOperator<>(newDataStream);
+    }
+
+    @Override
+    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(final ReduceFunction<V> fun, String componentId, TimeDurations windowDuration, TimeDurations slideDuration) {
+        return reduceByKeyAndWindow(fun, componentId, windowDuration, slideDuration, false);
     }
 
     @Override
@@ -175,7 +231,7 @@ public class FlinkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
      * Keyed stream window1
      * @param windowDuration window1 size
      * @param slideDuration slide size
-     * @return
+     * @return WindowedPairWorkloadOperator
      */
     @Override
     public WindowedPairWorkloadOperator<K, V> window(TimeDurations windowDuration, TimeDurations slideDuration) {
@@ -197,8 +253,8 @@ public class FlinkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
      *          window1 length of this stream
      * @param joinWindowDuration
      *          window1 length of joinStream
-     * @param <R>
-     * @return
+     * @param <R> Value type of the other stream
+     * @return PairWorkloadOperator after join
      */
     @Override
     public <R> PairWorkloadOperator<K, scala.Tuple2<V, R>> join(String componentId, PairWorkloadOperator<K, R> joinStream, TimeDurations windowDuration, TimeDurations joinWindowDuration) throws WorkloadException {
@@ -207,7 +263,7 @@ public class FlinkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
 
     /**
      * Event time join
-     * @param componentId
+     * @param componentId current compute component id
      * @param joinStream
      *          the other stream<K,R>
      * @param windowDuration
@@ -218,8 +274,8 @@ public class FlinkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
      *          event time assignment for this stream
      * @param eventTimeAssigner2
      *          event time assignment for joinStream
-     * @param <R>
-     * @return
+     * @param <R> Value type of the other stream
+     * @return PairWorkloadOperator
      * @throws WorkloadException
      */
     @Override
@@ -299,12 +355,11 @@ public class FlinkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
     @Override
     public void sink() {
         this.dataStream.addSink(new SinkFunction<Tuple2<K, V>>() {
-            private final Logger logger = LoggerFactory.getLogger(this.getClass());
-            Latency latency = new Latency(logger);
+            Latency latency = new Latency(Logger.getLogger("Latency"));
 
             @Override
             public void invoke(Tuple2<K, V> value) throws Exception {
-//                latency.execute((WithTime<? extends Object>) value._2());
+                latency.execute((WithTime<? extends Object>) value._2());
             }
         });
     }

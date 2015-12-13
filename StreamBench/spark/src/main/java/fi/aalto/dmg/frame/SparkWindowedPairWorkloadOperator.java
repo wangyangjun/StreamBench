@@ -21,9 +21,19 @@ public class SparkWindowedPairWorkloadOperator<K,V> implements WindowedPairWorkl
     }
 
     @Override
+    public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput) {
+        return reduceByKey(fun, componentId);
+    }
+
+    @Override
     public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId) {
         JavaPairDStream<K,V> newStream = this.pairDStream.reduceByKey(new ReduceFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(newStream);
+    }
+
+    @Override
+    public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput) {
+        return updateStateByKey(fun, componentId);
     }
 
     @Override
@@ -33,9 +43,19 @@ public class SparkWindowedPairWorkloadOperator<K,V> implements WindowedPairWorkl
     }
 
     @Override
+    public <R> PairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId, boolean logThroughput) {
+        return mapPartition(fun, componentId);
+    }
+
+    @Override
     public <R> PairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId) {
         JavaPairDStream<K,R> newStream = pairDStream.mapPartitionsToPair(new PairMapPartitionFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(newStream);
+    }
+
+    @Override
+    public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId, boolean logThroughput) {
+        return mapValue(fun, componentId);
     }
 
     @Override
@@ -44,8 +64,18 @@ public class SparkWindowedPairWorkloadOperator<K,V> implements WindowedPairWorkl
     }
 
     @Override
+    public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId, boolean logThroughput) {
+        return filter(fun, componentId);
+    }
+
+    @Override
     public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId) {
         return null;
+    }
+
+    @Override
+    public PairWorkloadOperator<K, V> reduce(ReduceFunction<Tuple2<K, V>> fun, String componentId, boolean logThroughput) {
+        return reduce(fun, componentId);
     }
 
     @Override

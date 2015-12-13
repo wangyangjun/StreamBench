@@ -10,6 +10,7 @@ import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import fi.aalto.dmg.exceptions.DurationException;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
+import fi.aalto.dmg.statistics.Throughput;
 import fi.aalto.dmg.util.TimeDurations;
 import fi.aalto.dmg.util.Utils;
 
@@ -33,6 +34,8 @@ public abstract class WindowedBolt extends BaseBasicBolt {
     // slide index in the windowed data structure: (0, 1, ..., WINDOW_SIZE-1)
     protected int slideInWindow = 0;
 
+    protected Throughput throughput;
+
     public WindowedBolt(TimeDurations windowDuration, TimeDurations slideDuration) throws DurationException {
         long window_tick_frequency_seconds = Utils.getSeconds(windowDuration);
         long slide_tick_frequency_seconds = Utils.getSeconds(slideDuration);
@@ -47,6 +50,9 @@ public abstract class WindowedBolt extends BaseBasicBolt {
 
     @Override
     public void execute(Tuple tuple, BasicOutputCollector collector) {
+        if(null != throughput) {
+            throughput.execute();
+        }
         if(isTickTuple(tuple)){
             processSlide(collector);
             collector.emit(BoltConstants.TICK_STREAM_ID, new Values(slideIndexInBuffer));
