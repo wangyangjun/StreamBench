@@ -36,7 +36,7 @@ taskmanager.heap.mb: 12288
 
 taskmanager.numberOfTaskSlots: 4
 
-parallelism.default: 52
+parallelism.default: 16
 
 #==============================================================================
 # Web Frontend

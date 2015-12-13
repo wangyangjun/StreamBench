@@ -15,7 +15,7 @@ if __name__ == "__main__":
 			subprocess.call(["ssh", "cloud-user@"+node['ip'], "sudo apt-get install -y git"])
 			print("Install git successfully")
 		# clone repository
-		files = subprocess.check_output(["ssh", "cloud-user@"+node['ip'], 'ls /home/cloud-user'])
+		files = subprocess.check_output(["ssh", "cloud-user@"+node['ip'], 'ls /home/cloud-user']).split('\n')
 		if 'RealtimeStreamBenchmark' not in files:
 			p = subprocess.Popen('ssh cloud-user@'+node['ip']+' "git clone https://github.com/wangyangjun/RealtimeStreamBenchmark.git"', shell=True)
 		else:
