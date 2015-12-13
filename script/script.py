@@ -16,37 +16,37 @@ if __name__ == "__main__":
 			print("Install git successfully")
 		# clone repository
 		files = subprocess.check_output(["ssh", "cloud-user@"+node['ip'], 'ls /home/cloud-user']).split('\n')
-		if 'RealtimeStreamBenchmark' not in files:
-			p = subprocess.Popen('ssh cloud-user@'+node['ip']+' "git clone https://github.com/wangyangjun/RealtimeStreamBenchmark.git"', shell=True)
+		if 'StreamBench' not in files:
+			p = subprocess.Popen('ssh cloud-user@'+node['ip']+' "git clone https://github.com/wangyangjun/StreamBench.git"', shell=True)
 		else:
-			p = subprocess.Popen('ssh cloud-user@'+node['ip']+' "cd /home/cloud-user/RealtimeStreamBenchmark;git checkout .;git pull;"', shell=True)
+			p = subprocess.Popen('ssh cloud-user@'+node['ip']+' "cd /home/cloud-user/StreamBench;git checkout .;git pull;"', shell=True)
 
 		# install jdk
 		if 0 == p.wait():
-			# subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install.py jdk6"])
-			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install.py jdk7"])
+			# subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py jdk6"])
+			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py jdk7"])
 
 		# install storm
 		# if 0 == p.wait():
-		# 	subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install.py storm"])
+		# 	subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py storm"])
 
 		# install spark
 		# if 0 == p.wait():
-		# 	subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install.py spark"])
+		# 	subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py spark"])
 
 		# install flink
 		if 0 == p.wait():
-			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install.py flink"])
+			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py flink"])
 
 		# install kafka
 		if 0 == p.wait():
-			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install.py kafka " + str(node['borker_id'])])
+			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py kafka " + str(node['borker_id'])])
 
 		# hosts
-		subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/update-hosts.py"])
+		subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/update-hosts.py"])
 
 		# install hadoop
 		# if 0 == p.wait():
-		# 	subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/RealtimeStreamBenchmark/script/install.py hadoop"])
+		# 	subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py hadoop"])
 		
 		

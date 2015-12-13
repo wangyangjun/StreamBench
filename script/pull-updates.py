@@ -10,5 +10,9 @@ if __name__ == "__main__":
 	path = os.path.dirname(os.path.realpath(__file__))
 	config = json.load(open(path+'/cluster-config.json'));
 	for node in config['nodes']:
-		p = subprocess.Popen('ssh cloud-user@'+node['ip']+' "cd /home/cloud-user/RealtimeStreamBenchmark;git checkout .;git pull;"', shell=True)
+		files = subprocess.check_output(["ssh", "cloud-user@"+node['ip'], 'ls /home/cloud-user']).split('\n')
+		if 'StreamBench' not in files:
+			p = subprocess.Popen('ssh cloud-user@'+node['ip']+' "git clone https://github.com/wangyangjun/StreamBench.git"', shell=True)
+		else:
+			p = subprocess.Popen('ssh cloud-user@'+node['ip']+' "cd /home/cloud-user/StreamBench;git checkout .;git pull;"', shell=True)
 
