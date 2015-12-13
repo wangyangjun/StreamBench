@@ -1,7 +1,7 @@
 package fi.aalto.dmg;
 
 import fi.aalto.dmg.exceptions.WorkloadException;
-import fi.aalto.dmg.frame.OperatorCreater;
+import fi.aalto.dmg.frame.OperatorCreator;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -59,8 +59,8 @@ public class BenchStarter
         Workload workloadInstance;
         try {
             Class dbclass = classLoader.loadClass(operatorCreatorConfig.getProperty("operator.creator"));
-            OperatorCreater operatorCreater = (OperatorCreater)dbclass.getConstructor(String.class).newInstance(args[0]);
-            workloadInstance = (Workload)workloadClass.getConstructor(OperatorCreater.class).newInstance(operatorCreater);
+            OperatorCreator operatorCreator = (OperatorCreator)dbclass.getConstructor(String.class).newInstance(args[0]);
+            workloadInstance = (Workload)workloadClass.getConstructor(OperatorCreator.class).newInstance(operatorCreator);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("Instance " + workloadClass + " failed");

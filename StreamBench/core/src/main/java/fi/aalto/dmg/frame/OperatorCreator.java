@@ -7,14 +7,14 @@ import java.io.Serializable;
 /**
  * Created by yangjun.wang on 23/10/15.
  */
-abstract public class OperatorCreater implements Serializable {
+abstract public class OperatorCreator implements Serializable {
     private String appName;
 
     public String getAppName(){
         return this.appName;
     }
 
-    public OperatorCreater(String name){
+    public OperatorCreator(String name){
         this.appName = name;
     }
 

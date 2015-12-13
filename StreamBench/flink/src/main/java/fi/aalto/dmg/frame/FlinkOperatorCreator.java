@@ -7,19 +7,18 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.util.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer082;
 import java.io.IOException;
-import java.util.Date;
 import java.util.Properties;
 
 /**
  * Created by yangjun.wang on 25/10/15.
  */
-public class FlinkOperatorCreater extends OperatorCreater {
+public class FlinkOperatorCreator extends OperatorCreator {
 
     private static final long serialVersionUID = 4194701654519072721L;
     private Properties properties;
     final StreamExecutionEnvironment env;
 
-    public FlinkOperatorCreater(String name) throws IOException {
+    public FlinkOperatorCreator(String name) throws IOException {
         super(name);
         properties = new Properties();
         env = StreamExecutionEnvironment.getExecutionEnvironment();

@@ -2,7 +2,7 @@ package fi.aalto.dmg.workloads;
 
 import fi.aalto.dmg.Workload;
 import fi.aalto.dmg.exceptions.WorkloadException;
-import fi.aalto.dmg.frame.OperatorCreater;
+import fi.aalto.dmg.frame.OperatorCreator;
 import fi.aalto.dmg.frame.PairWorkloadOperator;
 import fi.aalto.dmg.frame.WorkloadOperator;
 import fi.aalto.dmg.frame.userfunctions.UserFunctions;
@@ -22,7 +22,7 @@ public class WordCountGrouping extends Workload implements Serializable {
     private static final Logger logger = Logger.getLogger(WordCount.class);
     private static final long serialVersionUID = 2835367895719829656L;
 
-    public WordCountGrouping(OperatorCreater creater) throws WorkloadException {
+    public WordCountGrouping(OperatorCreator creater) throws WorkloadException {
         super(creater);
     }
 
@@ -33,7 +33,7 @@ public class WordCountGrouping extends Workload implements Serializable {
         String zkConnectStr = this.getProperties().getProperty("zookeeper.connect");
         String offset = this.getProperties().getProperty("auto.offset.reset");
 
-        return this.getOperatorCreater().createOperatorFromKafka(zkConnectStr, kafkaServers, groupId, topic, offset);
+        return this.getOperatorCreator().createOperatorFromKafka(zkConnectStr, kafkaServers, groupId, topic, offset);
     }
 
     public void Process() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {

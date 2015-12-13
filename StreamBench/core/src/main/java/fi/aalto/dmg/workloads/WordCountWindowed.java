@@ -2,11 +2,9 @@ package fi.aalto.dmg.workloads;
 
 import fi.aalto.dmg.Workload;
 import fi.aalto.dmg.exceptions.WorkloadException;
-import fi.aalto.dmg.frame.OperatorCreater;
+import fi.aalto.dmg.frame.OperatorCreator;
 import fi.aalto.dmg.frame.PairWorkloadOperator;
-import fi.aalto.dmg.frame.WindowedPairWorkloadOperator;
 import fi.aalto.dmg.frame.WorkloadOperator;
-import fi.aalto.dmg.frame.functions.MapPartitionFunction;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
 import fi.aalto.dmg.frame.userfunctions.UserFunctions;
 import fi.aalto.dmg.util.TimeDurations;
@@ -25,7 +23,7 @@ public class WordCountWindowed  extends Workload implements Serializable {
     private static final Logger logger = Logger.getLogger(WordCountWindowed.class);
     private static final long serialVersionUID = 5131563712627441022L;
 
-    public WordCountWindowed(OperatorCreater creater) throws WorkloadException {
+    public WordCountWindowed(OperatorCreator creater) throws WorkloadException {
         super(creater);
     }
 
@@ -36,7 +34,7 @@ public class WordCountWindowed  extends Workload implements Serializable {
         String zkConnectStr = this.getProperties().getProperty("zookeeper.connect");
         String offset = this.getProperties().getProperty("auto.offset.reset");
 
-        return this.getOperatorCreater().createOperatorFromKafka(zkConnectStr, kafkaServers, groupId, topic, offset);
+        return this.getOperatorCreator().createOperatorFromKafka(zkConnectStr, kafkaServers, groupId, topic, offset);
     }
 
     public static ReduceFunction<Tuple2<String, Integer>> tuple2ReduceFunction = new ReduceFunction<Tuple2<String, Integer>>() {

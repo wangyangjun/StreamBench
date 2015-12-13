@@ -7,7 +7,6 @@ import org.apache.spark.api.java.function.Function;
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaPairInputDStream;
-import org.apache.spark.streaming.api.java.JavaPairReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka.KafkaUtils;
 import scala.Tuple2;
@@ -19,7 +18,7 @@ import java.util.*;
 /**
  * Created by yangjun.wang on 25/10/15.
  */
-public class SparkOperatorCreater extends OperatorCreater implements Serializable {
+public class SparkOperatorCreater extends OperatorCreator implements Serializable {
 
     private static final long serialVersionUID = 6964020640199730722L;
     public JavaStreamingContext jssc;

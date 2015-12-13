@@ -4,8 +4,7 @@ import fi.aalto.dmg.Workload;
 import fi.aalto.dmg.exceptions.WorkloadException;
 import fi.aalto.dmg.frame.PairWorkloadOperator;
 import fi.aalto.dmg.frame.WorkloadOperator;
-import fi.aalto.dmg.frame.OperatorCreater;
-import fi.aalto.dmg.frame.functions.MapFunction;
+import fi.aalto.dmg.frame.OperatorCreator;
 import fi.aalto.dmg.frame.userfunctions.UserFunctions;
 import fi.aalto.dmg.util.WithTime;
 import org.apache.log4j.Logger;
@@ -25,8 +24,8 @@ public class WordCount extends Workload implements Serializable{
     private static final Logger logger = Logger.getLogger(WordCount.class);
     private static final long serialVersionUID = -1558126580235739604L;
 
-    public WordCount(OperatorCreater creater) throws WorkloadException {
-        super(creater);
+    public WordCount(OperatorCreator creator) throws WorkloadException {
+        super(creator);
     }
 
     private WorkloadOperator<WithTime<String>> kafkaStreamOperator(){
@@ -36,7 +35,7 @@ public class WordCount extends Workload implements Serializable{
         String zkConnectStr = this.getProperties().getProperty("zookeeper.connect");
         String offset = this.getProperties().getProperty("auto.offset.reset");
 
-        return this.getOperatorCreater().createOperatorFromKafka(zkConnectStr, kafkaServers, groupId, topic, offset);
+        return this.getOperatorCreator().createOperatorFromKafka(zkConnectStr, kafkaServers, groupId, topic, offset);
     }
 
     public void Process() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {

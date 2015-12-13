@@ -1,7 +1,7 @@
 package fi.aalto.dmg;
 
 import fi.aalto.dmg.exceptions.WorkloadException;
-import fi.aalto.dmg.frame.OperatorCreater;
+import fi.aalto.dmg.frame.OperatorCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,10 +17,10 @@ abstract public class Workload implements Serializable{
     private static final Logger logger = LoggerFactory.getLogger(Workload.class);
 
     private Properties properties;
-    private OperatorCreater operatorCreater;
+    private OperatorCreator operatorCreator;
 
-    public Workload(OperatorCreater creater) throws WorkloadException {
-        this.operatorCreater = creater;
+    public Workload(OperatorCreator creater) throws WorkloadException {
+        this.operatorCreator = creater;
         properties = new Properties();
         String configFile = this.getClass().getSimpleName() + ".properties";
         try {
@@ -37,13 +37,13 @@ abstract public class Workload implements Serializable{
     protected Properties getProperties() {
         return properties;
     }
-    protected OperatorCreater getOperatorCreater(){ return operatorCreater; }
+    protected OperatorCreator getOperatorCreator(){ return operatorCreator; }
 
     public void Start(){
         logger.info("Start workload: " + this.getClass().getSimpleName());
         try {
             Process();
-            this.getOperatorCreater().Start();
+            this.getOperatorCreator().Start();
         } catch (Exception e) {
             logger.error("WorkloadException caught when run workload " + this.getClass().getSimpleName());
             e.printStackTrace();

@@ -9,15 +9,7 @@ import java.util.UUID;
 
 import backtype.storm.Config;
 import backtype.storm.spout.SchemeAsMultiScheme;
-import backtype.storm.topology.BasicOutputCollector;
-import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.TopologyBuilder;
-import backtype.storm.topology.base.BaseBasicBolt;
-import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Tuple;
-import backtype.storm.tuple.Values;
-import fi.aalto.dmg.frame.bolts.BoltConstants;
-import fi.aalto.dmg.frame.bolts.FlatMapBolt;
 import fi.aalto.dmg.frame.bolts.WithTimeBolt;
 import fi.aalto.dmg.util.WithTime;
 import storm.kafka.*;
@@ -25,7 +17,7 @@ import storm.kafka.*;
 /**
  * Created by yangjun.wang on 01/11/15.
  */
-public class StormOperatorCreater extends OperatorCreater implements Serializable {
+public class StormOperatorCreater extends OperatorCreator implements Serializable {
 
     private static final long serialVersionUID = 4498355837057651696L;
     private Properties properties;
