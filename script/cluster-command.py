@@ -20,5 +20,5 @@ if __name__ == "__main__":
 		path = os.path.dirname(os.path.realpath(__file__))
 		config = json.load(open(path+'/cluster-config.json'))
 		for node in config['nodes']:
-			subprocess.Popen(['ssh', 'cloud-user@'+node['ip'], argv[1]])
+			subprocess.Popen(['ssh', 'cloud-user@'+node['ip'], sys.argv[1]])
 		
