@@ -12,7 +12,8 @@ if __name__ == "__main__":
 		sys.stderr.write("Usage: python %s start or stop\n" % (sys.argv[0]))
 		sys.exit(1)
 	else:
-		config = json.load(open('cluster-config.json'))
+		path = os.path.dirname(os.path.realpath(__file__))
+		config = json.load(open(path+'/cluster-config.json'))
 		if sys.argv[1] == 'start':
 			for node in config['nodes']:
 				subprocess.Popen(['ssh', 'cloud-user@'+node['ip'], 'nohup bash /usr/local/kafka/bin/kafka-server-start.sh /usr/local/kafka/config/server.properties&'])
