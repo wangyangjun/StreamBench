@@ -11,17 +11,18 @@ import java.io.Serializable;
 public class Latency implements Serializable{
 
     private static final long serialVersionUID = -8124631262741665559L;
-    private static Logger logger;
+    private static Logger logger = Logger.getLogger(Latency.class);
+    private String loggerName;
 
-    public Latency(Logger log) {
-        logger = log;
+    public Latency(String loggerName) {
+        this.loggerName = loggerName;
     }
 
     public void execute(WithTime<? extends Object> withTime){
         long latency = System.currentTimeMillis() - withTime.getTime();
         // probability to log 0.001
         if(Math.random() < 0.001) {
-            logger.warn(String.format("Latency:\t%d", latency));
+            logger.warn(String.format(this.loggerName + ":\t%d", latency));
         }
     }
 }

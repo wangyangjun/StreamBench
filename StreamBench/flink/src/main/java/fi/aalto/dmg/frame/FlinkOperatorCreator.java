@@ -47,7 +47,8 @@ public class FlinkOperatorCreator extends OperatorCreator {
         properties.put("zookeeper.connect", zkConStr);
         properties.put("group.id", group);
         properties.put("topic", topics);
-        properties.put("auto.offset.reset", offset);
+        properties.put("auto.commit.enable", false);
+        properties.put("auto.offset.reset", "earliest");
 
         DataStream<String> stream = env
                 .addSource(new FlinkKafkaConsumer082<String>(topics, new SimpleStringSchema(), properties));

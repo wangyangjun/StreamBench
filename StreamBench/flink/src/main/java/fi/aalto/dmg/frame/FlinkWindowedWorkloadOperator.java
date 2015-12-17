@@ -26,7 +26,7 @@ public class FlinkWindowedWorkloadOperator<T, W extends Window> implements Windo
     @Override
     public <R> WorkloadOperator<R> mapPartition(final MapPartitionFunction<T, R> fun, final String componentId, final boolean logThroughput) {
         DataStream<R> newDataStream = this.windowStream.apply(new WindowFunction<T, R, T, W>() {
-            Throughput throughput = new Throughput(Logger.getLogger(componentId));
+            Throughput throughput = new Throughput(componentId);
 
             @Override
             public void apply(T t, W window, Iterable<T> values, Collector<R> collector) throws Exception {
@@ -49,7 +49,7 @@ public class FlinkWindowedWorkloadOperator<T, W extends Window> implements Windo
     @Override
     public <R> WorkloadOperator<R> map(final MapFunction<T, R> fun, final String componentId, final boolean logThroughput) {
         DataStream<R> newDataStream = this.windowStream.apply(new WindowFunction<T, R, T, W>() {
-            Throughput throughput = new Throughput(Logger.getLogger(componentId));
+            Throughput throughput = new Throughput(componentId);
 
             @Override
             public void apply(T t, W window, Iterable<T> values, Collector<R> collector) throws Exception {
@@ -73,7 +73,7 @@ public class FlinkWindowedWorkloadOperator<T, W extends Window> implements Windo
     @Override
     public WorkloadOperator<T> filter(final FilterFunction<T> fun, final String componentId, final boolean logThroughput) {
         DataStream<T> newDataStream = this.windowStream.apply(new WindowFunction<T, T, T, W>() {
-            Throughput throughput = new Throughput(Logger.getLogger(componentId));
+            Throughput throughput = new Throughput(componentId);
 
             @Override
             public void apply(T t, W window, Iterable<T> values, Collector<T> collector) throws Exception {
@@ -97,7 +97,7 @@ public class FlinkWindowedWorkloadOperator<T, W extends Window> implements Windo
     @Override
     public WorkloadOperator<T> reduce(final fi.aalto.dmg.frame.functions.ReduceFunction<T> fun, final String componentId, final boolean logThroughput) {
         DataStream<T> newDataStream = this.windowStream.reduce(new ReduceFunction<T>() {
-            Throughput throughput = new Throughput(Logger.getLogger(componentId));
+            Throughput throughput = new Throughput(componentId);
 
             @Override
             public T reduce(T t, T t1) throws Exception {
@@ -118,7 +118,7 @@ public class FlinkWindowedWorkloadOperator<T, W extends Window> implements Windo
     @Override
     public <K, V> PairWorkloadOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun, final String componentId, final boolean logThroughput) {
         DataStream<Tuple2<K,V>> newDataStream = this.windowStream.apply(new WindowFunction<T, Tuple2<K, V>, T, W>() {
-            Throughput throughput = new Throughput(Logger.getLogger(componentId));
+            Throughput throughput = new Throughput(componentId);
 
             @Override
             public void apply(T t, W window, Iterable<T> values, Collector<Tuple2<K, V>> collector) throws Exception {

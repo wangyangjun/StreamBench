@@ -35,7 +35,7 @@ public class FlinkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
     @Override
     public <R> WorkloadOperator<R> map(final MapFunction<T, R> fun, final String componentId, final boolean logThroughput) {
         DataStream<R> newDataStream = dataStream.map(new org.apache.flink.api.common.functions.MapFunction<T, R>() {
-            Throughput throughput = new Throughput(Logger.getLogger(componentId));
+            Throughput throughput = new Throughput(componentId);
             public R map(T t) throws Exception {
                 if(logThroughput){
                     throughput.execute();
@@ -53,7 +53,7 @@ public class FlinkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
     @Override
     public <K, V> PairWorkloadOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun, final String componentId, final boolean logThroughput) {
         DataStream<Tuple2<K,V>> newDataStream = dataStream.map(new org.apache.flink.api.common.functions.MapFunction<T, Tuple2<K, V>>() {
-            Throughput throughput = new Throughput(Logger.getLogger(componentId));
+            Throughput throughput = new Throughput(componentId);
 
             public Tuple2<K, V> map(T t) throws Exception {
                 if(logThroughput) {
@@ -73,7 +73,7 @@ public class FlinkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
     @Override
     public WorkloadOperator<T> reduce(final ReduceFunction<T> fun, final String componentId, final boolean logThroughput) {
         DataStream<T> newDataStream = dataStream.keyBy(0).reduce(new org.apache.flink.api.common.functions.ReduceFunction<T>() {
-            Throughput throughput = new Throughput(Logger.getLogger(componentId));
+            Throughput throughput = new Throughput(componentId);
             public T reduce(T t, T t1) throws Exception {
                 if(logThroughput){
                     throughput.execute();
@@ -91,7 +91,7 @@ public class FlinkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
     @Override
     public WorkloadOperator<T> filter(final FilterFunction<T> fun, final String componentId, final boolean logThroughput) {
         DataStream<T> newDataStream = dataStream.filter(new org.apache.flink.api.common.functions.FilterFunction<T>() {
-            Throughput throughput = new Throughput(Logger.getLogger(componentId));
+            Throughput throughput = new Throughput(componentId);
             public boolean filter(T t) throws Exception {
                 if(logThroughput){
                     throughput.execute();
@@ -136,7 +136,7 @@ public class FlinkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
     @Override
     public <R> WorkloadOperator<R> flatMap(final FlatMapFunction<T, R> fun, final String componentId, final boolean logThroughput) {
         TypeInformation<R> returnType = TypeExtractor.createTypeInfo(FlatMapFunction.class, fun.getClass(), 1, null, null);
-        final Throughput throughput = new Throughput(Logger.getLogger(componentId));
+        final Throughput throughput = new Throughput(componentId);
 
         DataStream<R> newDataStream = dataStream.flatMap(new org.apache.flink.api.common.functions.FlatMapFunction<T, R>() {
             public void flatMap(T t, Collector<R> collector) throws Exception {

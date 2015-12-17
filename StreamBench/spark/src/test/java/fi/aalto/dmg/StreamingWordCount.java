@@ -25,6 +25,7 @@ public class StreamingWordCount {
         ssc.checkpoint("checkpoint");
 
         JavaReceiverInputDStream<String> lines = ssc.socketTextStream("127.0.0.1", 9999);
+
         JavaPairDStream<String, Long> wordCounts = lines.flatMap(new FlatMapFunction<String, String>() {
             public Iterable<String> call(String l) throws Exception {
                 return Arrays.asList(l.split(" "));
@@ -49,6 +50,7 @@ public class StreamingWordCount {
                         for (Long v : values) {
                             sum += v;
                         }
+
                         return Optional.of(state.or(0L) + sum);
                     }
                 });

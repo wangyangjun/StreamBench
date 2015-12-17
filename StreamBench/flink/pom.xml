@@ -37,15 +37,20 @@
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-connector-kafka</artifactId>
+            <artifactId>flink-java</artifactId>
             <version>${flink.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-java</artifactId>
+            <artifactId>flink-connector-kafka</artifactId>
             <version>${flink.version}</version>
-            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.flink</groupId>
+                    <artifactId>flink-streaming-java</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -60,11 +65,19 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>make-assembly</id>
+                        <id>assembly</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
+                        <configuration>
+                            <classifier>assembly</classifier>
+                            <archive>
+                                <manifestEntries>
+                                    <program-class>fi.aalto.dmg.App</program-class>
+                                </manifestEntries>
+                            </archive>
+                        </configuration>
                     </execution>
                 </executions>
                 <configuration>

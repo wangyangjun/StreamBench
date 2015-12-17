@@ -13,16 +13,16 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spark.version>1.5.0</spark.version>
-    <storm.version>0.9.5</storm.version>
+    <storm.version>0.10.0</storm.version>
     <flink.version>0.10.1</flink.version>
     <junit.version>4.4</junit.version>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
   </properties>
   <modules>
-      <module>core</module>
-      <module>storm</module>
-      <module>spark</module>
+    <module>core</module>
+    <module>storm</module>
+    <module>spark</module>
     <module>flink</module>
   </modules>
   <dependencies>

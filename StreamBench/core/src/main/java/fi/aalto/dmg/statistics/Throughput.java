@@ -1,5 +1,6 @@
 package fi.aalto.dmg.statistics;
 
+import org.apache.commons.math3.analysis.function.Log;
 import org.apache.log4j.Logger;
 
 import java.io.Serializable;
@@ -11,14 +12,15 @@ import java.io.Serializable;
 public class Throughput implements Serializable{
 
     private static final long serialVersionUID = -4968905648218161496L;
-    private static Logger logger;
+    private static Logger logger = Logger.getLogger(Throughput.class);
+    private String loggerName;
     private long received;
 
     private long lastLogTime;
     private long lastLogEle;
 
-    public Throughput(Logger log) {
-        logger = log;
+    public Throughput(String loggerName) {
+        this.loggerName = loggerName;
         this.received = 0;
         this.lastLogTime = 0;
     }
@@ -38,7 +40,7 @@ public class Throughput implements Serializable{
             long elementDiff = received - lastLogEle;
             double ex = (1000 / (double) timeDiff);
 
-            logger.warn(String.format("Throughput:\t%d\t%d\t%d\tms,elements,elements/second",
+            logger.warn(String.format(this.loggerName + ":\t%d\t%d\t%d\tms,elements,elements/second",
                     timeDiff,
                     elementDiff,
                     Double.valueOf(elementDiff * ex).longValue()));

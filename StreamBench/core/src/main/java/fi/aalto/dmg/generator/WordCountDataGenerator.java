@@ -60,7 +60,7 @@ public class WordCountDataGenerator {
         }
 
         FastZipfGenerator zipfGenerator = new FastZipfGenerator(ZIPF_SIZE, ZIPF_EXPONENT);
-        Throughput throughput = new Throughput(logger);
+        Throughput throughput = new Throughput("WordCountDataGenerator");
         // for loop to generate message
         for (int i = 0; i < SENTENCE_NUM; ++i) {
             double sentence_length = messageGenerator.nextGaussian(10, 1);

@@ -43,7 +43,7 @@ storm.meta.serialization.delegate: "backtype.storm.serialization.DefaultSerializ
 nimbus.host: "master"
 nimbus.thrift.port: 6627
 nimbus.thrift.max_buffer_size: 1048576
-nimbus.childopts: "-Xmx512m"
+nimbus.childopts: "-Xmx8192m"
 nimbus.task.timeout.secs: 30
 nimbus.supervisor.timeout.secs: 60
 nimbus.monitor.freq.secs: 10
@@ -56,10 +56,10 @@ nimbus.topology.validator: "backtype.storm.nimbus.DefaultTopologyValidator"
 
 ### ui.* configs are for the master
 ui.port: 8081
-ui.childopts: "-Xmx768m"
+ui.childopts: "-Xmx512m"
 
 logviewer.port: 8000
-logviewer.childopts: "-Xmx128m"
+logviewer.childopts: "-Xmx256m"
 logviewer.appender.name: "A1"
 
 
@@ -81,7 +81,7 @@ supervisor.slots.ports:
     - 6701
     - 6702
     - 6703
-supervisor.childopts: "-Xmx256m"
+supervisor.childopts: "-Xmx1024m"
 #how long supervisor will wait to ensure that a worker process is started
 supervisor.worker.start.timeout.secs: 120
 #how long between heartbeats until supervisor considers that worker dead and tries to restart it
@@ -93,7 +93,7 @@ supervisor.heartbeat.frequency.secs: 5
 supervisor.enable: true
 
 ### worker.* configs are for task workers
-worker.childopts: "-Xmx768m"
+worker.childopts: "-Xmx2048m"
 worker.heartbeat.frequency.secs: 1
 
 # control how many worker receiver threads we need per worker 

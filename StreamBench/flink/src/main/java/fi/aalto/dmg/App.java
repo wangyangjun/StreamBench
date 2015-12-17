@@ -1,6 +1,8 @@
 package fi.aalto.dmg;
 
 import fi.aalto.dmg.exceptions.WorkloadException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -13,9 +15,10 @@ import java.util.regex.Pattern;
 public class App
 {
     private static final Pattern SPACE = Pattern.compile(" ");
+    private static Logger logger = LoggerFactory.getLogger(App.class);
     public static void main( String[] args ) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
 
-        System.out.println("Start...");
+        logger.warn("Start...");
         String[] testArgs = {"WordCount"}; // WordCount WordCountGrouping WordCountWindowed
         BenchStarter.main(testArgs);
 

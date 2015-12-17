@@ -51,13 +51,23 @@ def install_storm():
 	path = os.path.dirname(os.path.realpath(__file__))
 	config = json.load(open(path+'/cluster-config.json'));
 
+	# download storm 
+	if 'storm' not in subprocess.check_output(['ls']).split('\n'):
+		p = subprocess.Popen(['wget', 'http://mirror.netinch.com/pub/apache/storm/apache-storm-0.10.0/apache-storm-0.10.0.tar.gz'])
+		if 0 == p.wait():
+			# exact
+			p = subprocess.Popen(['tar', '-zvxf', 'apache-storm-0.10.0.tar.gz'])
+			p.wait()
+			subprocess.call(['mv', 'apache-storm-0.10.0', 'storm'])
+
 	# cp storm
 	subprocess.call(['sudo', 'rm', '-rf', '/usr/local/storm'])
-	subprocess.call(['sudo', 'cp', '-r', path+'/storm', '/usr/local/storm'])
+	subprocess.call(['sudo', 'cp', '-r', 'storm', '/usr/local/storm'])
 	subprocess.call(['sudo', 'chown', '-R', 'cloud-user', '/usr/local/storm'])
-	# hosts
-	for node in config['nodes']:
-		appendline('/etc/hosts', node['ip']+'\t'+node['host'])
+
+	# conf
+	subprocess.call(['rm', '-rf', '/usr/local/storm/conf'])
+	subprocess.call(['cp', '-r', path+'/storm/conf', '/usr/local/storm/conf'])
 
 def install_spark():
 	path = os.path.dirname(os.path.realpath(__file__))
