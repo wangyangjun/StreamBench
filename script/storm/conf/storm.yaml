@@ -43,7 +43,7 @@ storm.meta.serialization.delegate: "backtype.storm.serialization.DefaultSerializ
 nimbus.host: "master"
 nimbus.thrift.port: 6627
 nimbus.thrift.max_buffer_size: 1048576
-nimbus.childopts: "-Xmx8192m"
+nimbus.childopts: "-Xmx4096m"
 nimbus.task.timeout.secs: 30
 nimbus.supervisor.timeout.secs: 60
 nimbus.monitor.freq.secs: 10
@@ -56,7 +56,7 @@ nimbus.topology.validator: "backtype.storm.nimbus.DefaultTopologyValidator"
 
 ### ui.* configs are for the master
 ui.port: 8081
-ui.childopts: "-Xmx512m"
+ui.childopts: "-Xmx768m"
 
 logviewer.port: 8000
 logviewer.childopts: "-Xmx256m"
@@ -109,9 +109,11 @@ zmq.hwm: 0
 
 storm.messaging.netty.server_worker_threads: 1
 storm.messaging.netty.client_worker_threads: 1
-storm.messaging.netty.buffer_size: 5242880 #5MB buffer
+#storm.messaging.netty.buffer_size: 5242880 #5MB buffer
+storm.messaging.netty.buffer_size: 10485760 #10MB buffer
+
 # Since nimbus.task.launch.secs and supervisor.worker.start.timeout.secs are 120, other workers should also wait at least that long before giving up on connecting to the other worker. The reconnection period need also be bigger than storm.zookeeper.session.timeout(default is 20s), so that we can abort the reconnection when the target worker is dead.
-storm.messaging.netty.max_retries: 300
+storm.messaging.netty.max_retries: 50
 storm.messaging.netty.max_wait_ms: 1000
 storm.messaging.netty.min_wait_ms: 100
 
