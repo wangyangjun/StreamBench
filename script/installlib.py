@@ -68,6 +68,9 @@ def install_storm():
 	# conf
 	subprocess.call(['rm', '-rf', '/usr/local/storm/conf'])
 	subprocess.call(['cp', '-r', path+'/storm/conf', '/usr/local/storm/conf'])
+	subprocess.call(['rm', '-rf', '/usr/local/storm/log4j2'])
+	subprocess.call(['cp', '-r', path+'/storm/log4j2', '/usr/local/storm/log4j2'])
+
 
 def install_spark():
 	path = os.path.dirname(os.path.realpath(__file__))
