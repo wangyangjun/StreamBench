@@ -10,7 +10,7 @@ from util import appendline, get_ip_address
 if __name__ == "__main__":
 	# start server one by one
 	if len(sys.argv) < 2:
-		print('Usage: python %s "command"\n' % (sys.argv[0]))
+		print('Usage: python %s "command"' % (sys.argv[0]))
 		print("cd /home/cloud-user/StreamBench;git checkout .;git pull;")
 		print("nohup bash /usr/local/kafka/bin/kafka-server-start.sh /usr/local/kafka/config/server.properties")
 		print("nohup bash /usr/local/kafka/bin/kafka-server-stop.sh")

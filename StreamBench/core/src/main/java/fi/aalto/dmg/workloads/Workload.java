@@ -1,4 +1,4 @@
-package fi.aalto.dmg;
+package fi.aalto.dmg.workloads;
 
 import fi.aalto.dmg.exceptions.WorkloadException;
 import fi.aalto.dmg.frame.OperatorCreator;

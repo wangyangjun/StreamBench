@@ -61,7 +61,7 @@
         messageId="[${sys:user.name}:${sys:logging.sensitivity}]" id="storm"/>
 </appenders>
 <loggers>
-    <root level="warn"> <!-- We log everything -->
+    <root level="INFO"> <!-- We log everything -->
         <appender-ref ref="A1"/>
         <appender-ref ref="syslog"/>
     </root>
