@@ -16,8 +16,8 @@ if __name__ == "__main__":
 	if 'flink' == sys.argv[1]:	
 		subprocess.Popen('mkdir tmplogs', shell=True).wait()
 		for node in config['nodes']:
-			subprocess.Popen('scp ' + node['host'] + ':/usr/local/flink/log/* tmplogs/', shell=True).wait()
-		subprocess.Popen('tar cvf ' + sys.argv[2] + ' tmplogs/*', shell=True)
+			subprocess.Popen('scp ' + node['host'] + ':/usr/local/flink/log/*.log tmplogs/', shell=True).wait()
+		subprocess.Popen('tar cvf ' + sys.argv[2] + ' tmplogs/*', shell=True).wait()
 		subprocess.Popen('rm -rf tmplogs', shell=True)
 	elif 'storm' == sys.argv[1]:
 		subprocess.Popen('mkdir tmplogs', shell=True).wait()

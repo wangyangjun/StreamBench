@@ -78,7 +78,9 @@ transactional.zookeeper.port: null
 # Define the amount of workers that can be run on this machine. Each worker is assigned a port to use for communication
 supervisor.slots.ports:
     - 6700
-
+    - 6701
+    - 6702
+    - 6703
 supervisor.childopts: "-Xmx1024m"
 #how long supervisor will wait to ensure that a worker process is started
 supervisor.worker.start.timeout.secs: 120
@@ -91,7 +93,7 @@ supervisor.heartbeat.frequency.secs: 5
 supervisor.enable: true
 
 ### worker.* configs are for task workers
-worker.childopts: "-Xmx4096m"
+worker.childopts: "-Xmx2048m"
 worker.heartbeat.frequency.secs: 1
 
 # control how many worker receiver threads we need per worker 
