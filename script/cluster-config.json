@@ -4,30 +4,35 @@
 			"host": "master",
 			"hostname": "masternode.novalocal",
 			"master": true,
+			"kafka": true,
 			"borker_id": 0
 		},{
-			"ip": "192.168.1.26",
-			"host": "worker1",
+			"ip": "192.168.1.30",
+			"host": "kafka1",
 			"hostname": "kafka1.novalocal",
 			"master": false,
+			"kafka": true,
 			"borker_id": 1
 		},{
-			"ip": "192.168.1.27",
-			"host": "worker2",
+			"ip": "192.168.1.31",
+			"host": "kafka2",
 			"hostname": "kafka2.novalocal",
 			"master": false,
+			"kafka": true,
 			"borker_id": 2
 		},{
-			"ip": "192.168.1.28",
-			"host": "worker3",
+			"ip": "192.168.1.32",
+			"host": "kafka3",
 			"hostname": "kafka3.novalocal",
 			"master": false,
+			"kafka": true,
 			"borker_id": 3
 		},{
-			"ip": "192.168.1.29",
-			"host": "worker4",
+			"ip": "192.168.1.33",
+			"host": "kafka4",
 			"hostname": "kafka4.novalocal",
 			"master": false,
+			"kafka": true,
 			"borker_id": 4
 		}
 	]
