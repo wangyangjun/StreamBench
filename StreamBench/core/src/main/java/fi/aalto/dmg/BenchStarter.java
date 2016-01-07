@@ -2,6 +2,7 @@ package fi.aalto.dmg;
 
 import fi.aalto.dmg.exceptions.WorkloadException;
 import fi.aalto.dmg.frame.OperatorCreator;
+import fi.aalto.dmg.workloads.Workload;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;

@@ -32,12 +32,8 @@ public class WindowReduceBolt<T> extends WindowedBolt {
         reduceList = new ArrayList<>(WINDOW_SIZE);
     }
 
-    public WindowReduceBolt(ReduceFunction<T> function,
-                            TimeDurations windowDuration,
-                            TimeDurations slideDuration,
-                            Logger logger) throws DurationException {
-        this(function, windowDuration, slideDuration);
-        this.throughput = new Throughput(logger);
+    public void enableThroughput(String loggerName) {
+        this.throughput = new Throughput(loggerName);
     }
 
     @Override

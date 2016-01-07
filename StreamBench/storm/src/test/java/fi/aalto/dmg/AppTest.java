@@ -42,7 +42,7 @@ public class AppTest  {
         BrokerHosts hosts = new ZkHosts("localhost:2181");
         SpoutConfig spoutConfig = new SpoutConfig(hosts, "WordCount", "/" + "WordCount", UUID.randomUUID().toString());
         spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
-        spoutConfig.forceFromStart = true;
+        spoutConfig.ignoreZkOffsets = true;
 
         builder.setSpout("spout", new KafkaSpout(spoutConfig));
         builder.setBolt("split", new SplitSentence()).shuffleGrouping("spout");

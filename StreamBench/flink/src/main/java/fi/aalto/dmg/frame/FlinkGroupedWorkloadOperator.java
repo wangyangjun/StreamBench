@@ -16,7 +16,7 @@ public class FlinkGroupedWorkloadOperator<K,V> implements GroupedWorkloadOperato
         this.groupedDataStream = groupedDataStream;
     }
 
-    public FlinkPairWorkloadOperator<K, V> reduce(final ReduceFunction<V> fun, String componentId) {
+    public FlinkPairWorkloadOperator<K, V> reduce(final ReduceFunction<V> fun, String componentId, int parallelism) {
 
         DataStream<Tuple2<K,V>> newDataSet = this.groupedDataStream.reduce(new org.apache.flink.api.common.functions.ReduceFunction<Tuple2<K,V>>() {
             public Tuple2<K,V> reduce(Tuple2<K,V> t1, Tuple2<K,V> t2) throws Exception {

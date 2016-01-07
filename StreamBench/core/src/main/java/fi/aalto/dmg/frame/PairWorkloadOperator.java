@@ -15,8 +15,8 @@ public interface PairWorkloadOperator<K, V> extends Serializable{
     GroupedWorkloadOperator<K,V> groupByKey();
 
     // TODO: translate to reduce on each node, then group merge
-    PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput);
-    PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId);
+    PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId, int parallelism, boolean logThroughput);
+    PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId, int parallelism);
 
     /**
      * Map <K,V> tuple to <K,R>
@@ -25,14 +25,14 @@ public interface PairWorkloadOperator<K, V> extends Serializable{
      * @param <R>
      * @return maped PairWorkloadOperator<K,R>
      */
-    <R> PairWorkloadOperator<K, R> mapValue(MapFunction<V, R> fun, String componentId, boolean logThroughput);
-    <R> PairWorkloadOperator<K, R> mapValue(MapFunction<V, R> fun, String componentId);
+    <R> PairWorkloadOperator<K, R> mapValue(MapFunction<V, R> fun, String componentId, int parallelism, boolean logThroughput);
+    <R> PairWorkloadOperator<K, R> mapValue(MapFunction<V, R> fun, String componentId, int parallelism);
 
-    <R> PairWorkloadOperator<K, R> flatMapValue(FlatMapFunction<V, R> fun, String componentId, boolean logThroughput);
-    <R> PairWorkloadOperator<K, R> flatMapValue(FlatMapFunction<V, R> fun, String componentId);
+    <R> PairWorkloadOperator<K, R> flatMapValue(FlatMapFunction<V, R> fun, String componentId, int parallelism, boolean logThroughput);
+    <R> PairWorkloadOperator<K, R> flatMapValue(FlatMapFunction<V, R> fun, String componentId, int parallelism);
 
-    PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K,V>> fun, String componentId, boolean logThroughput);
-    PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K,V>> fun, String componentId);
+    PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K,V>> fun, String componentId, int parallelism, boolean logThroughput);
+    PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K,V>> fun, String componentId, int parallelism);
 
     /**
      * iterative operator,
@@ -42,19 +42,20 @@ public interface PairWorkloadOperator<K, V> extends Serializable{
      * @param componentId
      * @return
      */
-    PairWorkloadOperator<K,V> iterative(MapFunction<V, V> mapFunction, FilterFunction<Tuple2<K,V>> iterativeFunction, String componentId);
+    PairWorkloadOperator<K,V> iterative(MapFunction<V, V> mapFunction, FilterFunction<Tuple2<K,V>> iterativeFunction,
+                                        String componentId, int parallelism);
 
-    PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput);
-    PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId);
+    PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId, int parallelism, boolean logThroughput);
+    PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId, int parallelism);
 
 
-    PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId,
+    PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, int parallelism,
                                                     TimeDurations windowDuration, boolean logThroughput);
-    PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration);
+    PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, int parallelism, TimeDurations windowDuration);
 
-    PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId,
+    PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, int parallelism,
                                                     TimeDurations windowDuration, TimeDurations slideDuration, boolean logThroughput);
-    PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId,
+    PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, int parallelism,
                                                     TimeDurations windowDuration, TimeDurations slideDuration);
 
     WindowedPairWorkloadOperator<K, V> window(TimeDurations windowDuration);
@@ -101,6 +102,6 @@ public interface PairWorkloadOperator<K, V> extends Serializable{
 
     void print();
 
-    void sink();
+    void sink(int parallelism);
 }
 

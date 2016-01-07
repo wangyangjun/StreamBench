@@ -39,13 +39,10 @@ public class WindowMapPartitionBolt<T, R> extends WindowedBolt {
         }
     }
 
-    public WindowMapPartitionBolt(MapPartitionFunction<T, R> function,
-                                  TimeDurations windowDuration,
-                                  TimeDurations slideDuration,
-                                  Logger logger) throws DurationException {
-        this(function, windowDuration, slideDuration);
-        this.throughput = new Throughput(logger);
+    public void enableThroughput(String loggerName) {
+        this.throughput = new Throughput(loggerName);
     }
+
 
 
 

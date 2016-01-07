@@ -25,10 +25,10 @@ public class FlatMapBolt<T, R> extends BaseBasicBolt {
         this.fun = function;
     }
 
-    public FlatMapBolt(FlatMapFunction<T, R> function, Logger logger){
-        this(function);
-        this.throughput = new Throughput(logger);
+    public void enableThroughput(String loggerName) {
+        this.throughput = new Throughput(loggerName);
     }
+
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {

@@ -2,6 +2,8 @@ package fi.aalto.dmg.workloads;
 
 import fi.aalto.dmg.exceptions.WorkloadException;
 import fi.aalto.dmg.frame.OperatorCreator;
+import fi.aalto.dmg.frame.WorkloadOperator;
+import fi.aalto.dmg.util.WithTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +20,7 @@ abstract public class Workload implements Serializable{
 
     private Properties properties;
     private OperatorCreator operatorCreator;
+    protected int parallelism;
 
     public Workload(OperatorCreator creater) throws WorkloadException {
         this.operatorCreator = creater;
@@ -25,6 +28,11 @@ abstract public class Workload implements Serializable{
         String configFile = this.getClass().getSimpleName() + ".properties";
         try {
             properties.load(this.getClass().getClassLoader().getResourceAsStream(configFile));
+
+            int hosts = Integer.parseInt(properties.getProperty("hosts"));
+            int cores = Integer.parseInt(properties.getProperty("cores"));
+            parallelism = hosts*cores;
+
         } catch (IOException e) {
             throw new WorkloadException("Read configure file " + configFile + " failed");
         } catch (Exception e) {
@@ -38,6 +46,28 @@ abstract public class Workload implements Serializable{
         return properties;
     }
     protected OperatorCreator getOperatorCreator(){ return operatorCreator; }
+
+    protected WorkloadOperator<WithTime<String>> kafkaStreamOperatorWithTime(){
+        String topic = this.getProperties().getProperty("topic");
+        String groupId = this.getProperties().getProperty("group.id");
+        String kafkaServers = this.getProperties().getProperty("bootstrap.servers");
+        String zkConnectStr = this.getProperties().getProperty("zookeeper.connect");
+        String offset = this.getProperties().getProperty("auto.offset.reset");
+
+        return this.getOperatorCreator().createOperatorFromKafkaWithTime(zkConnectStr,
+                kafkaServers, groupId, topic, offset, parallelism);
+    }
+
+    protected WorkloadOperator<String> kafkaStreamOperator(){
+        String topic = this.getProperties().getProperty("topic");
+        String groupId = this.getProperties().getProperty("group.id");
+        String kafkaServers = this.getProperties().getProperty("bootstrap.servers");
+        String zkConnectStr = this.getProperties().getProperty("zookeeper.connect");
+        String offset = this.getProperties().getProperty("auto.offset.reset");
+
+        return this.getOperatorCreator().createOperatorFromKafka(zkConnectStr,
+                kafkaServers, groupId, topic, offset, parallelism);
+    }
 
     public void Start(){
         logger.info("Start workload: " + this.getClass().getSimpleName());

@@ -37,15 +37,14 @@ public class StormWindowedPairOperator<K,V> implements WindowedPairWorkloadOpera
 
 
     @Override
-    public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput) {
+    public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId, int parallelism, boolean logThroughput) {
         try {
-            if(logThroughput){
-                topologyBuilder.setBolt(componentId, new WindowPairReduceByKeyBolt<>(fun, windowDuration, slideDuration, Logger.getLogger(componentId)))
-                        .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
-            } else {
-                topologyBuilder.setBolt(componentId, new WindowPairReduceByKeyBolt<>(fun, windowDuration, slideDuration))
-                        .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
+            WindowPairReduceByKeyBolt<K, V> bolt = new WindowPairReduceByKeyBolt<>(fun, windowDuration, slideDuration);
+            if(logThroughput) {
+                bolt.enableThroughput(componentId);
             }
+            topologyBuilder.setBolt(componentId, bolt, parallelism)
+                    .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
         } catch (DurationException e) {
             e.printStackTrace();
         }
@@ -53,12 +52,12 @@ public class StormWindowedPairOperator<K,V> implements WindowedPairWorkloadOpera
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId) {
-        return reduceByKey(fun, componentId, false);
+    public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId, int parallelism) {
+        return reduceByKey(fun, componentId, parallelism, false);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput) {
+    public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId, int parallelism, boolean logThroughput) {
         return null;
     }
 
@@ -69,7 +68,7 @@ public class StormWindowedPairOperator<K,V> implements WindowedPairWorkloadOpera
      * @return
      */
     @Override
-    public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId) {
+    public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId, int parallelism) {
 //        try {
 //            topologyBuilder.setBolt(componentId, new UpdateStateBolt<>(fun, windowDuration, slideDuration))
 //                    .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
@@ -81,15 +80,15 @@ public class StormWindowedPairOperator<K,V> implements WindowedPairWorkloadOpera
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId, boolean logThroughput) {
+    public <R> PairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun,
+                                                       String componentId, int parallelism, boolean logThroughput) {
         try {
-            if(logThroughput){
-                topologyBuilder.setBolt(componentId, new WindowPairMapPartitionBolt<>(fun, windowDuration, slideDuration, Logger.getLogger(componentId)))
-                        .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
-            } else {
-                topologyBuilder.setBolt(componentId, new WindowPairMapPartitionBolt<>(fun, windowDuration, slideDuration))
-                        .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
+            WindowPairMapPartitionBolt<K, V, R> bolt = new WindowPairMapPartitionBolt<>(fun, windowDuration, slideDuration);
+            if(logThroughput) {
+                bolt.enableThroughput(componentId);
             }
+            topologyBuilder.setBolt(componentId, bolt, parallelism)
+                    .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
         } catch (DurationException e) {
             e.printStackTrace();
         }
@@ -97,20 +96,21 @@ public class StormWindowedPairOperator<K,V> implements WindowedPairWorkloadOpera
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId) {
-        return mapPartition(fun, componentId, false);
+    public <R> PairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun,
+                                                       String componentId, int parallelism) {
+        return mapPartition(fun, componentId, parallelism, false);
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId, boolean logThroughput) {
+    public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun,
+                                                   String componentId, int parallelism, boolean logThroughput) {
         try {
-            if(logThroughput){
-                topologyBuilder.setBolt(componentId, new WindowMapValueBolt<>(fun, windowDuration, slideDuration, Logger.getLogger(componentId)))
-                        .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
-            } else {
-                topologyBuilder.setBolt(componentId, new WindowMapValueBolt<>(fun, windowDuration, slideDuration))
-                        .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
+            WindowMapValueBolt<K, V, R> bolt = new WindowMapValueBolt<>(fun, windowDuration, slideDuration);
+            if(logThroughput) {
+                bolt.enableThroughput(componentId);
             }
+            topologyBuilder.setBolt(componentId, bolt, parallelism)
+                    .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
         } catch (DurationException e) {
             e.printStackTrace();
         }
@@ -118,20 +118,21 @@ public class StormWindowedPairOperator<K,V> implements WindowedPairWorkloadOpera
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId) {
-        return mapValue(fun, componentId, false);
+    public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun,
+                                                   String componentId, int parallelism) {
+        return mapValue(fun, componentId, parallelism, false);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId, boolean logThroughput) {
+    public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun,
+                                             String componentId, int parallelism, boolean logThroughput) {
         try {
-            if(logThroughput){
-                topologyBuilder.setBolt(componentId, new WindowPairFilterBolt<>(fun, windowDuration, slideDuration, Logger.getLogger(componentId)))
-                        .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
-            } else {
-                topologyBuilder.setBolt(componentId, new WindowPairFilterBolt<>(fun, windowDuration, slideDuration))
-                        .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
+            WindowPairFilterBolt<K, V> bolt = new WindowPairFilterBolt<>(fun, windowDuration, slideDuration);
+            if(logThroughput) {
+                bolt.enableThroughput(componentId);
             }
+            topologyBuilder.setBolt(componentId, bolt, parallelism)
+                    .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
         } catch (DurationException e) {
             e.printStackTrace();
         }
@@ -139,20 +140,20 @@ public class StormWindowedPairOperator<K,V> implements WindowedPairWorkloadOpera
     }
 
     @Override
-    public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId) {
-        return filter(fun, componentId, false);
+    public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId, int parallelism) {
+        return filter(fun, componentId, parallelism, false);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduce(ReduceFunction<Tuple2<K, V>> fun, String componentId, boolean logThroughput) {
+    public PairWorkloadOperator<K, V> reduce(ReduceFunction<Tuple2<K, V>> fun, String componentId,
+                                             int parallelism, boolean logThroughput) {
         try {
-            if(logThroughput){
-                topologyBuilder.setBolt(componentId, new WindowPairReduceBolt<>(fun, windowDuration, slideDuration, Logger.getLogger(componentId)))
-                        .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
-            } else {
-                topologyBuilder.setBolt(componentId, new WindowPairReduceBolt<>(fun, windowDuration, slideDuration))
-                        .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
+            WindowPairReduceBolt<K, V> bolt = new WindowPairReduceBolt<>(fun, windowDuration, slideDuration);
+            if(logThroughput) {
+                bolt.enableThroughput(componentId);
             }
+            topologyBuilder.setBolt(componentId, bolt, parallelism)
+                    .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
         } catch (DurationException e) {
             e.printStackTrace();
         }
@@ -160,8 +161,8 @@ public class StormWindowedPairOperator<K,V> implements WindowedPairWorkloadOpera
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduce(ReduceFunction<Tuple2<K, V>> fun, String componentId) {
-        return  reduce(fun, componentId, false);
+    public PairWorkloadOperator<K, V> reduce(ReduceFunction<Tuple2<K, V>> fun, String componentId, int parallelism) {
+        return  reduce(fun, componentId, parallelism, false);
     }
 
     @Override

@@ -34,12 +34,8 @@ public class WindowPairReduceBolt<K,V> extends WindowedBolt {
         reduceDataContainer = new BTree<>(WINDOW_SIZE);
     }
 
-    public WindowPairReduceBolt(ReduceFunction<Tuple2<K, V>> function,
-                                TimeDurations windowDuration,
-                                TimeDurations slideDuration,
-                                Logger logger) throws DurationException {
-        this(function, windowDuration, slideDuration);
-        this.throughput = new Throughput(logger);
+    public void enableThroughput(String loggerName) {
+        this.throughput = new Throughput(loggerName);
     }
 
     /**

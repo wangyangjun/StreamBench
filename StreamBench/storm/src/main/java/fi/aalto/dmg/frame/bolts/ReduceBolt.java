@@ -27,9 +27,8 @@ public class ReduceBolt<T> extends BaseBasicBolt {
         this.currentValue = null;
     }
 
-    public ReduceBolt(ReduceFunction<T> function, Logger logger){
-        this(function);
-        this.throughput = new Throughput(logger);
+    public void enableThroughput(String loggerName) {
+        this.throughput = new Throughput(loggerName);
     }
 
 

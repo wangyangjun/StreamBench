@@ -30,10 +30,10 @@ public class PairReduceBolt<K,V> extends BaseBasicBolt {
         map = new HashMap<>();
     }
 
-    public PairReduceBolt(ReduceFunction<V> function, Logger logger){
-        this(function);
-        this.throughput = new Throughput(logger);
+    public void enableThroughput(String loggerName) {
+        this.throughput = new Throughput(loggerName);
     }
+
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {

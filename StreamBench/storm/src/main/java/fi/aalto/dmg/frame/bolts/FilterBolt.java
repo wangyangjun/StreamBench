@@ -24,10 +24,10 @@ public class FilterBolt<T> extends BaseBasicBolt {
         this.fun = function;
     }
 
-    public FilterBolt(FilterFunction<T> function, Logger logger){
-        this.fun = function;
-        this.throughput = new Throughput(logger);
+    public void enableThroughput(String loggerName) {
+        this.throughput = new Throughput(loggerName);
     }
+
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {

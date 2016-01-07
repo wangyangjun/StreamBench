@@ -19,7 +19,7 @@ public class PairLatencyBolt<T> extends BaseBasicBolt {
     private Latency latency;
 
     public PairLatencyBolt() {
-        latency = new Latency(logger);
+        latency = new Latency(this.getClass().getName());
     }
 
     @Override

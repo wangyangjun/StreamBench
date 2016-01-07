@@ -1,6 +1,5 @@
 package fi.aalto.dmg.workloads;
 
-import fi.aalto.dmg.Workload;
 import fi.aalto.dmg.exceptions.WorkloadException;
 import fi.aalto.dmg.frame.OperatorCreator;
 import fi.aalto.dmg.frame.PairWorkloadOperator;
@@ -26,24 +25,18 @@ public class WordCountGrouping extends Workload implements Serializable {
         super(creater);
     }
 
-    private WorkloadOperator<WithTime<String>> kafkaStreamOperator(){
-        String topic = this.getProperties().getProperty("topic");
-        String groupId = this.getProperties().getProperty("group.id");
-        String kafkaServers = this.getProperties().getProperty("bootstrap.servers");
-        String zkConnectStr = this.getProperties().getProperty("zookeeper.connect");
-        String offset = this.getProperties().getProperty("auto.offset.reset");
-
-        return this.getOperatorCreator().createOperatorFromKafka(zkConnectStr, kafkaServers, groupId, topic, offset);
-    }
-
     public void Process() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         try {
-            WorkloadOperator<WithTime<String>> operator = kafkaStreamOperator();
+            int hosts = Integer.parseInt(this.getProperties().getProperty("hosts"));
+            int cores = Integer.parseInt(this.getProperties().getProperty("cores"));
+            int parallelism = hosts*cores;
+
+            WorkloadOperator<WithTime<String>> operator = kafkaStreamOperatorWithTime();
             PairWorkloadOperator<String, WithTime<Integer>> counts =
-                    operator.flatMap(UserFunctions.splitFlatMapWithTime, "spliter").
-                            mapToPair(UserFunctions.mapToStrIntPairWithTime, "pair").
-                            groupByKey().reduce(UserFunctions.sumReduceWithTime, "sum").
-                            updateStateByKey(UserFunctions.sumReduceWithTime, "cumulate");
+                    operator.flatMap(UserFunctions.splitFlatMapWithTime, "spliter", parallelism).
+                            mapToPair(UserFunctions.mapToStrIntPairWithTime, "pair", parallelism).
+                            groupByKey().reduce(UserFunctions.sumReduceWithTime, "sum", parallelism).
+                            updateStateByKey(UserFunctions.sumReduceWithTime, "cumulate", parallelism);
             counts.print();
         }
         catch (Exception e){

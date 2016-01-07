@@ -39,12 +39,8 @@ public class WindowPairMapPartitionBolt<K, V, R> extends WindowedBolt {
         }
     }
 
-    public WindowPairMapPartitionBolt(MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> function,
-                                      TimeDurations windowDuration,
-                                      TimeDurations slideDuration,
-                                      Logger logger) throws DurationException {
-        this(function, windowDuration, slideDuration);
-        this.throughput = new Throughput(logger);
+    public void enableThroughput(String loggerName) {
+        this.throughput = new Throughput(loggerName);
     }
 
     /**

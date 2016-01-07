@@ -10,5 +10,5 @@ import java.io.Serializable;
  * Created by yangjun.wang on 25/10/15.
  */
 public interface GroupedWorkloadOperator<K,V> extends Serializable{
-    PairWorkloadOperator<K, V> reduce(ReduceFunction<V> fun, String componentId);
+    PairWorkloadOperator<K, V> reduce(ReduceFunction<V> fun, String componentId, int parallelism);
 }

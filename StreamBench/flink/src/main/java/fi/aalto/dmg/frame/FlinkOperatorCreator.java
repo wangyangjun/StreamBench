@@ -25,15 +25,8 @@ public class FlinkOperatorCreator extends OperatorCreator {
         properties.load(this.getClass().getClassLoader().getResourceAsStream("flink-cluster.properties"));
     }
 
-    /**
-     *
-     * @param zkConStr
-     * @param group
-     * @param topics single topic
-     * @return
-     */
     @Override
-    public WorkloadOperator<WithTime<String>> createOperatorFromKafka(String zkConStr, String kafkaServers, String group, String topics, String offset) {
+    public WorkloadOperator<WithTime<String>> createOperatorFromKafkaWithTime(String zkConStr, String kafkaServers, String group, String topics, String offset, int parallelism) {
         /*
         * Note that the Kafka source is expecting the following parameters to be set
         *  - "bootstrap.servers" (comma separated list of kafka brokers)
@@ -59,6 +52,21 @@ public class FlinkOperatorCreator extends OperatorCreator {
             }
         });
         return new FlinkWorkloadOperator<>(withTimeDataStream);
+    }
+
+    @Override
+    public WorkloadOperator<String> createOperatorFromKafka(String zkConStr, String kafkaServers, String group, String topics, String offset, int parallelism) {
+        Properties properties = new Properties();
+        properties.put("bootstrap.servers", kafkaServers);
+        properties.put("zookeeper.connect", zkConStr);
+        properties.put("group.id", group);
+        properties.put("topic", topics);
+        properties.put("auto.commit.enable", false);
+        properties.put("auto.offset.reset", "earliest");
+
+        DataStream<String> stream = env
+                .addSource(new FlinkKafkaConsumer082<String>(topics, new SimpleStringSchema(), properties));
+        return new FlinkWorkloadOperator<>(stream);
     }
 
     @Override

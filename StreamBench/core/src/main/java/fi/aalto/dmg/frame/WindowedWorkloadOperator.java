@@ -10,24 +10,24 @@ import java.io.Serializable;
 public interface WindowedWorkloadOperator<T> extends Serializable {
 
     // return WorkloadOperator<R>
-    <R> WorkloadOperator<R> mapPartition(MapPartitionFunction<T, R> fun, String componentId, boolean logThroughput);
-    <R> WorkloadOperator<R> mapPartition(MapPartitionFunction<T, R> fun, String componentId);
+    <R> WorkloadOperator<R> mapPartition(MapPartitionFunction<T, R> fun, String componentId, int parallelism, boolean logThroughput);
+    <R> WorkloadOperator<R> mapPartition(MapPartitionFunction<T, R> fun, String componentId, int parallelism);
 
     // return new WorkloadOperator<R>();
-    <R> WorkloadOperator<R> map(MapFunction<T, R> fun, String componentId, boolean logThroughput);
-    <R> WorkloadOperator<R> map(MapFunction<T, R> fun, String componentId);
+    <R> WorkloadOperator<R> map(MapFunction<T, R> fun, String componentId, int parallelism, boolean logThroughput);
+    <R> WorkloadOperator<R> map(MapFunction<T, R> fun, String componentId, int parallelism);
 
     // return new WorkloadOperator<T>();
-    WorkloadOperator<T> filter(FilterFunction<T> fun, String componentId, boolean logThroughput);
-    WorkloadOperator<T> filter(FilterFunction<T> fun, String componentId);
+    WorkloadOperator<T> filter(FilterFunction<T> fun, String componentId, int parallelism, boolean logThroughput);
+    WorkloadOperator<T> filter(FilterFunction<T> fun, String componentId, int parallelism);
 
     // return new WorkloadOperator<T>();
-    WorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId, boolean logThroughput);
-    WorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId);
+    WorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId, int parallelism, boolean logThroughput);
+    WorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId, int parallelism);
 
     // return new PairWorkloadOperator<K,V>
-    <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId, boolean logThroughput);
-    <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId);
+    <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId, int parallelism, boolean logThroughput);
+    <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId, int parallelism);
 
     void print();
 }

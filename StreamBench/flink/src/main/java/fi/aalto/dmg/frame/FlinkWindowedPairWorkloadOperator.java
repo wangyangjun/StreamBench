@@ -30,7 +30,7 @@ public class FlinkWindowedPairWorkloadOperator<K,V, W extends Window> implements
 
 
     @Override
-    public PairWorkloadOperator<K, V> reduceByKey(final ReduceFunction<V> fun, final String componentId, final boolean logThroughput) {
+    public PairWorkloadOperator<K, V> reduceByKey(final ReduceFunction<V> fun, final String componentId, int parallelism, final boolean logThroughput) {
         DataStream<Tuple2<K,V>> newDataStream = this.windowStream.reduce(new org.apache.flink.api.common.functions.ReduceFunction<Tuple2<K, V>>() {
             Throughput throughput = new Throughput(componentId);
 
@@ -46,12 +46,12 @@ public class FlinkWindowedPairWorkloadOperator<K,V, W extends Window> implements
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduceByKey(final ReduceFunction<V> fun, String componentId) {
-        return reduceByKey(fun, componentId, false);
+    public PairWorkloadOperator<K, V> reduceByKey(final ReduceFunction<V> fun, String componentId, int parallelism) {
+        return reduceByKey(fun, componentId, parallelism, false);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> updateStateByKey(final ReduceFunction<V> fun, final String componentId, final boolean logThroughput) {
+    public PairWorkloadOperator<K, V> updateStateByKey(final ReduceFunction<V> fun, final String componentId, int parallelism, final boolean logThroughput) {
         DataStream<Tuple2<K,V>> newDataStream = this.windowStream.reduce(new org.apache.flink.api.common.functions.ReduceFunction<Tuple2<K, V>>() {
             Throughput throughput = new Throughput(componentId);
 
@@ -74,12 +74,12 @@ public class FlinkWindowedPairWorkloadOperator<K,V, W extends Window> implements
      * @return
      */
     @Override
-    public PairWorkloadOperator<K, V> updateStateByKey(final ReduceFunction<V> fun, String componentId) {
-        return updateStateByKey(fun, componentId, false);
+    public PairWorkloadOperator<K, V> updateStateByKey(final ReduceFunction<V> fun, String componentId, int parallelism) {
+        return updateStateByKey(fun, componentId, parallelism, false);
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> mapPartition(final MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun, final String componentId, final boolean logThroughput) {
+    public <R> PairWorkloadOperator<K, R> mapPartition(final MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun, final String componentId, int parallelism, final boolean logThroughput) {
         DataStream<Tuple2<K,R>> newDataStream = this.windowStream.apply(new WindowFunction<Tuple2<K, V>, Tuple2<K, R>, K, W>() {
             Throughput throughput = new Throughput(componentId);
 
@@ -99,12 +99,12 @@ public class FlinkWindowedPairWorkloadOperator<K,V, W extends Window> implements
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> mapPartition(final MapPartitionFunction<scala.Tuple2<K, V>, scala.Tuple2<K, R>> fun, String componentId) {
-        return mapPartition(fun, componentId, false);
+    public <R> PairWorkloadOperator<K, R> mapPartition(final MapPartitionFunction<scala.Tuple2<K, V>, scala.Tuple2<K, R>> fun, String componentId, int parallelism) {
+        return mapPartition(fun, componentId, parallelism, false);
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> mapValue(final MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun, final String componentId, final boolean logThroughput) {
+    public <R> PairWorkloadOperator<K, R> mapValue(final MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun, final String componentId, int parallelism, final boolean logThroughput) {
         DataStream<Tuple2<K,R>> newDataStream = this.windowStream.apply(new WindowFunction<Tuple2<K, V>, Tuple2<K, R>, K, W>() {
             Throughput throughput = new Throughput(componentId);
 
@@ -123,12 +123,12 @@ public class FlinkWindowedPairWorkloadOperator<K,V, W extends Window> implements
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> mapValue(final MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId) {
-        return mapValue(fun, componentId, false);
+    public <R> PairWorkloadOperator<K, R> mapValue(final MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId, int parallelism) {
+        return mapValue(fun, componentId, parallelism, false);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> filter(final FilterFunction<Tuple2<K, V>> fun, final String componentId, final boolean logThroughput) {
+    public PairWorkloadOperator<K, V> filter(final FilterFunction<Tuple2<K, V>> fun, final String componentId, int parallelism, final boolean logThroughput) {
         DataStream<Tuple2<K,V>> newDataStream = this.windowStream.apply(new WindowFunction<Tuple2<K, V>, Tuple2<K, V>, K, W>() {
             Throughput throughput = new Throughput(componentId);
 
@@ -147,12 +147,12 @@ public class FlinkWindowedPairWorkloadOperator<K,V, W extends Window> implements
     }
 
     @Override
-    public PairWorkloadOperator<K, V> filter(final FilterFunction<Tuple2<K, V>> fun, String componentId) {
-        return filter(fun, componentId, false);
+    public PairWorkloadOperator<K, V> filter(final FilterFunction<Tuple2<K, V>> fun, String componentId, int parallelism) {
+        return filter(fun, componentId, parallelism, false);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduce(final ReduceFunction<Tuple2<K, V>> fun, final String componentId, final boolean logThroughput) {
+    public PairWorkloadOperator<K, V> reduce(final ReduceFunction<Tuple2<K, V>> fun, final String componentId, int parallelism, final boolean logThroughput) {
         DataStream<Tuple2<K, V>> newDataStream = this.windowStream.reduce(new org.apache.flink.api.common.functions.ReduceFunction<Tuple2<K, V>>() {
             Throughput throughput = new Throughput(componentId);
 
@@ -168,8 +168,8 @@ public class FlinkWindowedPairWorkloadOperator<K,V, W extends Window> implements
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduce(final ReduceFunction<Tuple2<K, V>> fun, String componentId) {
-        return reduce(fun, componentId, false);
+    public PairWorkloadOperator<K, V> reduce(final ReduceFunction<Tuple2<K, V>> fun, String componentId, int parallelism) {
+        return reduce(fun, componentId, parallelism, false);
     }
 
     @Override

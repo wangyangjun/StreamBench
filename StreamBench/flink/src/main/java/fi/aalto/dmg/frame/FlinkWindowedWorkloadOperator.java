@@ -24,7 +24,7 @@ public class FlinkWindowedWorkloadOperator<T, W extends Window> implements Windo
     }
 
     @Override
-    public <R> WorkloadOperator<R> mapPartition(final MapPartitionFunction<T, R> fun, final String componentId, final boolean logThroughput) {
+    public <R> WorkloadOperator<R> mapPartition(final MapPartitionFunction<T, R> fun, final String componentId, int parallelism, final boolean logThroughput) {
         DataStream<R> newDataStream = this.windowStream.apply(new WindowFunction<T, R, T, W>() {
             Throughput throughput = new Throughput(componentId);
 
@@ -42,12 +42,13 @@ public class FlinkWindowedWorkloadOperator<T, W extends Window> implements Windo
         return new FlinkWorkloadOperator<>(newDataStream);
     }
 
-    public <R> WorkloadOperator<R> mapPartition(final MapPartitionFunction<T, R> fun, String componentId) {
-        return mapPartition(fun, componentId, false);
+    @Override
+    public <R> WorkloadOperator<R> mapPartition(final MapPartitionFunction<T, R> fun, String componentId, int parallelism) {
+        return mapPartition(fun, componentId, parallelism, false);
     }
 
     @Override
-    public <R> WorkloadOperator<R> map(final MapFunction<T, R> fun, final String componentId, final boolean logThroughput) {
+    public <R> WorkloadOperator<R> map(final MapFunction<T, R> fun, final String componentId, int parallelism, final boolean logThroughput) {
         DataStream<R> newDataStream = this.windowStream.apply(new WindowFunction<T, R, T, W>() {
             Throughput throughput = new Throughput(componentId);
 
@@ -66,12 +67,12 @@ public class FlinkWindowedWorkloadOperator<T, W extends Window> implements Windo
     }
 
     @Override
-    public <R> WorkloadOperator<R> map(final MapFunction<T, R> fun, String componentId) {
-        return map(fun, componentId, false);
+    public <R> WorkloadOperator<R> map(final MapFunction<T, R> fun, String componentId, int parallelism) {
+        return map(fun, componentId, parallelism, false);
     }
 
     @Override
-    public WorkloadOperator<T> filter(final FilterFunction<T> fun, final String componentId, final boolean logThroughput) {
+    public WorkloadOperator<T> filter(final FilterFunction<T> fun, final String componentId, int parallelism, final boolean logThroughput) {
         DataStream<T> newDataStream = this.windowStream.apply(new WindowFunction<T, T, T, W>() {
             Throughput throughput = new Throughput(componentId);
 
@@ -90,12 +91,12 @@ public class FlinkWindowedWorkloadOperator<T, W extends Window> implements Windo
     }
 
     @Override
-    public WorkloadOperator<T> filter(final FilterFunction<T> fun, String componentId) {
-        return filter(fun, componentId, false);
+    public WorkloadOperator<T> filter(final FilterFunction<T> fun, String componentId, int parallelism) {
+        return filter(fun, componentId, parallelism, false);
     }
 
     @Override
-    public WorkloadOperator<T> reduce(final fi.aalto.dmg.frame.functions.ReduceFunction<T> fun, final String componentId, final boolean logThroughput) {
+    public WorkloadOperator<T> reduce(final fi.aalto.dmg.frame.functions.ReduceFunction<T> fun, final String componentId, int parallelism, final boolean logThroughput) {
         DataStream<T> newDataStream = this.windowStream.reduce(new ReduceFunction<T>() {
             Throughput throughput = new Throughput(componentId);
 
@@ -111,12 +112,12 @@ public class FlinkWindowedWorkloadOperator<T, W extends Window> implements Windo
     }
 
     @Override
-    public WorkloadOperator<T> reduce(final fi.aalto.dmg.frame.functions.ReduceFunction<T> fun, String componentId) {
-        return reduce(fun, componentId, false);
+    public WorkloadOperator<T> reduce(final fi.aalto.dmg.frame.functions.ReduceFunction<T> fun, String componentId, int parallelism) {
+        return reduce(fun, componentId, parallelism, false);
     }
 
     @Override
-    public <K, V> PairWorkloadOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun, final String componentId, final boolean logThroughput) {
+    public <K, V> PairWorkloadOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun, final String componentId, int parallelism, final boolean logThroughput) {
         DataStream<Tuple2<K,V>> newDataStream = this.windowStream.apply(new WindowFunction<T, Tuple2<K, V>, T, W>() {
             Throughput throughput = new Throughput(componentId);
 
@@ -135,8 +136,8 @@ public class FlinkWindowedWorkloadOperator<T, W extends Window> implements Windo
     }
 
     @Override
-    public <K, V> PairWorkloadOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun, String componentId) {
-        return mapToPair(fun, componentId, false);
+    public <K, V> PairWorkloadOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun, String componentId, int parallelism) {
+        return mapToPair(fun, componentId, parallelism, false);
     }
 
     @Override

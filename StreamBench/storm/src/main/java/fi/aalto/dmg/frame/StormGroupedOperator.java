@@ -21,9 +21,12 @@ public class StormGroupedOperator<K,V> implements GroupedWorkloadOperator<K,V>  
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduce(ReduceFunction<V> fun, String componentId) {
+    public PairWorkloadOperator<K, V> reduce(ReduceFunction<V> fun, String componentId, int parallelism) {
 
-        topologyBuilder.setBolt(componentId, new PairReduceBolt<K,V>(fun)).fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
+        topologyBuilder.setBolt(componentId,
+                new PairReduceBolt<K,V>(fun),
+                parallelism)
+            .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
         return new StormPairOperator<>(topologyBuilder, componentId);
     }
 }

@@ -35,7 +35,7 @@ public class StormOperatorCreator extends OperatorCreator implements Serializabl
 
         conf = new Config();
         conf.setDebug(true);
-        conf.setNumWorkers(2);
+//        conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 2000);
         conf.put(Config.TOPOLOGY_ACKER_EXECUTORS, 0);
 
         topologyBuilder = new TopologyBuilder();
@@ -48,6 +48,7 @@ public class StormOperatorCreator extends OperatorCreator implements Serializabl
                                                                       String topics,
                                                                       String offset,
                                                                       int parallelism) {
+        conf.setNumWorkers(parallelism);
         BrokerHosts hosts = new ZkHosts(zkConStr);
         SpoutConfig spoutConfig = new SpoutConfig(hosts, topics, "/" + topics, UUID.randomUUID().toString());
         spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
@@ -65,6 +66,7 @@ public class StormOperatorCreator extends OperatorCreator implements Serializabl
                                                                       String topics,
                                                                       String offset,
                                                                       int parallelism) {
+        conf.setNumWorkers(parallelism);
         BrokerHosts hosts = new ZkHosts(zkConStr);
         SpoutConfig spoutConfig = new SpoutConfig(hosts, topics, "/" + topics, UUID.randomUUID().toString());
         spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());

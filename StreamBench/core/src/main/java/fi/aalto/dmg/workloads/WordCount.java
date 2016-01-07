@@ -1,6 +1,5 @@
 package fi.aalto.dmg.workloads;
 
-import fi.aalto.dmg.Workload;
 import fi.aalto.dmg.exceptions.WorkloadException;
 import fi.aalto.dmg.frame.PairWorkloadOperator;
 import fi.aalto.dmg.frame.WorkloadOperator;
@@ -17,6 +16,9 @@ import java.lang.reflect.InvocationTargetException;
  * Spark, Flink implement pre-aggregation
  * Storm reduces on field grouping stream
  * Spark streaming is a mini-batches model, which need call updateStateByKey to accumulate
+ *
+ * *********** Components ***************
+ * Source -> AddTime -> Splitter -> Pair -> Sum -> (Update state) -> Sink(log latency)
  * Created by yangjun.wang on 27/10/15.
  */
 public class WordCount extends Workload implements Serializable{
@@ -28,25 +30,18 @@ public class WordCount extends Workload implements Serializable{
         super(creator);
     }
 
-    private WorkloadOperator<WithTime<String>> kafkaStreamOperator(){
-        String topic = this.getProperties().getProperty("topic");
-        String groupId = this.getProperties().getProperty("group.id");
-        String kafkaServers = this.getProperties().getProperty("bootstrap.servers");
-        String zkConnectStr = this.getProperties().getProperty("zookeeper.connect");
-        String offset = this.getProperties().getProperty("auto.offset.reset");
 
-        return this.getOperatorCreator().createOperatorFromKafka(zkConnectStr, kafkaServers, groupId, topic, offset);
-    }
 
     public void Process() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         try {
-            WorkloadOperator<WithTime<String>> operator = kafkaStreamOperator();
+
+            WorkloadOperator<WithTime<String>> operator = kafkaStreamOperatorWithTime();
             PairWorkloadOperator<String, WithTime<Integer>> counts =
-                    operator.flatMap(UserFunctions.splitFlatMapWithTime, "splitter")
-                            .mapToPair(UserFunctions.mapToStrIntPairWithTime, "pair")
-                            .reduceByKey(UserFunctions.sumReduceWithTime, "sum", true)
-                            .updateStateByKey(UserFunctions.sumReduceWithTime, "accumulate");
-            counts.sink();
+                    operator.flatMap(UserFunctions.splitFlatMapWithTime, "splitter", parallelism)
+                            .mapToPair(UserFunctions.mapToStrIntPairWithTime, "pair", parallelism)
+                            .reduceByKey(UserFunctions.sumReduceWithTime, "sum", parallelism, true)
+                            .updateStateByKey(UserFunctions.sumReduceWithTime, "accumulate", parallelism);
+            counts.sink(parallelism);
         }
         catch (Exception e){
             logger.error(e.getMessage());

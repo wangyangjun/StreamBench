@@ -20,97 +20,105 @@ public class StormOperator<T> extends OperatorBase implements WorkloadOperator<T
     }
 
     @Override
-    public <R> WorkloadOperator<R> map(MapFunction<T, R> fun, String componentId, boolean logThroughput) {
+    public <R> WorkloadOperator<R> map(MapFunction<T, R> fun, String componentId, int parallelism, boolean logThroughput) {
+        MapBolt<T, R> bolt = new MapBolt<>(fun);
         if(logThroughput) {
-            topologyBuilder.setBolt(componentId, new MapBolt<>(fun, Logger.getLogger(componentId)))
-                    .localOrShuffleGrouping(preComponentId);
-        } else {
-            topologyBuilder.setBolt(componentId, new MapBolt<>(fun))
-                    .localOrShuffleGrouping(preComponentId);
+            bolt.enableThroughput(componentId);
         }
+        topologyBuilder.setBolt(componentId, bolt, parallelism).localOrShuffleGrouping(preComponentId);
         return new StormOperator<>(topologyBuilder, componentId);
     }
 
     @Override
-    public <R> WorkloadOperator<R> map(MapFunction<T, R> fun, String componentId) {
-        return map(fun, componentId, false);
+    public <R> WorkloadOperator<R> map(MapFunction<T, R> fun, String componentId, int parallelism) {
+        return map(fun, componentId, parallelism, false);
     }
 
     @Override
-    public <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId, boolean logThroughput) {
+    public <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId, int parallelism, boolean logThroughput) {
+        MapToPairBolt<T, K, V> bolt = new MapToPairBolt<>(fun);
         if(logThroughput) {
-            topologyBuilder.setBolt(componentId, new MapToPairBolt<>(fun, Logger.getLogger(componentId)))
-                    .localOrShuffleGrouping(preComponentId);
-        } else {
-            topologyBuilder.setBolt(componentId, new MapToPairBolt<>(fun))
-                    .localOrShuffleGrouping(preComponentId);
+            bolt.enableThroughput(componentId);
         }
+        topologyBuilder.setBolt(componentId, bolt, parallelism).localOrShuffleGrouping(preComponentId);
         return new StormPairOperator<>(topologyBuilder, componentId);
     }
 
     @Override
-    public <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId) {
-        return mapToPair(fun, componentId, false);
+    public <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId, int parallelism) {
+        return mapToPair(fun, componentId, parallelism, false);
     }
 
     @Override
-    public WorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId, boolean logThroughput) {
+    public WorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId, int parallelism, boolean logThroughput) {
+        ReduceBolt<T> bolt = new ReduceBolt<>(fun);
         if(logThroughput) {
-            topologyBuilder.setBolt(componentId, new ReduceBolt<>(fun, Logger.getLogger(componentId)))
-                    .localOrShuffleGrouping(preComponentId);
-
-        } else {
-            topologyBuilder.setBolt(componentId, new ReduceBolt<>(fun))
-                    .localOrShuffleGrouping(preComponentId);
+            bolt.enableThroughput(componentId);
         }
+        topologyBuilder.setBolt(componentId, bolt, parallelism).localOrShuffleGrouping(preComponentId);
         return new StormOperator<>(topologyBuilder, componentId);
     }
 
     @Override
-    public WorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId) {
-        return reduce(fun, componentId, false);
+    public WorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId, int parallelism) {
+        return reduce(fun, componentId, parallelism, false);
     }
 
     @Override
-    public WorkloadOperator<T> filter(FilterFunction<T> fun, String componentId, boolean logThroughput) {
+    public WorkloadOperator<T> filter(FilterFunction<T> fun, String componentId, int parallelism, boolean logThroughput) {
+        FilterBolt<T> bolt = new FilterBolt<>(fun);
         if(logThroughput){
-            topologyBuilder.setBolt(componentId, new FilterBolt<>(fun, Logger.getLogger(componentId)))
-                    .localOrShuffleGrouping(preComponentId);
-        } else {
-            topologyBuilder.setBolt(componentId, new FilterBolt<>(fun))
-                    .localOrShuffleGrouping(preComponentId);
+            bolt.enableThroughput(componentId);
         }
+        topologyBuilder.setBolt(componentId, bolt, parallelism).localOrShuffleGrouping(preComponentId);
         return new StormOperator<>(topologyBuilder, componentId);
     }
 
     @Override
-    public WorkloadOperator<T> filter(FilterFunction<T> fun, String componentId) {
-        return  filter(fun, componentId, false);
+    public WorkloadOperator<T> filter(FilterFunction<T> fun, String componentId, int parallelism) {
+        return  filter(fun, componentId, parallelism, false);
     }
 
     @Override
-    public WorkloadOperator<T> iterative(MapFunction<T, T> mapFunction, FilterFunction<T> iterativeFunction, String componentId) {
-        topologyBuilder.setBolt(componentId, new IteractiveBolt<>(mapFunction, iterativeFunction))
+    public WorkloadOperator<T> iterative(MapFunction<T, T> mapFunction, FilterFunction<T> iterativeFunction,
+                                         String componentId, int parallelism) {
+        topologyBuilder.setBolt(componentId, new IteractiveBolt<>(mapFunction, iterativeFunction), parallelism)
                 .localOrShuffleGrouping(preComponentId)
                 .shuffleGrouping(componentId, IteractiveBolt.ITERATIVE_STREAM);
         return new StormOperator<>(topologyBuilder, componentId);
     }
 
     @Override
-    public <R> WorkloadOperator<R> flatMap(FlatMapFunction<T, R> fun, String componentId, boolean logThroughput) {
-        if(logThroughput) {
-            topologyBuilder.setBolt(componentId, new FlatMapBolt<>(fun, Logger.getLogger(componentId)))
-                    .localOrShuffleGrouping(preComponentId);
-        } else {
-            topologyBuilder.setBolt(componentId, new FlatMapBolt<>(fun))
-                    .localOrShuffleGrouping(preComponentId);
+    public <R> WorkloadOperator<R> flatMap(FlatMapFunction<T, R> fun, String componentId, int parallelism, boolean logThroughput) {
+        FlatMapBolt<T, R> bolt = new FlatMapBolt<>(fun);
+        if(logThroughput){
+            bolt.enableThroughput(componentId);
         }
+        topologyBuilder.setBolt(componentId, bolt, parallelism).localOrShuffleGrouping(preComponentId);
         return new StormOperator<>(topologyBuilder, componentId);
     }
 
     @Override
-    public <R> WorkloadOperator<R> flatMap(FlatMapFunction<T, R> fun, String componentId) {
-        return flatMap(fun, componentId, false);
+    public <R> WorkloadOperator<R> flatMap(FlatMapFunction<T, R> fun, String componentId, int parallelism) {
+        return flatMap(fun, componentId, parallelism, false);
+    }
+
+    @Override
+    public <K, V> PairWorkloadOperator<K, V> flatMapToPair(FlatMapPairFunction<T, K, V> fun,
+                                                           String componentId,
+                                                           int parallelism,
+                                                           boolean logThroughput) {
+        FlatMapToPairBolt<T, K, V> bolt = new FlatMapToPairBolt<>(fun);
+        if(logThroughput){
+            bolt.enableThroughput(componentId);
+        }
+        topologyBuilder.setBolt(componentId, bolt, parallelism).localOrShuffleGrouping(preComponentId);
+        return new StormPairOperator<>(topologyBuilder, componentId);
+    }
+
+    @Override
+    public <K, V> PairWorkloadOperator<K, V> flatMapToPair(FlatMapPairFunction<T, K, V> fun, String componentId, int parallelism) {
+        return flatMapToPair(fun, componentId, parallelism, false);
     }
 
     @Override
@@ -129,7 +137,7 @@ public class StormOperator<T> extends OperatorBase implements WorkloadOperator<T
     }
 
     @Override
-    public void sink() {
+    public void sink(int parallelism) {
 
     }
 }

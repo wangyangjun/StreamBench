@@ -109,4 +109,27 @@ public class UserFunctions {
         }
     };
 
+    public static FlatMapPairFunction<WithTime<String>, String, WithTime<Integer>> flatMapToPairWithTime
+            =  new FlatMapPairFunction<WithTime<String>, String, WithTime<Integer>>() {
+        @Override
+        public Iterable<Tuple2<String, WithTime<Integer>>> flatMapToPair(WithTime<String> var1) throws Exception {
+            List<Tuple2<String, WithTime<Integer>>> results = new ArrayList<>();
+            for(String str : var1.getValue().toLowerCase().split("\\W+")){
+                results.add(new Tuple2<>(str, new WithTime<>(1, var1.getTime())));
+            }
+            return results;
+        }
+    };
+
+    public static FlatMapPairFunction<String, String, WithTime<Integer>> flatMapToPairAddTime
+            =  new FlatMapPairFunction<String, String, WithTime<Integer>>() {
+        @Override
+        public Iterable<Tuple2<String, WithTime<Integer>>> flatMapToPair(String var1) throws Exception {
+            List<Tuple2<String, WithTime<Integer>>> results = new ArrayList<>();
+            for(String str : var1.toLowerCase().split("\\W+")){
+                results.add(new Tuple2<>(str, new WithTime<>(1, System.currentTimeMillis())));
+            }
+            return results;
+        }
+    };
 }

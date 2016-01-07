@@ -39,12 +39,8 @@ public class WindowPairFilterBolt<K,V> extends WindowedBolt {
         }
     }
 
-    public WindowPairFilterBolt(FilterFunction<Tuple2<K, V>> function,
-                                TimeDurations windowDuration,
-                                TimeDurations slideDuration,
-                                Logger logger) throws DurationException {
-        this(function, windowDuration, slideDuration);
-        this.throughput = new Throughput(logger);
+    public void enableThroughput(String loggerName) {
+        this.throughput = new Throughput(loggerName);
     }
 
     /**

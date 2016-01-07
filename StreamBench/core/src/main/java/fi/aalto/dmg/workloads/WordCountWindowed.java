@@ -1,6 +1,5 @@
 package fi.aalto.dmg.workloads;
 
-import fi.aalto.dmg.Workload;
 import fi.aalto.dmg.exceptions.WorkloadException;
 import fi.aalto.dmg.frame.OperatorCreator;
 import fi.aalto.dmg.frame.PairWorkloadOperator;
@@ -27,16 +26,6 @@ public class WordCountWindowed  extends Workload implements Serializable {
         super(creater);
     }
 
-    private WorkloadOperator<WithTime<String>> kafkaStreamOperator(){
-        String topic = this.getProperties().getProperty("topic");
-        String groupId = this.getProperties().getProperty("group.id");
-        String kafkaServers = this.getProperties().getProperty("bootstrap.servers");
-        String zkConnectStr = this.getProperties().getProperty("zookeeper.connect");
-        String offset = this.getProperties().getProperty("auto.offset.reset");
-
-        return this.getOperatorCreator().createOperatorFromKafka(zkConnectStr, kafkaServers, groupId, topic, offset);
-    }
-
     public static ReduceFunction<Tuple2<String, Integer>> tuple2ReduceFunction = new ReduceFunction<Tuple2<String, Integer>>() {
         @Override
         public Tuple2<String, Integer> reduce(Tuple2<String, Integer> var1, Tuple2<String, Integer> var2) throws Exception {
@@ -46,6 +35,10 @@ public class WordCountWindowed  extends Workload implements Serializable {
     @Override
     public void Process() throws WorkloadException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         try {
+            int hosts = Integer.parseInt(this.getProperties().getProperty("hosts"));
+            int cores = Integer.parseInt(this.getProperties().getProperty("cores"));
+            int parallelism = hosts*cores;
+
             /*
             WorkloadOperator<String> operator = kafkaStreamOperator();
             WindowedPairWorkloadOperator<String, Integer> counts =
@@ -61,11 +54,11 @@ public class WordCountWindowed  extends Workload implements Serializable {
             cumulateCounts.print();
             */
 
-            WorkloadOperator<WithTime<String>> operator = kafkaStreamOperator();
+            WorkloadOperator<WithTime<String>> operator = kafkaStreamOperatorWithTime();
             PairWorkloadOperator<String, WithTime<Integer>> counts =
-                    operator.flatMap(UserFunctions.splitFlatMapWithTime, "spliter")
-                            .mapToPair(UserFunctions.mapToStrIntPairWithTime, "pair")
-                            .reduceByKeyAndWindow(UserFunctions.sumReduceWithTime, "counter",
+                    operator.flatMap(UserFunctions.splitFlatMapWithTime, "spliter", parallelism)
+                            .mapToPair(UserFunctions.mapToStrIntPairWithTime, "pair", parallelism)
+                            .reduceByKeyAndWindow(UserFunctions.sumReduceWithTime, "counter", parallelism,
                                     new TimeDurations(TimeUnit.SECONDS, 1), new TimeDurations(TimeUnit.SECONDS, 1));
             counts.print();
 

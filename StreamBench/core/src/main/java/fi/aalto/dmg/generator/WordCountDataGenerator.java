@@ -17,7 +17,7 @@ import java.util.Properties;
  */
 public class WordCountDataGenerator {
     private static final Logger logger = Logger.getLogger(WordCountDataGenerator.class);
-    private static int SENTENCE_NUM = 10000000;
+    private static int SENTENCE_NUM = 1000000;
     private static int ZIPF_SIZE = 10000;
     private static double ZIPF_EXPONENT = 1;
     private static String TOPIC = "WordCount";
@@ -32,15 +32,15 @@ public class WordCountDataGenerator {
         props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, "snappy");
 
         props.put(ProducerConfig.BATCH_SIZE_CONFIG, 1024);
-        props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 1024000);
-        props.put(ProducerConfig.SEND_BUFFER_CONFIG, 1024000);
-        props.put(ProducerConfig.RECEIVE_BUFFER_CONFIG, 1024000);
+        props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 67108864);
+        props.put(ProducerConfig.SEND_BUFFER_CONFIG, 67108864);
+        props.put(ProducerConfig.RECEIVE_BUFFER_CONFIG, 67108864);
 
         props.put(ProducerConfig.TIMEOUT_CONFIG, 250);
         props.put(ProducerConfig.LINGER_MS_CONFIG, 0);
 
         props.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, "5000000");
-        props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, "1024");
+        props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, "128");
 
 
         props.put(ProducerConfig.BLOCK_ON_BUFFER_FULL_CONFIG, true);
@@ -50,7 +50,19 @@ public class WordCountDataGenerator {
         return producer;
     }
 
-    public static void main( String[] args ) {
+    public static void main( String[] args ) throws InterruptedException {
+        // 1   ---- 0.7K/s
+        // 2   ---- 1.3K/s
+        // 3   ---- 2.0K/s
+        // 4   ---- 2.6K/s
+        // 5   ---- 3.2K/s
+        // 10  ---- 6K/s
+        // 50  ---- 15K/s
+        // 100 ---- 27K/s
+        int SLEEP_FREQUENCY = 1000;
+        if(args.length > 0) {
+            SLEEP_FREQUENCY = Integer.parseInt(args[0]);
+        }
 
         RandomDataGenerator messageGenerator = new RandomDataGenerator();
         long time = System.currentTimeMillis();
@@ -62,6 +74,7 @@ public class WordCountDataGenerator {
         FastZipfGenerator zipfGenerator = new FastZipfGenerator(ZIPF_SIZE, ZIPF_EXPONENT);
         Throughput throughput = new Throughput("WordCountDataGenerator");
         // for loop to generate message
+        long sent_sentences = 0;
         for (int i = 0; i < SENTENCE_NUM; ++i) {
             double sentence_length = messageGenerator.nextGaussian(10, 1);
             StringBuilder messageBuilder = new StringBuilder();
@@ -74,6 +87,11 @@ public class WordCountDataGenerator {
             throughput.execute();
             ProducerRecord<String, String> newRecord = new ProducerRecord<String, String>(TOPIC, messageBuilder.toString());
             producer.send(newRecord);
+            sent_sentences++;
+
+            if(sent_sentences%SLEEP_FREQUENCY == 0) {
+                Thread.sleep(1);
+            }
         }
         System.out.println("Latency: " + String.valueOf(System.currentTimeMillis()-time));
     }

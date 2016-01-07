@@ -1,7 +1,7 @@
 package fi.aalto.dmg.statistics;
 
-import org.apache.commons.math3.analysis.function.Log;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 
@@ -12,7 +12,7 @@ import java.io.Serializable;
 public class Throughput implements Serializable{
 
     private static final long serialVersionUID = -4968905648218161496L;
-    private static Logger logger = Logger.getLogger(Throughput.class);
+    private static Logger logger = LoggerFactory.getLogger(Throughput.class);
     private String loggerName;
     private long received;
 

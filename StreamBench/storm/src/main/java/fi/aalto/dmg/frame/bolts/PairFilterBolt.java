@@ -28,10 +28,10 @@ public class PairFilterBolt<K,V> extends BaseBasicBolt {
         this.fun = function;
     }
 
-    public PairFilterBolt(FilterFunction<Tuple2<K, V>> function, Logger logger){
-        this(function);
-        this.throughput = new Throughput(logger);
+    public void enableThroughput(String loggerName) {
+        this.throughput = new Throughput(loggerName);
     }
+
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {

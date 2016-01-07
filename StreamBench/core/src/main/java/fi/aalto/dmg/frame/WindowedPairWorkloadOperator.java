@@ -16,8 +16,8 @@ public interface WindowedPairWorkloadOperator<K,V> extends Serializable {
      * @param componentId
      * @return PairWorkloadOperator<K, V>
      */
-    PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput);
-    PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId);
+    PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId, int parallelism, boolean logThroughput);
+    PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId, int parallelism);
 
     /**
      * cumulate window stream
@@ -25,23 +25,23 @@ public interface WindowedPairWorkloadOperator<K,V> extends Serializable {
      * @param componentId
      * @return
      */
-    PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput);
-    PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId);
+    PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId, int parallelism, boolean logThroughput);
+    PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId, int parallelism);
 
     // return WorkloadOperator<R>
-    <R> PairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K,V>, Tuple2<K,R>> fun, String componentId, boolean logThroughput);
-    <R> PairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K,V>, Tuple2<K,R>> fun, String componentId);
+    <R> PairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K,V>, Tuple2<K,R>> fun, String componentId, int parallelism, boolean logThroughput);
+    <R> PairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K,V>, Tuple2<K,R>> fun, String componentId, int parallelism);
 
     // return new WorkloadOperator<R>();
-    <R> PairWorkloadOperator<K, R> mapValue(MapFunction<Tuple2<K,V>, Tuple2<K,R>> fun, String componentId, boolean logThroughput);
-    <R> PairWorkloadOperator<K, R> mapValue(MapFunction<Tuple2<K,V>, Tuple2<K,R>> fun, String componentId);
+    <R> PairWorkloadOperator<K, R> mapValue(MapFunction<Tuple2<K,V>, Tuple2<K,R>> fun, String componentId, int parallelism, boolean logThroughput);
+    <R> PairWorkloadOperator<K, R> mapValue(MapFunction<Tuple2<K,V>, Tuple2<K,R>> fun, String componentId, int parallelism);
 
     // return new WorkloadOperator<T>();
-    PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K,V>> fun, String componentId, boolean logThroughput);
-    PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K,V>> fun, String componentId);
+    PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K,V>> fun, String componentId, int parallelism, boolean logThroughput);
+    PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K,V>> fun, String componentId, int parallelism);
 
-    PairWorkloadOperator<K, V> reduce(ReduceFunction<Tuple2<K,V>> fun, String componentId, boolean logThroughput);
-    PairWorkloadOperator<K, V> reduce(ReduceFunction<Tuple2<K,V>> fun, String componentId);
+    PairWorkloadOperator<K, V> reduce(ReduceFunction<Tuple2<K,V>> fun, String componentId, int parallelism, boolean logThroughput);
+    PairWorkloadOperator<K, V> reduce(ReduceFunction<Tuple2<K,V>> fun, String componentId, int parallelism);
 
     void print();
 

@@ -25,9 +25,8 @@ public class MapToPairBolt<T, K, V> extends BaseBasicBolt {
         this.fun = function;
     }
 
-    public MapToPairBolt(MapPairFunction<T, K, V> function, Logger logger){
-        this.fun = function;
-        throughput = new Throughput(logger);
+    public void enableThroughput(String loggerName) {
+        this.throughput = new Throughput(loggerName);
     }
 
     @Override

@@ -26,9 +26,8 @@ public class MapValueBolt<V, R> extends BaseBasicBolt {
         this.fun = function;
     }
 
-    public MapValueBolt(MapFunction<V, R> function, Logger logger){
-        this(function);
-        this.throughput = new Throughput(logger);
+    public void enableThroughput(String loggerName) {
+        this.throughput = new Throughput(loggerName);
     }
 
     @Override
