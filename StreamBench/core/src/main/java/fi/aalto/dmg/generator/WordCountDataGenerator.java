@@ -17,7 +17,7 @@ import java.util.Properties;
  */
 public class WordCountDataGenerator {
     private static final Logger logger = Logger.getLogger(WordCountDataGenerator.class);
-    private static int SENTENCE_NUM = 1000000;
+    private static long SENTENCE_NUM = 1000000;
     private static int ZIPF_SIZE = 10000;
     private static double ZIPF_EXPONENT = 1;
     private static String TOPIC = "WordCount";
@@ -48,8 +48,7 @@ public class WordCountDataGenerator {
         FastZipfGenerator zipfGenerator = new FastZipfGenerator(ZIPF_SIZE, ZIPF_EXPONENT);
         Throughput throughput = new Throughput("WordCountDataGenerator");
         // for loop to generate message
-        long sent_sentences = 0;
-        for (int i = 0; i < SENTENCE_NUM; ++i) {
+        for (long sent_sentences = 0; sent_sentences < SENTENCE_NUM; ++sent_sentences) {
             double sentence_length = messageGenerator.nextGaussian(10, 1);
             StringBuilder messageBuilder = new StringBuilder();
             for(int l = 0; l < 10; ++l){
@@ -61,8 +60,8 @@ public class WordCountDataGenerator {
             throughput.execute();
             ProducerRecord<String, String> newRecord = new ProducerRecord<String, String>(TOPIC, messageBuilder.toString());
             producer.send(newRecord);
-            sent_sentences++;
 
+            // control data generate speed
             if(sent_sentences%SLEEP_FREQUENCY == 0) {
                 Thread.sleep(1);
             }
