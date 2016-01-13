@@ -26,7 +26,7 @@ public class FasterWordCount extends Workload implements Serializable {
     public void Process() throws WorkloadException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         try {
 
-            WorkloadOperator<String> operator = kafkaStreamOperator();
+            WorkloadOperator<String> operator = kafkaStreamOperator("source");
             PairWorkloadOperator<String, WithTime<Integer>> counts =
                     operator.flatMapToPair(UserFunctions.flatMapToPairAddTime, "splitter", parallelism)
                             .reduceByKey(UserFunctions.sumReduceWithTime, "sum", parallelism, true)

@@ -47,6 +47,7 @@ public class SparkOperatorCreater extends OperatorCreator implements Serializabl
                                                                                    String group,
                                                                                    String topics,
                                                                                    String offset,
+                                                                                   String componentId,
                                                                                    int parallelism) {
         HashSet<String> topicsSet = new HashSet<>(Arrays.asList(topics.split(",")));
         HashMap<String, String> kafkaParams = new HashMap<>();
@@ -70,7 +71,13 @@ public class SparkOperatorCreater extends OperatorCreator implements Serializabl
     }
 
     @Override
-    public WorkloadOperator<String> createOperatorFromKafka(String zkConStr, String kafkaServers, String group, String topics, String offset, int parallelism) {
+    public WorkloadOperator<String> createOperatorFromKafka(String zkConStr,
+                                                            String kafkaServers,
+                                                            String group,
+                                                            String topics,
+                                                            String offset,
+                                                            String componentId,
+                                                            int parallelism) {
         HashSet<String> topicsSet = new HashSet<>(Arrays.asList(topics.split(",")));
         HashMap<String, String> kafkaParams = new HashMap<>();
         kafkaParams.put("metadata.broker.list", kafkaServers);

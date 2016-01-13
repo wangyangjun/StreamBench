@@ -9,6 +9,8 @@ import backtype.storm.tuple.Values;
 import fi.aalto.dmg.frame.functions.AssignTimeFunction;
 import fi.aalto.dmg.util.TimeDurations;
 import fi.aalto.dmg.util.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.Tuple2;
 import scala.Tuple3;
 
@@ -20,6 +22,7 @@ import java.util.LinkedList;
  * Created by jun on 17/11/15.
  */
 public class JoinBolt<K,V,R> extends BaseBasicBolt {
+    private static final Logger logger = LoggerFactory.getLogger(JoinBolt.class);
 
     private static final long serialVersionUID = 4820980147212849642L;
     private String component1;
@@ -58,6 +61,7 @@ public class JoinBolt<K,V,R> extends BaseBasicBolt {
         this(component1, windowDuration1, component2, windowDuration2);
         this.eventTimeAssigner1 = eventTimeAssigner1;
         this.eventTimeAssigner2 = eventTimeAssigner2;
+        logger.error("New JoinBolt!");
     }
 
     @Override
@@ -65,6 +69,7 @@ public class JoinBolt<K,V,R> extends BaseBasicBolt {
         // get current time
         long currentTime = System.currentTimeMillis();
         if(tuple.getSourceComponent().equals(this.component1)){
+
             K key = (K)tuple.getValue(0);
             V value = (V)tuple.getValue(1);
             if(null != this.eventTimeAssigner1) {
@@ -89,6 +94,7 @@ public class JoinBolt<K,V,R> extends BaseBasicBolt {
                 dataContainer2.removeFirst();
             }
         } else {
+
             K key = (K)tuple.getValue(0);
             R value = (R)tuple.getValue(1);
             if(null != this.eventTimeAssigner2) {
@@ -103,7 +109,9 @@ public class JoinBolt<K,V,R> extends BaseBasicBolt {
                 // clean expired data
                 if(element1._1()+component1_window_milliseconds<currentTime){
                     expiredDataNum++;
+                    logger.error("expired");
                 } else if( element1._2().equals(key)){
+                    logger.error("emit");
                     collector.emit(new Values(key, new Tuple2<V,R>(element1._3(), value)));
                     break;
                 }

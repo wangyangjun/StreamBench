@@ -26,7 +26,13 @@ public class FlinkOperatorCreator extends OperatorCreator {
     }
 
     @Override
-    public WorkloadOperator<WithTime<String>> createOperatorFromKafkaWithTime(String zkConStr, String kafkaServers, String group, String topics, String offset, int parallelism) {
+    public WorkloadOperator<WithTime<String>> createOperatorFromKafkaWithTime(String zkConStr,
+                                                                              String kafkaServers,
+                                                                              String group,
+                                                                              String topics,
+                                                                              String offset,
+                                                                              String componentId,
+                                                                              int parallelism) {
         /*
         * Note that the Kafka source is expecting the following parameters to be set
         *  - "bootstrap.servers" (comma separated list of kafka brokers)
@@ -55,7 +61,13 @@ public class FlinkOperatorCreator extends OperatorCreator {
     }
 
     @Override
-    public WorkloadOperator<String> createOperatorFromKafka(String zkConStr, String kafkaServers, String group, String topics, String offset, int parallelism) {
+    public WorkloadOperator<String> createOperatorFromKafka(String zkConStr,
+                                                            String kafkaServers,
+                                                            String group,
+                                                            String topics,
+                                                            String offset,
+                                                            String componentId,
+                                                            int parallelism) {
         Properties properties = new Properties();
         properties.put("bootstrap.servers", kafkaServers);
         properties.put("zookeeper.connect", zkConStr);

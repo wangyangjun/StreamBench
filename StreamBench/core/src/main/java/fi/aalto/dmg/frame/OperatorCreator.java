@@ -28,6 +28,7 @@ abstract public class OperatorCreator implements Serializable {
                                                                                String group,
                                                                                String topics,
                                                                                String offset,
+                                                                               String componentId,
                                                                                int parallelism);
 
     abstract public WorkloadOperator<String> createOperatorFromKafka(String zkConStr,
@@ -35,6 +36,7 @@ abstract public class OperatorCreator implements Serializable {
                                                                                String group,
                                                                                String topics,
                                                                                String offset,
+                                                                               String componentId,
                                                                                int parallelism);
 
     /**

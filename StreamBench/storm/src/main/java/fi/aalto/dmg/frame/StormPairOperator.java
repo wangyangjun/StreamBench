@@ -166,7 +166,7 @@ public class StormPairOperator<K, V> implements PairWorkloadOperator<K,V> {
 
         if(joinStream instanceof StormPairOperator){
             StormPairOperator<K,R> joinStormStream = (StormPairOperator<K,R>)joinStream;
-            topologyBuilder.setBolt(componentId, new JoinBolt<>(componentId, windowDuration, joinStormStream.preComponentId, joinWindowDuration))
+            topologyBuilder.setBolt(componentId, new JoinBolt<>(this.preComponentId, windowDuration, joinStormStream.preComponentId, joinWindowDuration))
                     .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField))
                     .fieldsGrouping(joinStormStream.preComponentId, new Fields(BoltConstants.OutputKeyField));
             return new StormPairOperator<>(topologyBuilder, componentId);
@@ -182,7 +182,7 @@ public class StormPairOperator<K, V> implements PairWorkloadOperator<K,V> {
         if(joinStream instanceof StormPairOperator){
             StormPairOperator<K,R> joinStormStream = (StormPairOperator<K,R>)joinStream;
             topologyBuilder
-                .setBolt(componentId, new JoinBolt<>(componentId, windowDuration,
+                .setBolt(componentId, new JoinBolt<>(this.preComponentId, windowDuration,
                     joinStormStream.preComponentId, joinWindowDuration,
                     eventTimeAssigner1, eventTimeAssigner2))
                 .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField))

@@ -35,7 +35,7 @@ public class WordCount extends Workload implements Serializable{
     public void Process() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         try {
 
-            WorkloadOperator<WithTime<String>> operator = kafkaStreamOperatorWithTime();
+            WorkloadOperator<WithTime<String>> operator = kafkaStreamOperatorWithTime("source");
             PairWorkloadOperator<String, WithTime<Integer>> counts =
                     operator.flatMap(UserFunctions.splitFlatMapWithTime, "splitter", parallelism)
                             .mapToPair(UserFunctions.mapToStrIntPairWithTime, "pair", parallelism)

@@ -38,11 +38,11 @@ public class ClickedAdvertisement extends Workload implements Serializable {
     public void Process() throws WorkloadException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         try {
 
-            PairWorkloadOperator<String, Long> advertisements = kafkaStreamOperator()
+            PairWorkloadOperator<String, Long> advertisements = kafkaStreamOperator("advertisement")
                     .mapToPair(UserFunctions.mapToStringLongPair, "Extractor", parallelism);
-            PairWorkloadOperator<String, Long> clicks = kafkaStreamOperator2()
+            PairWorkloadOperator<String, Long> clicks = kafkaStreamOperator2("click")
                     .mapToPair(UserFunctions.mapToStringLongPair, "Extractor2", parallelism );
-
+//            clicks.print();
             PairWorkloadOperator<String, Tuple2<Long, Long>> clicksWithCreatTime = advertisements.join(
                     "Join",
                     clicks,

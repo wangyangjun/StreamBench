@@ -47,7 +47,7 @@ abstract public class Workload implements Serializable{
     }
     protected OperatorCreator getOperatorCreator(){ return operatorCreator; }
 
-    protected WorkloadOperator<WithTime<String>> kafkaStreamOperatorWithTime(){
+    protected WorkloadOperator<WithTime<String>> kafkaStreamOperatorWithTime(String componentId){
         String topic = this.getProperties().getProperty("topic");
         String groupId = this.getProperties().getProperty("group.id");
         String kafkaServers = this.getProperties().getProperty("bootstrap.servers");
@@ -55,10 +55,10 @@ abstract public class Workload implements Serializable{
         String offset = this.getProperties().getProperty("auto.offset.reset");
 
         return this.getOperatorCreator().createOperatorFromKafkaWithTime(zkConnectStr,
-                kafkaServers, groupId, topic, offset, parallelism);
+                kafkaServers, groupId, topic, offset, componentId, parallelism);
     }
 
-    protected WorkloadOperator<String> kafkaStreamOperator(){
+    protected WorkloadOperator<String> kafkaStreamOperator(String componentId){
         String topic = this.getProperties().getProperty("topic");
         String groupId = this.getProperties().getProperty("group.id");
         String kafkaServers = this.getProperties().getProperty("bootstrap.servers");
@@ -66,10 +66,10 @@ abstract public class Workload implements Serializable{
         String offset = this.getProperties().getProperty("auto.offset.reset");
 
         return this.getOperatorCreator().createOperatorFromKafka(zkConnectStr,
-                kafkaServers, groupId, topic, offset, parallelism);
+                kafkaServers, groupId, topic, offset, componentId, parallelism);
     }
 
-    protected WorkloadOperator<String> kafkaStreamOperator2(){
+    protected WorkloadOperator<String> kafkaStreamOperator2(String componentId){
         String topic = this.getProperties().getProperty("topic2");
         String groupId = this.getProperties().getProperty("group.id");
         String kafkaServers = this.getProperties().getProperty("bootstrap.servers");
@@ -77,7 +77,7 @@ abstract public class Workload implements Serializable{
         String offset = this.getProperties().getProperty("auto.offset.reset");
 
         return this.getOperatorCreator().createOperatorFromKafka(zkConnectStr,
-                kafkaServers, groupId, topic, offset, parallelism);
+                kafkaServers, groupId, topic, offset, componentId, parallelism);
     }
 
     public void Start(){
