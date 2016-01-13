@@ -147,16 +147,17 @@ public class StreamJoinOperator<K, IN1, IN2, OUT>
     private void processWatermark(long watermark) throws Exception{
         if(setProcessingTime)
             return;
-        // process elements after current watermark1 and lower than mark
+        // process elements after currentWatermark and lower than watermark
         for (StreamRecord<IN1> record1 : stream1Buffer.getElements()) {
             if(record1.getTimestamp() >= this.currentWatermark
                     && record1.getTimestamp() < watermark){
                 for (StreamRecord<IN2> record2 : stream2Buffer.getElements()) {
-                    if(keySelector1.getKey(record1.getValue()).equals(keySelector2.getKey(record2.getValue())))
-                        if(record1.getTimestamp() >= record2.getTimestamp()
-                                && record2.getTimestamp() + this.stream2WindowLength >= record1.getTimestamp()){
+                    if(keySelector1.getKey(record1.getValue()).equals(keySelector2.getKey(record2.getValue()))) {
+                        if (record1.getTimestamp() >= record2.getTimestamp()
+                                && record2.getTimestamp() + this.stream2WindowLength >= record1.getTimestamp()) {
                             output.collect(new StreamRecord<>(userFunction.join(record1.getValue(), record2.getValue())));
                         }
+                    }
                 }
             }
         }
@@ -165,11 +166,12 @@ public class StreamJoinOperator<K, IN1, IN2, OUT>
             if(record2.getTimestamp() >= this.currentWatermark
                     && record2.getTimestamp() < watermark){
                 for (StreamRecord<IN1> record1 : stream1Buffer.getElements()) {
-                    if(keySelector1.getKey(record1.getValue()).equals(keySelector2.getKey(record2.getValue())))
-                        if(record2.getTimestamp() > record1.getTimestamp()
-                                && record1.getTimestamp() + this.stream1WindowLength >= record2.getTimestamp()){
+                    if(keySelector1.getKey(record1.getValue()).equals(keySelector2.getKey(record2.getValue()))) {
+                        if (record2.getTimestamp() > record1.getTimestamp()
+                                && record1.getTimestamp() + this.stream1WindowLength >= record2.getTimestamp()) {
                             output.collect(new StreamRecord<>(userFunction.join(record1.getValue(), record2.getValue())));
                         }
+                    }
                 }
             }
         }
@@ -196,7 +198,6 @@ public class StreamJoinOperator<K, IN1, IN2, OUT>
 
     @Override
     public void processWatermark1(Watermark mark) throws Exception {
-        LOG.error("Watermark");
 
         long watermark = Math.min(mark.getTimestamp(), currentWatermark2);
         // process elements [currentWatermark, watermark)
@@ -209,7 +210,6 @@ public class StreamJoinOperator<K, IN1, IN2, OUT>
 
     @Override
     public void processWatermark2(Watermark mark) throws Exception {
-        LOG.error("Watermark");
 
         long watermark = Math.min(mark.getTimestamp(), currentWatermark1);
         // process elements [currentWatermark, watermark)

@@ -41,7 +41,7 @@ public class FlinkOperatorCreator extends OperatorCreator {
         properties.put("group.id", group);
         properties.put("topic", topics);
         properties.put("auto.commit.enable", false);
-        properties.put("auto.offset.reset", "earliest");
+        properties.put("auto.offset.reset", "offset");
 
         DataStream<String> stream = env
                 .addSource(new FlinkKafkaConsumer082<String>(topics, new SimpleStringSchema(), properties));

@@ -49,6 +49,11 @@ public class NoWindowJoinedStreams<IN1, IN2> {
         return new Where<>(input1.clean(keySelector), keyType);
     }
 
+    // TODO: tmp solution for InvalidTypesException
+    public <KEY> Where<KEY> where(KeySelector<IN1, KEY> keySelector, TypeInformation<KEY> keyType)  {
+        return new Where<>(input1.clean(keySelector), keyType);
+    }
+
     // ------------------------------------------------------------------------
 
     /**
@@ -65,7 +70,9 @@ public class NoWindowJoinedStreams<IN1, IN2> {
             this.keySelector1 = keySelector1;
             this.keyType = keyType;
             if (!(input1 instanceof KeyedStream)) {
-                input1 = input1.keyBy(keySelector1);
+                // TODO: tmp solution for InvalidTypesException
+//                input1 = input1.keyBy(keySelector1);
+                input1 = new KeyedStream<>(input1, keySelector1, keyType);
             }
         }
 
@@ -101,6 +108,15 @@ public class NoWindowJoinedStreams<IN1, IN2> {
                 return new EqualTo(input2.clean(keySelector));
             }
 
+            // TODO: tmp solution for InvalidTypesException
+            public EqualTo equalTo(KeySelector<IN2, KEY> keySelector, TypeInformation<KEY> otherKey) {
+                if (!otherKey.equals(this.keyType)) {
+                    throw new IllegalArgumentException("The keys for the two inputs are not equal: " +
+                            "first key = " + this.keyType + " , second key = " + otherKey);
+                }
+
+                return new EqualTo(input2.clean(keySelector));
+            }
             // --------------------------------------------------------------------
 
             /**
@@ -113,7 +129,9 @@ public class NoWindowJoinedStreams<IN1, IN2> {
                 EqualTo(KeySelector<IN2, KEY> keySelector2) {
                     this.keySelector2 = requireNonNull(keySelector2);
                     if(!(input2 instanceof KeyedStream)){
-                        input2 = input2.keyBy(keySelector2);
+//                        input2 = input2.keyBy(keySelector2);
+                        // TODO: tmp solution for InvalidTypesException
+                        input2 = new KeyedStream<>(input2, keySelector2, keyType);
                     }
                 }
 

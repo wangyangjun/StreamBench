@@ -48,13 +48,13 @@ public class AdvClickDataGenerator {
             producer = Generator.createProducer();
         }
         // for loop to generate advertisement
-        for (long i = 0; i < ADV_NUM; ++i) {
+        for (long i = 0; i < 100; ++i) {
             // advertisement id
             String advId = UUID.randomUUID().toString();
             long timestamp = System.currentTimeMillis();
             // TODO: write to kafka topic
             // write (t, advId) to kafka or wait t then write advId to kafka?
-            producer.send(new ProducerRecord<String, String>(ADV_TOPIC, String.format("%d\t%s", timestamp, advId)));
+            producer.send(new ProducerRecord<>(ADV_TOPIC, advId, String.format("%d\t%s", timestamp, advId)));
 //            System.out.println(timestamp + "\t" + advId);
             throughput.execute();
             // whether customer clicked this advertisement
@@ -93,8 +93,8 @@ public class AdvClickDataGenerator {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            long timestamp = System.currentTimeMillis();
-            producer.send(new ProducerRecord<String, String>(CLICK_TOPIC, String.format("%d\t%s", timestamp, advId)));
+            producer.send(new ProducerRecord<>(CLICK_TOPIC, advId,
+                    String.format("%d\t%s", System.currentTimeMillis(), advId)));
 //            System.out.println("Clicked: " + timestamp + "\t" + advId);
         }
     }

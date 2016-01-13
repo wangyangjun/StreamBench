@@ -32,82 +32,89 @@ public class SparkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput) {
-        return reduceByKey(fun, componentId);
+    public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId, int parallelism, boolean logThroughput) {
+        return reduceByKey(fun, componentId, parallelism);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduceByKey(final ReduceFunction<V> fun, String componentId) {
+    public PairWorkloadOperator<K, V> reduceByKey(final ReduceFunction<V> fun, String componentId, int parallelism) {
         JavaPairDStream<K,V> newStream = pairDStream.reduceByKey(new ReduceFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(newStream);
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<V, R> fun, String componentId, boolean logThroughput) {
-        return mapValue(fun, componentId);
+    public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<V, R> fun, String componentId, int parallelism, boolean logThroughput) {
+        return mapValue(fun, componentId, parallelism);
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<V, R> fun, String componentId) {
+    public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<V, R> fun, String componentId, int parallelism) {
         JavaPairDStream<K,R> newStream = pairDStream.mapValues(new FunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(newStream);
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> flatMapValue(FlatMapFunction<V, R> fun, String componentId, boolean logThroughput) {
-        return flatMapValue(fun, componentId);
+    public <R> PairWorkloadOperator<K, R> flatMapValue(FlatMapFunction<V, R> fun, String componentId, int parallelism, boolean logThroughput) {
+        return flatMapValue(fun, componentId, parallelism);
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> flatMapValue(FlatMapFunction<V, R> fun, String componentId) {
+    public <R> PairWorkloadOperator<K, R> flatMapValue(FlatMapFunction<V, R> fun, String componentId, int parallelism) {
         JavaPairDStream<K,R> newStream = pairDStream.flatMapValues(new FlatMapValuesFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(newStream);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId, boolean logThroughput) {
-        return filter(fun, componentId);
+    public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId, int parallelism,
+                                             boolean logThroughput) {
+        return filter(fun, componentId, parallelism);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId) {
+    public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId, int parallelism) {
         JavaPairDStream<K,V> newStream = pairDStream.filter(new FilterFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(newStream);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> iterative(MapFunction<V, V> mapFunction, FilterFunction<Tuple2<K, V>> iterativeFunction, String componentId) {
+    public PairWorkloadOperator<K, V> iterative(MapFunction<V, V> mapFunction, FilterFunction<Tuple2<K, V>> iterativeFunction,
+                                                String componentId, int parallelism) {
         return null;
     }
 
     @Override
-    public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput) {
-        return updateStateByKey(fun, componentId);
+    public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId,
+                                                       int parallelism, boolean logThroughput) {
+        return updateStateByKey(fun, componentId, parallelism);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> updateStateByKey(final ReduceFunction<V> fun, String componentId) {
+    public PairWorkloadOperator<K, V> updateStateByKey(final ReduceFunction<V> fun, String componentId, int parallelism) {
         JavaPairDStream<K, V> cumulateStream = pairDStream.updateStateByKey(new UpdateStateFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(cumulateStream);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration, boolean logThroughput) {
-        return reduceByKeyAndWindow(fun, componentId, windowDuration);
+    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, int parallelism,
+                                                           TimeDurations windowDuration, boolean logThroughput) {
+        return reduceByKeyAndWindow(fun, componentId, parallelism, windowDuration);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration) {
-        return reduceByKeyAndWindow(fun, componentId, windowDuration, windowDuration);
+    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, int parallelism,
+                                                           TimeDurations windowDuration) {
+        return reduceByKeyAndWindow(fun, componentId, parallelism, windowDuration, windowDuration);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration, TimeDurations slideDuration, boolean logThroughput) {
-        return reduceByKeyAndWindow(fun, componentId, windowDuration, slideDuration);
+    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, int parallelism,
+                                                           TimeDurations windowDuration, TimeDurations slideDuration, boolean logThroughput) {
+        return reduceByKeyAndWindow(fun, componentId, parallelism, windowDuration, slideDuration);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration, TimeDurations slideDuration) {
+    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, int parallelism,
+                                                           TimeDurations windowDuration, TimeDurations slideDuration) {
         Duration windowDurations = Utils.timeDurationsToSparkDuration(windowDuration);
         Duration slideDurations = Utils.timeDurationsToSparkDuration(slideDuration);
         JavaPairDStream<K, V> accumulateStream = pairDStream.reduceByKeyAndWindow(new ReduceFunctionImpl<V>(fun), windowDurations, slideDurations);
@@ -193,7 +200,7 @@ public class SparkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
     }
 
     @Override
-    public void sink() {
+    public void sink(int parallelism) {
 //        this.pairDStream = this.pairDStream.filter(new PairLatencySinkFunction<K,V>());
         this.pairDStream.print();
     }

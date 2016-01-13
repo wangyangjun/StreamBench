@@ -69,6 +69,17 @@ abstract public class Workload implements Serializable{
                 kafkaServers, groupId, topic, offset, parallelism);
     }
 
+    protected WorkloadOperator<String> kafkaStreamOperator2(){
+        String topic = this.getProperties().getProperty("topic2");
+        String groupId = this.getProperties().getProperty("group.id");
+        String kafkaServers = this.getProperties().getProperty("bootstrap.servers");
+        String zkConnectStr = this.getProperties().getProperty("zookeeper.connect");
+        String offset = this.getProperties().getProperty("auto.offset.reset");
+
+        return this.getOperatorCreator().createOperatorFromKafka(zkConnectStr,
+                kafkaServers, groupId, topic, offset, parallelism);
+    }
+
     public void Start(){
         logger.info("Start workload: " + this.getClass().getSimpleName());
         try {

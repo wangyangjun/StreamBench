@@ -20,7 +20,7 @@ public class SparkGroupedWorkloadOperator<K,V> implements GroupedWorkloadOperato
     }
 
     @Override
-    public SparkPairWorkloadOperator<K, V> reduce(final ReduceFunction<V> fun, String componentId) {
+    public SparkPairWorkloadOperator<K, V> reduce(final ReduceFunction<V> fun, String componentId, int parallelism) {
         JavaPairDStream<K,V> newStream = this.pairDStream.mapToPair(new GrouperPairFunctionImpl<K,V>(fun));
         return new SparkPairWorkloadOperator<>(newStream);
     }

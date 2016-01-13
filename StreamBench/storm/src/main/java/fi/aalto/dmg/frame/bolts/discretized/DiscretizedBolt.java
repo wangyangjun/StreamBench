@@ -42,6 +42,8 @@ public abstract class DiscretizedBolt extends BaseBasicBolt {
 
     /**
      * Including logic of determining the end of one slide
+     * Before process the slide, all tick tuples of last component(one for each node) must be received
+     *
      * @param tuple
      * @param collector
      */

@@ -19,7 +19,7 @@ public class App
     public static void main( String[] args ) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
 
         logger.warn("Start...");
-        String[] testArgs = {"WordCount"}; // WordCount WordCountGrouping WordCountWindowed FasterWordCount
+        String[] testArgs = {"ClickedAdvertisement"}; // WordCount WordCountWindowed FasterWordCount, ClickedAdvertisement
         BenchStarter.main(testArgs);
 
     }

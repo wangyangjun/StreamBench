@@ -18,6 +18,9 @@ import java.util.Map;
 
 /**
  * Created by jun on 11/12/15.
+ *
+ * Implement window operation for Storm
+ *
  */
 public abstract class WindowedBolt extends BaseBasicBolt {
 
@@ -27,7 +30,8 @@ public abstract class WindowedBolt extends BaseBasicBolt {
 
     // slides id emit to next component 0,1,2
     protected static int BUFFER_SLIDES_NUM = 3;
-    protected static int slideIndexInBuffer = 0;
+    // slideIndexInBuffer couldn't be static, each worker should has its own slideIndexInBuffer
+    protected int slideIndexInBuffer = 0;
 
     // Slides number in a window
     protected int WINDOW_SIZE;

@@ -18,6 +18,8 @@ import java.io.Serializable;
 
 /**
  * Created by jun on 20/11/15.
+ * Test for InvalidTypesException
+ * Get type information from scala.Tuple2<K,V>
  */
 public class InvalidTypesExceptionTest {
     public static void main(String[] args) throws Exception {
@@ -32,9 +34,9 @@ public class InvalidTypesExceptionTest {
                 .socketTextStream("localhost", 9999)
                 .flatMap(new Splitter2());
 //
-        KeyedStream<Tuple2<String, Integer>, String> keyedStream = groupByKey(pairs, String.class);
+        KeyedStream<Tuple2<String, Integer>, String> keyedStream = groupByKey(pairs);
 //
-//        keyedStream.print();
+        keyedStream.print();
         env.execute("Socket Stream WordCount");
     }
 
@@ -65,7 +67,7 @@ public class InvalidTypesExceptionTest {
         });
     }
 
-    public static <K,V> KeyedStream<Tuple2<K,V>,K> groupByKey(DataStream<Tuple2<K,V>> dataStream, Class<K> keyClass) {
+    public static <K,V> KeyedStream<Tuple2<K,V>,K> groupByKey(DataStream<Tuple2<K,V>> dataStream) {
         KeySelector<Tuple2<K, V>, K> keySelector = new KeySelector<Tuple2<K, V>, K>() {
             @Override
             public K getKey(Tuple2<K, V> value) throws Exception {
@@ -82,6 +84,7 @@ public class InvalidTypesExceptionTest {
 //        BasicTypeInfo.STRING_TYPE_INFO
 //        TypeInformation<K> keyTypeInfo = TypeExtractor.getKeySelectorTypes(keySelector, dataStream.getType());
         TypeInformation<K> keyTypeInfo = TypeExtractor.getUnaryOperatorReturnType(keySelector2, KeySelector.class, false, false, dataStream.getType(), null ,false);
+
         KeyedStream<Tuple2<K, V>, K> keyedStream = new KeyedStream<>(dataStream, keySelector, keyTypeInfo);
         return keyedStream;
     }

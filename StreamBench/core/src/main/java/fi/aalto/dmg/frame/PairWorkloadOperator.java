@@ -55,6 +55,17 @@ public interface PairWorkloadOperator<K, V> extends Serializable{
 
     PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, int parallelism,
                                                     TimeDurations windowDuration, TimeDurations slideDuration, boolean logThroughput);
+
+    /**
+     * Pre-aggregation -> key group -> reduce
+     * @param fun
+     *      reduce function
+     * @param componentId
+     * @param parallelism
+     * @param windowDuration
+     * @param slideDuration
+     * @return
+     */
     PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, int parallelism,
                                                     TimeDurations windowDuration, TimeDurations slideDuration);
 
@@ -81,7 +92,7 @@ public interface PairWorkloadOperator<K, V> extends Serializable{
 
     /**
      * Join two pair streams which have the same type of key -- K base on event time
-     * @param stream2
+     * @param joinStream
      *          the other stream<K,R>
      * @param windowDuration
      *          window length of this stream
@@ -96,7 +107,7 @@ public interface PairWorkloadOperator<K, V> extends Serializable{
      * @return joined stream
      */
     <R> PairWorkloadOperator<K, Tuple2<V,R>> join(
-            String componentId, PairWorkloadOperator<K,R> stream2,
+            String componentId, PairWorkloadOperator<K,R> joinStream,
             TimeDurations windowDuration, TimeDurations windowDuration2,
             AssignTimeFunction<V> eventTimeAssigner1, AssignTimeFunction<R> eventTimeAssigner2) throws WorkloadException;
 
