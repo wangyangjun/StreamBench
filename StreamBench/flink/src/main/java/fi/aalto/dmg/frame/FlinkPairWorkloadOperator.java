@@ -20,6 +20,7 @@ import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.*;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.AscendingTimestampExtractor;
+import org.apache.flink.streaming.api.functions.TimestampExtractor;
 import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 import org.apache.flink.streaming.api.operators.PreaggregationReduce;
 import org.apache.flink.streaming.api.windowing.time.Time;
@@ -345,10 +346,31 @@ public class FlinkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
 
             DataStream<Tuple2<K,V>> dataStream1 = new KeyedStream<>(dataStream, keySelector1, keyTypeInfo);
             if(null != eventTimeAssigner1) {
-                final AscendingTimestampExtractor<Tuple2<K, V>> timestampExtractor1 = new AscendingTimestampExtractor<Tuple2<K, V>>() {
+//                final AscendingTimestampExtractor<Tuple2<K, V>> timestampExtractor1 = new AscendingTimestampExtractor<Tuple2<K, V>>() {
+//                    @Override
+//                    public long extractAscendingTimestamp(Tuple2<K, V> element, long currentTimestamp) {
+//                        return eventTimeAssigner1.assign(element._2());
+//                    }
+//                };
+                TimestampExtractor<Tuple2<K,V>> timestampExtractor1 = new TimestampExtractor<Tuple2<K, V>>() {
+                    long currentTimestamp = 0L;
                     @Override
-                    public long extractAscendingTimestamp(Tuple2<K, V> element, long currentTimestamp) {
-                        return eventTimeAssigner1.assign(element._2());
+                    public long extractTimestamp(Tuple2<K, V> kvTuple2, long l) {
+                        long timestamp = eventTimeAssigner1.assign(kvTuple2._2());
+                        if( timestamp > this.currentTimestamp) {
+                            this.currentTimestamp = timestamp;
+                        }
+                        return timestamp;
+                    }
+
+                    @Override
+                    public long extractWatermark(Tuple2<K, V> kvTuple2, long l) {
+                        return -9223372036854775808L;
+                    }
+
+                    @Override
+                    public long getCurrentWatermark() {
+                        return currentTimestamp - 500;
                     }
                 };
                 dataStream1 = dataStream1.assignTimestamps(timestampExtractor1);
@@ -356,10 +378,31 @@ public class FlinkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
 
             DataStream<Tuple2<K, R>> dataStream2 = new KeyedStream<>(joinFlinkStream.dataStream, keySelector2, keyTypeInfo);
             if(null != eventTimeAssigner2) {
-                final AscendingTimestampExtractor<Tuple2<K, R>> timestampExtractor2 = new AscendingTimestampExtractor<Tuple2<K, R>>() {
+//                final AscendingTimestampExtractor<Tuple2<K, R>> timestampExtractor2 = new AscendingTimestampExtractor<Tuple2<K, R>>() {
+//                    @Override
+//                    public long extractAscendingTimestamp(Tuple2<K, R> element, long currentTimestamp) {
+//                        return eventTimeAssigner2.assign(element._2());
+//                    }
+//                };
+                TimestampExtractor<Tuple2<K,R>> timestampExtractor2 = new TimestampExtractor<Tuple2<K, R>>() {
+                    long currentTimestamp = 0L;
                     @Override
-                    public long extractAscendingTimestamp(Tuple2<K, R> element, long currentTimestamp) {
-                        return eventTimeAssigner2.assign(element._2());
+                    public long extractTimestamp(Tuple2<K, R> kvTuple2, long l) {
+                        long timestamp = eventTimeAssigner2.assign(kvTuple2._2());
+                        if( timestamp > this.currentTimestamp) {
+                            this.currentTimestamp = timestamp;
+                        }
+                        return timestamp;
+                    }
+
+                    @Override
+                    public long extractWatermark(Tuple2<K, R> kvTuple2, long l) {
+                        return -9223372036854775808L;
+                    }
+
+                    @Override
+                    public long getCurrentWatermark() {
+                        return currentTimestamp - 500;
                     }
                 };
                 dataStream2 = dataStream2.assignTimestamps(timestampExtractor2);

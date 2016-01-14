@@ -8,7 +8,6 @@ import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import fi.aalto.dmg.frame.functions.AssignTimeFunction;
 import fi.aalto.dmg.util.TimeDurations;
-import fi.aalto.dmg.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.Tuple2;
@@ -85,6 +84,7 @@ public class JoinBolt<K,V,R> extends BaseBasicBolt {
                 if(element2._1()+component2_window_milliseconds<currentTime){
                     expiredDataNum++;
                 } else if( element2._2().equals(key)){
+                    logger.error("emit:" + currentTime);
                     collector.emit(new Values(key, new Tuple2<V,R>(value, element2._3())));
                     break;
                 }
@@ -111,7 +111,6 @@ public class JoinBolt<K,V,R> extends BaseBasicBolt {
                     expiredDataNum++;
                     logger.error("expired");
                 } else if( element1._2().equals(key)){
-                    logger.error("emit");
                     collector.emit(new Values(key, new Tuple2<V,R>(element1._3(), value)));
                     break;
                 }
