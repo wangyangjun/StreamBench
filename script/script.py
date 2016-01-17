@@ -26,21 +26,23 @@ if __name__ == "__main__":
 			# subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py jdk6"])
 			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py jdk7"])
 
-		# install storm
-		if 0 == p.wait():
-			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py storm"])
+		if node['kafka'] != True:
+			# install storm
+			if 0 == p.wait():
+				subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py storm"])
 
-		# install spark
-		# if 0 == p.wait():
-		# 	subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py spark"])
+			# install spark
+			if 0 == p.wait():
+				subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py spark"])
 
-		# install flink
-		if 0 == p.wait():
-			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py flink"])
+			# install flink
+			if 0 == p.wait():
+				subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py flink"])
 
-		# install kafka
-		if 0 == p.wait():
-			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py kafka " + str(node['borker_id'])])
+		if node['kafka'] == True:
+			# install kafka
+			if 0 == p.wait():
+				subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py kafka " + str(node['borker_id'])])
 
 		# hosts
 		subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/update-hosts.py"])

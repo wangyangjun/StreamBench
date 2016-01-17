@@ -1,23 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6d9a9d57-ef9e-4bb6-b667-e4deb25fdef8" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/statistics/PerformanceStreamingListener.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/spark/src/test/resources/log4j.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/flink/src/main/java/fi/aalto/dmg/frame/FlinkWorkloadOperator.java" afterPath="$PROJECT_DIR$/flink/src/main/java/fi/aalto/dmg/frame/FlinkWorkloadOperator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/flink/src/test/java/fi/aalto/dmg/JoinTest.java" afterPath="$PROJECT_DIR$/flink/src/test/java/fi/aalto/dmg/JoinTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/App.java" afterPath="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/App.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkOperatorCreater.java" afterPath="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkOperatorCreater.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkPairWorkloadOperator.java" afterPath="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkPairWorkloadOperator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkWindowedPairWorkloadOperator.java" afterPath="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkWindowedPairWorkloadOperator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkWindowedWorkloadOperator.java" afterPath="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkWindowedWorkloadOperator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkWorkloadOperator.java" afterPath="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkWorkloadOperator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/functions/PairFunctionImpl.java" afterPath="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/functions/PairFunctionImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/functions/PairLatencySinkFunction.java" afterPath="$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/functions/PairLatencySinkFunction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spark/src/test/java/fi/aalto/dmg/StreamingWordCount.java" afterPath="$PROJECT_DIR$/spark/src/test/java/fi/aalto/dmg/StreamingWordCount.java" />
-    </list>
+    <list default="true" id="6d9a9d57-ef9e-4bb6-b667-e4deb25fdef8" name="Default" comment="" />
     <ignored path="StreamBench.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -67,7 +51,7 @@
       <file leaf-file-name="SparkPairWorkloadOperator.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkPairWorkloadOperator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.39634147">
+            <state vertical-scroll-proportion="0.4817073">
               <caret line="202" column="0" selection-start-line="202" selection-start-column="0" selection-end-line="202" selection-end-column="0" />
               <folding>
                 <element signature="e#10176#10571#0" expanded="true" />
@@ -1776,7 +1760,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/spark/src/main/java/fi/aalto/dmg/frame/SparkPairWorkloadOperator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.39634147">
+        <state vertical-scroll-proportion="0.4817073">
           <caret line="202" column="0" selection-start-line="202" selection-start-column="0" selection-end-line="202" selection-end-column="0" />
           <folding>
             <element signature="e#10176#10571#0" expanded="true" />
