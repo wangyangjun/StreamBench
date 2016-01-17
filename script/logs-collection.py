@@ -16,14 +16,16 @@ if __name__ == "__main__":
 	if 'flink' == sys.argv[1]:	
 		subprocess.Popen('mkdir tmplogs', shell=True).wait()
 		for node in config['nodes']:
-			subprocess.Popen('scp ' + node['host'] + ':/usr/local/flink/log/*.log tmplogs/', shell=True).wait()
+			if node['kafka'] != True:
+				subprocess.Popen('scp ' + node['host'] + ':/usr/local/flink/log/*.log tmplogs/', shell=True).wait()
 		subprocess.Popen('tar cvf ' + sys.argv[2] + ' tmplogs/*', shell=True).wait()
 		subprocess.Popen('rm -rf tmplogs', shell=True)
 	elif 'storm' == sys.argv[1]:
 		subprocess.Popen('mkdir tmplogs', shell=True).wait()
 		for node in config['nodes']:
-			for port in storm_ports:
-				subprocess.Popen('scp ' + node['host'] + ':/usr/local/storm/logs/*'+port+'.log ' \
-					+ 'tmplogs/' + node['host']+port+'.log', shell=True).wait()
+			if node['kafka'] != True:
+				for port in storm_ports:
+					subprocess.Popen('scp ' + node['host'] + ':/usr/local/storm/logs/*'+port+'.log ' \
+						+ 'tmplogs/' + node['host']+port+'.log', shell=True).wait()
 		subprocess.Popen('tar cvf ' + sys.argv[2] + ' tmplogs/*', shell=True).wait()
 		subprocess.Popen('rm -rf tmplogs', shell=True).wait()
