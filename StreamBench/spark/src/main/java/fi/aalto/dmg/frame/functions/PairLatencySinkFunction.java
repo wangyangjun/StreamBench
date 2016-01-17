@@ -16,7 +16,7 @@ public class PairLatencySinkFunction<K,V> implements Function<Tuple2<K, V>, Bool
     private Latency latency;
 
     public PairLatencySinkFunction(){
-        latency = new Latency(logger);
+        latency = new Latency(PairLatencySinkFunction.class.getSimpleName());
     }
 
     @Override

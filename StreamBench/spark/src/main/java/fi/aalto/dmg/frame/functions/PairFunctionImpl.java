@@ -10,19 +10,26 @@ import scala.Tuple2;
  */
 public class PairFunctionImpl<T,K,V> implements PairFunction<T,K,V>  {
     private static final long serialVersionUID = -1342161519291972356L;
-    private static final Logger logger = Logger.getLogger(PairFunctionImpl.class);
 
     private MapPairFunction<T,K,V> fun;
-    Throughput throughput;
+    private Throughput throughput;
+    private boolean enableThroughput;
 
     public PairFunctionImpl(MapPairFunction<T,K,V> function){
         fun = function;
-        throughput = new Throughput(logger);
+    }
+
+    public PairFunctionImpl(MapPairFunction<T,K,V> function, boolean enableThroughput){
+        this(function);
+        this.enableThroughput = enableThroughput;
+        throughput = new Throughput(PairFunctionImpl.class.getSimpleName());
     }
 
     @Override
     public Tuple2<K, V> call(T t) throws Exception {
-        throughput.execute();
+        if(enableThroughput) {
+            throughput.execute();
+        }
         return fun.mapToPair(t);
     }
 }

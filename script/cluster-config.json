@@ -7,33 +7,81 @@
 			"kafka": true,
 			"borker_id": 0
 		},{
-			"ip": "192.168.1.30",
+			"ip": "192.168.1.34",
 			"host": "kafka1",
 			"hostname": "kafka1.novalocal",
 			"master": false,
 			"kafka": true,
 			"borker_id": 1
 		},{
-			"ip": "192.168.1.31",
+			"ip": "192.168.1.35",
 			"host": "kafka2",
 			"hostname": "kafka2.novalocal",
 			"master": false,
 			"kafka": true,
 			"borker_id": 2
 		},{
-			"ip": "192.168.1.32",
+			"ip": "192.168.1.36",
 			"host": "kafka3",
 			"hostname": "kafka3.novalocal",
 			"master": false,
 			"kafka": true,
 			"borker_id": 3
 		},{
-			"ip": "192.168.1.33",
+			"ip": "192.168.1.37",
 			"host": "kafka4",
 			"hostname": "kafka4.novalocal",
 			"master": false,
 			"kafka": true,
 			"borker_id": 4
+		},{
+			"ip": "192.168.1.38",
+			"host": "worker1",
+			"hostname": "worker1.novalocal",
+			"master": false,
+			"kafka": false
+		},{
+			"ip": "192.168.1.39",
+			"host": "worker2",
+			"hostname": "worker2.novalocal",
+			"master": false,
+			"kafka": false
+		},{
+			"ip": "192.168.1.40",
+			"host": "worker3",
+			"hostname": "worker3.novalocal",
+			"master": false,
+			"kafka": false
+		},{
+			"ip": "192.168.1.41",
+			"host": "worker4",
+			"hostname": "worker4.novalocal",
+			"master": false,
+			"kafka": false
+		},{
+			"ip": "192.168.1.42",
+			"host": "worker5",
+			"hostname": "worker5.novalocal",
+			"master": false,
+			"kafka": false
+		},{
+			"ip": "192.168.1.43",
+			"host": "worker6",
+			"hostname": "worker6.novalocal",
+			"master": false,
+			"kafka": false
+		},{
+			"ip": "192.168.1.44",
+			"host": "worker7",
+			"hostname": "worker7.novalocal",
+			"master": false,
+			"kafka": false
+		},{
+			"ip": "192.168.1.45",
+			"host": "worker8",
+			"hostname": "worker8.novalocal",
+			"master": false,
+			"kafka": false
 		}
 	]
 }

@@ -21,65 +21,94 @@ public class SparkWindowedPairWorkloadOperator<K,V> implements WindowedPairWorkl
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput) {
-        return reduceByKey(fun, componentId);
+    public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId,
+                                                  int parallelism,
+                                                  boolean logThroughput) {
+        return reduceByKey(fun, componentId, parallelism);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId) {
+    public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun,
+                                                  String componentId,
+                                                  int parallelism) {
         JavaPairDStream<K,V> newStream = this.pairDStream.reduceByKey(new ReduceFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(newStream);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput) {
-        return updateStateByKey(fun, componentId);
+    public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun,
+                                                       String componentId,
+                                                       int parallelism,
+                                                       boolean logThroughput) {
+        return updateStateByKey(fun, componentId, parallelism);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId) {
+    public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun,
+                                                       String componentId,
+                                                       int parallelism) {
         JavaPairDStream<K, V> cumulateStream = this.pairDStream.updateStateByKey(new UpdateStateFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(cumulateStream);
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId, boolean logThroughput) {
-        return mapPartition(fun, componentId);
+    public <R> PairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun,
+                                                       String componentId,
+                                                       int parallelism,
+                                                       boolean logThroughput) {
+        return mapPartition(fun, componentId, parallelism);
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId) {
+    public <R> PairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun,
+                                                       String componentId,
+                                                       int parallelism) {
         JavaPairDStream<K,R> newStream = pairDStream.mapPartitionsToPair(new PairMapPartitionFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(newStream);
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId, boolean logThroughput) {
-        return mapValue(fun, componentId);
+    public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun,
+                                                   String componentId,
+                                                   int parallelism,
+                                                   boolean logThroughput) {
+        return mapValue(fun, componentId, parallelism);
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun, String componentId) {
+    public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun,
+                                                   String componentId,
+                                                   int parallelism) {
         return null;
     }
 
     @Override
-    public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId, boolean logThroughput) {
-        return filter(fun, componentId);
+    public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun,
+                                             String componentId,
+                                             int parallelism,
+                                             boolean logThroughput) {
+        return filter(fun, componentId, parallelism);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId) {
+    public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun,
+                                             String componentId,
+                                             int parallelism) {
         return null;
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduce(ReduceFunction<Tuple2<K, V>> fun, String componentId, boolean logThroughput) {
-        return reduce(fun, componentId);
+    public PairWorkloadOperator<K, V> reduce(ReduceFunction<Tuple2<K, V>> fun,
+                                             String componentId,
+                                             int parallelism,
+                                             boolean logThroughput) {
+        return reduce(fun, componentId, parallelism);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduce(ReduceFunction<Tuple2<K, V>> fun, String componentId) {
+    public PairWorkloadOperator<K, V> reduce(ReduceFunction<Tuple2<K, V>> fun,
+                                             String componentId,
+                                             int parallelism) {
         return null;
     }
 

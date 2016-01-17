@@ -1,6 +1,7 @@
 package fi.aalto.dmg;
 
 import com.google.common.base.Optional;
+import fi.aalto.dmg.statistics.PerformanceStreamingListener;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.function.FlatMapFunction;
@@ -11,6 +12,7 @@ import org.apache.spark.streaming.Time;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
 import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
+import org.apache.spark.streaming.scheduler.StatsReportListener;
 import scala.Tuple2;
 
 import java.util.*;
@@ -23,6 +25,9 @@ public class StreamingWordCount {
         SparkConf conf = new SparkConf().setMaster("local[2]").setAppName("Stateful Network Word Count");
         JavaStreamingContext ssc = new JavaStreamingContext(conf, Durations.seconds(1));
         ssc.checkpoint("checkpoint");
+
+        ssc.addStreamingListener(new PerformanceStreamingListener());
+
 
         JavaReceiverInputDStream<String> lines = ssc.socketTextStream("127.0.0.1", 9999);
 

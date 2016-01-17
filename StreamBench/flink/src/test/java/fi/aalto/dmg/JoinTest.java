@@ -54,7 +54,7 @@ public class JoinTest implements Serializable{
 //                        return 0;
 //                    }
 //                });
-
+        gender.join().where()
         KeySelector<Tuple2<String,String>, String> keySelector2 = new KeySelector<Tuple2<String,String>, String>() {
             @Override
             public String getKey(Tuple2<String, String> value) throws Exception {

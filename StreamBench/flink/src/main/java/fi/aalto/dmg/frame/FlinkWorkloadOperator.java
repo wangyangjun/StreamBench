@@ -185,7 +185,9 @@ public class FlinkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
     }
 
     @Override
-    public <K, V> PairWorkloadOperator<K, V> flatMapToPair(FlatMapPairFunction<T, K, V> fun, String componentId, int parallelism) {
+    public <K, V> PairWorkloadOperator<K, V> flatMapToPair(FlatMapPairFunction<T, K, V> fun,
+                                                           String componentId,
+                                                           int parallelism) {
         return flatMapToPair(fun, componentId, parallelism, false);
     }
 

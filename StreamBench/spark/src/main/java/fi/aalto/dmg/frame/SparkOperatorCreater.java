@@ -1,5 +1,6 @@
 package fi.aalto.dmg.frame;
 
+import fi.aalto.dmg.statistics.PerformanceStreamingListener;
 import fi.aalto.dmg.util.WithTime;
 import kafka.serializer.StringDecoder;
 import org.apache.spark.SparkConf;
@@ -9,6 +10,8 @@ import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaPairInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka.KafkaUtils;
+import org.apache.spark.streaming.scheduler.StatsReportListener;
+import org.apache.spark.streaming.ui.StreamingJobProgressListener;
 import scala.Tuple2;
 
 import java.io.IOException;
@@ -107,6 +110,8 @@ public class SparkOperatorCreater extends OperatorCreator implements Serializabl
 
     @Override
     public void Start() {
+        jssc.addStreamingListener(new PerformanceStreamingListener());
+
         jssc.checkpoint("/tmp/log-analyzer-streaming");
         jssc.start();
         jssc.awaitTermination();
