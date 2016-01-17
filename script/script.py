@@ -26,7 +26,7 @@ if __name__ == "__main__":
 			# subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py jdk6"])
 			subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py jdk7"])
 
-		if node['kafka'] != True:
+		if node['kafka'] != True or node['master'] == True:
 			# install storm
 			if 0 == p.wait():
 				subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py storm"])
