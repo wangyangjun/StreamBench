@@ -21,7 +21,7 @@ if __name__ == "__main__":
 					print("Start nimbus in server " + node['ip'])
 					subprocess.Popen(['ssh', 'cloud-user@'+node['ip'], 'nohup /usr/local/storm/bin/storm nimbus&'])
 					# subprocess.call(['ssh', 'cloud-user@'+node['ip'], 'nohup /usr/local/storm/bin/storm ui&'])
-				else:
+				elif node['kafka'] != True:
 					print("Start supervisor in server " + node['ip'])
 					subprocess.Popen(['ssh', 'cloud-user@'+node['ip'], 'nohup /usr/local/storm/bin/storm supervisor&'])
 					
