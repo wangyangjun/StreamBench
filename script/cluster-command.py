@@ -23,12 +23,12 @@ if __name__ == "__main__":
 		config = json.load(open(path+'/cluster-config.json'))
 		if sys.argv[1] == 'all':
 			for node in config['nodes']:
-				subprocess.Popen(['ssh', 'cloud-user@'+node['ip'], sys.argv[1]])
+				subprocess.Popen(['ssh', 'cloud-user@'+node['ip'], sys.argv[2]])
 		elif sys.argv[1] == 'kafka':
 			for node in config['nodes']:
 				if node['kafka']:
-					subprocess.Popen(['ssh', 'cloud-user@'+node['ip'], sys.argv[1]])
+					subprocess.Popen(['ssh', 'cloud-user@'+node['ip'], sys.argv[2]])
 		elif sys.argv[1] == 'worker':
 			for node in config['nodes']:
 				if node['kafka'] == False:
-					subprocess.Popen(['ssh', 'cloud-user@'+node['ip'], sys.argv[1]])
+					subprocess.Popen(['ssh', 'cloud-user@'+node['ip'], sys.argv[2]])
