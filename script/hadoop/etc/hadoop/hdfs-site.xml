@@ -34,9 +34,14 @@
          <name>dfs.replication</name>
          <value>3</value>
      </property>
-     <property>       
+    <property>       
 		<name>dfs.http.address</name>
 		<value>http://master:50070</value>
-	 <description>Enter your NameNode hostname for http access.</description>
+	 	<description>Enter your NameNode hostname for http access.</description>
+	 </property>
+	<property>            
+		<name>dfs.secondary.http.address</name>
+		<value>http://master:50090</value>
+	 	<description>Enter your NameNode hostname for http access.</description>
 	</property>
 </configuration>
