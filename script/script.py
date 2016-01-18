@@ -39,6 +39,10 @@ if __name__ == "__main__":
 			if 0 == p.wait():
 				subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py flink"])
 
+			# install hadoop
+			if 0 == p.wait():
+				subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py hadoop"])
+		
 		if node['kafka'] == True:
 			# install kafka
 			if 0 == p.wait():
@@ -47,8 +51,5 @@ if __name__ == "__main__":
 		# hosts
 		subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/update-hosts.py"])
 
-		# install hadoop
-		# if 0 == p.wait():
-		# 	subprocess.call(["ssh", "cloud-user@"+node['ip'], "python /home/cloud-user/StreamBench/script/install.py hadoop"])
-		
+
 		
