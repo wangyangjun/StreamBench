@@ -76,14 +76,14 @@ def install_spark():
 	path = os.path.dirname(os.path.realpath(__file__))
 	config = json.load(open(path+'/cluster-config.json'));
 
-	# download sprk http://mirror.netinch.com/pub/apache/spark/spark-1.6.0/spark-1.6.0-bin-hadoop2.6.tgz
+	# download sprk http://mirror.netinch.com/pub/apache/spark/spark-1.5.1/spark-1.5.1-bin-hadoop2.6.tgz
 	if 'spark' not in subprocess.check_output(['ls']).split('\n'):
-		p = subprocess.Popen(['wget', 'http://mirror.netinch.com/pub/apache/spark/spark-1.6.0/spark-1.6.0-bin-hadoop2.6.tgz'])
+		p = subprocess.Popen(['wget', 'http://mirror.netinch.com/pub/apache/spark/spark-1.5.1/spark-1.5.1-bin-hadoop2.6.tgz'])
 		if 0 == p.wait():
 			# exact
-			p = subprocess.Popen(['tar', '-zvxf', 'spark-1.6.0-bin-hadoop2.6.tgz'])
+			p = subprocess.Popen(['tar', '-zvxf', 'spark-1.5.1-bin-hadoop2.6.tgz'])
 			p.wait()
-			subprocess.call(['mv', 'spark-1.6.0-bin-hadoop2.6', 'spark'])
+			subprocess.call(['mv', 'spark-1.5.1-bin-hadoop2.6', 'spark'])
 	# cp spark
 	subprocess.call(['sudo', 'rm', '-rf', '/usr/local/spark'])
 	subprocess.call(['sudo', 'cp', '-r', 'spark', '/usr/local/spark'])
