@@ -81,17 +81,17 @@ public class StormOperatorCreator extends OperatorCreator implements Serializabl
     @Override
     public void Start() {
         // TODO: switch between local and cluster
-//        try {
-//            StormSubmitter.submitTopologyWithProgressBar("WordCount", conf, topologyBuilder.createTopology());
-//        } catch (AlreadyAliveException e) {
-//            e.printStackTrace();
-//        } catch (InvalidTopologyException e) {
-//            e.printStackTrace();
-//        } catch (AuthorizationException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            StormSubmitter.submitTopologyWithProgressBar("WordCount", conf, topologyBuilder.createTopology());
+        } catch (AlreadyAliveException e) {
+            e.printStackTrace();
+        } catch (InvalidTopologyException e) {
+            e.printStackTrace();
+        } catch (AuthorizationException e) {
+            e.printStackTrace();
+        }
 
-        LocalCluster cluster = new LocalCluster();
-        cluster.submitTopology("word-count", conf, topologyBuilder.createTopology());
+//        LocalCluster cluster = new LocalCluster();
+//        cluster.submitTopology("word-count", conf, topologyBuilder.createTopology());
     }
 }

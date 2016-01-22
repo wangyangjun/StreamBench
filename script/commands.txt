@@ -1,0 +1,198 @@
+/usr/local/storm/bin/storm jar storm-1.0-SNAPSHOT-jar-with-dependencies.jar fi.aalto.dmg.App
+
+/usr/local/flink/bin/flink run flink-1.0-SNAPSHOT-jar-with-dependencies.jar
+
+python StreamBench/script/cluster-command.py kafka "java -cp /home/cloud-user/StreamBench/jars/data-generator.jar fi.aalto.dmg.generator.WordCountDataGenerator &"
+
+/usr/local/spark/bin/spark-submit --class fi.aalto.dmg.App --master spark://master:7077 --conf "spark.executor.extraJavaOptions=-Dlog4j.configuration=log4j.properties" --executor-memory 2G spark-1.0-SNAPSHOT-jar-with-dependencies.jar &
+
+[ERROR] [01/20/2016 15:40:35.728] [TestingActorSystem-akka.actor.default-dispatcher-5] [akka://TestingActorSystem/user/$a] Kill (akka.actor.ActorKilledException)
+[INFO] [01/20/2016 15:40:36.052] [TestingActorSystem-akka.actor.default-dispatcher-2] [akka://TestingActorSystem/user/$a] Message [org.apache.flink.runtime.messages.JobManagerMessages$LeaderSessionMessage] from Actor[akka://TestingActorSystem/deadLetters] to Actor[akka://TestingActorSystem/user/$a#-707902188] was not delivered. [1] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
+[ERROR] [01/20/2016 15:40:37.937] [TestingActorSystem-akka.actor.default-dispatcher-6] [akka://TestingActorSystem/user/$c] Kill (akka.actor.ActorKilledException)
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running org.apache.flink.streaming.connectors.kafka.KafkaProducerITCase
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.102 sec - in org.apache.flink.streaming.connectors.kafka.KafkaProducerITCase
+Running org.apache.flink.streaming.connectors.kafka.KafkaITCase
+01/20/2016 16:30:23	Job execution switched to status RUNNING.
+01/20/2016 16:30:23	Source: Custom Source -> Sink: Unnamed(1/1) switched to SCHEDULED 
+01/20/2016 16:30:23	Source: Custom Source -> Sink: Unnamed(1/1) switched to DEPLOYING 
+01/20/2016 16:30:23	Source: Custom Source -> Sink: Unnamed(1/1) switched to RUNNING 
+01/20/2016 16:30:23	Source: Custom Source -> Sink: Unnamed(1/1) switched to FINISHED 
+01/20/2016 16:30:23	Job execution switched to status FINISHED.
+01/20/2016 16:30:23	Job execution switched to status RUNNING.
+01/20/2016 16:30:23	Source: Custom Source -> Sink: Unnamed(1/2) switched to SCHEDULED 
+01/20/2016 16:30:23	Source: Custom Source -> Sink: Unnamed(1/2) switched to DEPLOYING 
+01/20/2016 16:30:23	Source: Custom Source -> Sink: Unnamed(2/2) switched to SCHEDULED 
+01/20/2016 16:30:23	Source: Custom Source -> Sink: Unnamed(2/2) switched to DEPLOYING 
+01/20/2016 16:30:23	Source: Custom Source -> Sink: Unnamed(1/2) switched to RUNNING 
+01/20/2016 16:30:23	Source: Custom Source -> Sink: Unnamed(2/2) switched to RUNNING 
+01/20/2016 16:30:23	Source: Custom Source -> Sink: Unnamed(1/2) switched to FINISHED 
+01/20/2016 16:30:23	Source: Custom Source -> Sink: Unnamed(2/2) switched to FINISHED 
+01/20/2016 16:30:23	Job execution switched to status FINISHED.
+01/20/2016 16:30:24	Job execution switched to status RUNNING.
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(1/3) switched to SCHEDULED 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(1/3) switched to DEPLOYING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(2/3) switched to SCHEDULED 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(2/3) switched to DEPLOYING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(3/3) switched to SCHEDULED 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(3/3) switched to DEPLOYING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(1/3) switched to RUNNING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(2/3) switched to RUNNING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(3/3) switched to RUNNING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(1/3) switched to FINISHED 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(2/3) switched to FINISHED 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(3/3) switched to FINISHED 
+01/20/2016 16:30:24	Job execution switched to status FINISHED.
+01/20/2016 16:30:24	Job execution switched to status RUNNING.
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(1/4) switched to SCHEDULED 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(1/4) switched to DEPLOYING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(2/4) switched to SCHEDULED 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(2/4) switched to DEPLOYING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(3/4) switched to SCHEDULED 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(3/4) switched to DEPLOYING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(4/4) switched to SCHEDULED 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(4/4) switched to DEPLOYING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(4/4) switched to RUNNING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(1/4) switched to RUNNING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(3/4) switched to RUNNING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(2/4) switched to RUNNING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(4/4) switched to FINISHED 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(1/4) switched to FINISHED 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(2/4) switched to FINISHED 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(3/4) switched to FINISHED 
+01/20/2016 16:30:24	Job execution switched to status FINISHED.
+01/20/2016 16:30:24	Job execution switched to status RUNNING.
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(1/5) switched to SCHEDULED 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(1/5) switched to DEPLOYING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(2/5) switched to SCHEDULED 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(2/5) switched to DEPLOYING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(3/5) switched to SCHEDULED 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(3/5) switched to DEPLOYING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(4/5) switched to SCHEDULED 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(4/5) switched to DEPLOYING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(5/5) switched to SCHEDULED 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(5/5) switched to DEPLOYING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(1/5) switched to RUNNING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(2/5) switched to RUNNING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(4/5) switched to RUNNING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(3/5) switched to RUNNING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(5/5) switched to RUNNING 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(1/5) switched to FINISHED 
+01/20/2016 16:30:24	Source: Custom Source -> Sink: Unnamed(2/5) switched to FINISHED 
+01/20/2016 16:30:25	Source: Custom Source -> Sink: Unnamed(4/5) switched to FINISHED 
+01/20/2016 16:30:25	Source: Custom Source -> Sink: Unnamed(5/5) switched to FINISHED 
+01/20/2016 16:30:25	Source: Custom Source -> Sink: Unnamed(3/5) switched to FINISHED 
+01/20/2016 16:30:25	Job execution switched to status FINISHED.
+01/20/2016 16:30:25	Job execution switched to status RUNNING.
+01/20/2016 16:30:25	Source: Custom Source(1/1) switched to SCHEDULED 
+01/20/2016 16:30:25	Source: Custom Source(1/1) switched to DEPLOYING 
+01/20/2016 16:30:25	Flat Map(1/1) switched to SCHEDULED 
+01/20/2016 16:30:25	Flat Map(1/1) switched to DEPLOYING 
+01/20/2016 16:30:25	Source: Custom Source(1/1) switched to RUNNING 
+01/20/2016 16:30:25	Flat Map(1/1) switched to RUNNING 
+01/20/2016 16:30:25	Flat Map(1/1) switched to FAILED 
+org.apache.flink.streaming.connectors.kafka.testutils.SuccessException
+	at org.apache.flink.streaming.connectors.kafka.KafkaConsumerTestBase$5.flatMap(KafkaConsumerTestBase.java:875)
+	at org.apache.flink.streaming.connectors.kafka.KafkaConsumerTestBase$5.flatMap(KafkaConsumerTestBase.java:852)
+	at org.apache.flink.streaming.api.operators.StreamFlatMap.processElement(StreamFlatMap.java:46)
+	at org.apache.flink.streaming.runtime.io.StreamInputProcessor.processInput(StreamInputProcessor.java:166)
+	at org.apache.flink.streaming.runtime.tasks.OneInputStreamTask.run(OneInputStreamTask.java:63)
+	at org.apache.flink.streaming.runtime.tasks.StreamTask.invoke(StreamTask.java:232)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:567)
+	at java.lang.Thread.run(Thread.java:745)
+
+01/20/2016 16:30:25	Job execution switched to status FAILING.
+org.apache.flink.streaming.connectors.kafka.testutils.SuccessException
+	at org.apache.flink.streaming.connectors.kafka.KafkaConsumerTestBase$5.flatMap(KafkaConsumerTestBase.java:875)
+	at org.apache.flink.streaming.connectors.kafka.KafkaConsumerTestBase$5.flatMap(KafkaConsumerTestBase.java:852)
+	at org.apache.flink.streaming.api.operators.StreamFlatMap.processElement(StreamFlatMap.java:46)
+	at org.apache.flink.streaming.runtime.io.StreamInputProcessor.processInput(StreamInputProcessor.java:166)
+	at org.apache.flink.streaming.runtime.tasks.OneInputStreamTask.run(OneInputStreamTask.java:63)
+	at org.apache.flink.streaming.runtime.tasks.StreamTask.invoke(StreamTask.java:232)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:567)
+	at java.lang.Thread.run(Thread.java:745)
+01/20/2016 16:30:25	Source: Custom Source(1/1) switched to CANCELING 
+01/20/2016 16:30:25	Source: Custom Source(1/1) switched to CANCELED 
+01/20/2016 16:30:25	Job execution switched to status FAILED.
+01/20/2016 16:31:03	Job execution switched to status RUNNING.
+01/20/2016 16:31:03	Source: Custom Source -> Sink: Unnamed(1/1) switched to SCHEDULED 
+01/20/2016 16:31:03	Source: Custom Source -> Sink: Unnamed(1/1) switched to DEPLOYING 
+01/20/2016 16:31:03	Source: Custom Source -> Sink: Unnamed(1/1) switched to RUNNING 
+01/20/2016 16:31:03	Source: Custom Source -> Sink: Unnamed(1/1) switched to FINISHED 
+01/20/2016 16:31:03	Job execution switched to status FINISHED.
+01/20/2016 16:31:04	Job execution switched to status RUNNING.
+01/20/2016 16:31:04	Source: Custom Source -> Map -> Flat Map(1/1) switched to SCHEDULED 
+01/20/2016 16:31:04	Source: Custom Source -> Map -> Flat Map(1/1) switched to DEPLOYING 
+01/20/2016 16:31:04	Source: Custom Source -> Map -> Flat Map(1/1) switched to RUNNING 
+01/20/2016 16:31:05	Source: Custom Source -> Map -> Flat Map(1/1) switched to FAILED 
+java.lang.Exception: Could not forward element to next operator
+	at org.apache.flink.streaming.connectors.kafka.internals.LegacyFetcher.run(LegacyFetcher.java:247)
+	at org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer.run(FlinkKafkaConsumer.java:425)
+	at org.apache.flink.streaming.api.operators.StreamSource.run(StreamSource.java:58)
+	at org.apache.flink.streaming.runtime.tasks.SourceStreamTask.run(SourceStreamTask.java:55)
+	at org.apache.flink.streaming.runtime.tasks.StreamTask.invoke(StreamTask.java:232)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:567)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.RuntimeException: Could not forward element to next operator
+	at org.apache.flink.streaming.runtime.tasks.OperatorChain$CopyingChainingOutput.collect(OperatorChain.java:319)
+	at org.apache.flink.streaming.runtime.tasks.OperatorChain$CopyingChainingOutput.collect(OperatorChain.java:300)
+	at org.apache.flink.streaming.runtime.io.CollectorWrapper.collect(CollectorWrapper.java:48)
+	at org.apache.flink.streaming.runtime.io.CollectorWrapper.collect(CollectorWrapper.java:29)
+	at org.apache.flink.streaming.runtime.tasks.SourceStreamTask$SourceOutput.collect(SourceStreamTask.java:97)
+	at org.apache.flink.streaming.api.operators.StreamSource$NonTimestampContext.collect(StreamSource.java:98)
+	at org.apache.flink.streaming.connectors.kafka.internals.LegacyFetcher$SimpleConsumerThread.run(LegacyFetcher.java:476)
+Caused by: java.lang.RuntimeException: Could not forward element to next operator
+	at org.apache.flink.streaming.runtime.tasks.OperatorChain$CopyingChainingOutput.collect(OperatorChain.java:319)
+	at org.apache.flink.streaming.runtime.tasks.OperatorChain$CopyingChainingOutput.collect(OperatorChain.java:300)
+	at org.apache.flink.streaming.runtime.io.CollectorWrapper.collect(CollectorWrapper.java:48)
+	at org.apache.flink.streaming.runtime.io.CollectorWrapper.collect(CollectorWrapper.java:29)
+	at org.apache.flink.streaming.api.operators.StreamMap.processElement(StreamMap.java:37)
+	at org.apache.flink.streaming.runtime.tasks.OperatorChain$CopyingChainingOutput.collect(OperatorChain.java:316)
+	... 6 more
+Caused by: org.apache.flink.streaming.connectors.kafka.testutils.SuccessException
+	at org.apache.flink.streaming.connectors.kafka.KafkaConsumerTestBase$12.flatMap(KafkaConsumerTestBase.java:1275)
+	at org.apache.flink.streaming.connectors.kafka.KafkaConsumerTestBase$12.flatMap(KafkaConsumerTestBase.java:1255)
+	at org.apache.flink.streaming.api.operators.StreamFlatMap.processElement(StreamFlatMap.java:46)
+	at org.apache.flink.streaming.runtime.tasks.OperatorChain$CopyingChainingOutput.collect(OperatorChain.java:316)
+	... 11 more
+
+01/20/2016 16:31:05	Job execution switched to status FAILING.
+java.lang.Exception: Could not forward element to next operator
+	at org.apache.flink.streaming.connectors.kafka.internals.LegacyFetcher.run(LegacyFetcher.java:247)
+	at org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer.run(FlinkKafkaConsumer.java:425)
+	at org.apache.flink.streaming.api.operators.StreamSource.run(StreamSource.java:58)
+	at org.apache.flink.streaming.runtime.tasks.SourceStreamTask.run(SourceStreamTask.java:55)
+	at org.apache.flink.streaming.runtime.tasks.StreamTask.invoke(StreamTask.java:232)
+	at org.apache.flink.runtime.taskmanager.Task.run(Task.java:567)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.lang.RuntimeException: Could not forward element to next operator
+	at org.apache.flink.streaming.runtime.tasks.OperatorChain$CopyingChainingOutput.collect(OperatorChain.java:319)
+	at org.apache.flink.streaming.runtime.tasks.OperatorChain$CopyingChainingOutput.collect(OperatorChain.java:300)
+	at org.apache.flink.streaming.runtime.io.CollectorWrapper.collect(CollectorWrapper.java:48)
+	at org.apache.flink.streaming.runtime.io.CollectorWrapper.collect(CollectorWrapper.java:29)
+	at org.apache.flink.streaming.runtime.tasks.SourceStreamTask$SourceOutput.collect(SourceStreamTask.java:97)
+	at org.apache.flink.streaming.api.operators.StreamSource$NonTimestampContext.collect(StreamSource.java:98)
+	at org.apache.flink.streaming.connectors.kafka.internals.LegacyFetcher$SimpleConsumerThread.run(LegacyFetcher.java:476)
+Caused by: java.lang.RuntimeException: Could not forward element to next operator
+	at org.apache.flink.streaming.runtime.tasks.OperatorChain$CopyingChainingOutput.collect(OperatorChain.java:319)
+	at org.apache.flink.streaming.runtime.tasks.OperatorChain$CopyingChainingOutput.collect(OperatorChain.java:300)
+	at org.apache.flink.streaming.runtime.io.CollectorWrapper.collect(CollectorWrapper.java:48)
+	at org.apache.flink.streaming.runtime.io.CollectorWrapper.collect(CollectorWrapper.java:29)
+	at org.apache.flink.streaming.api.operators.StreamMap.processElement(StreamMap.java:37)
+	at org.apache.flink.streaming.runtime.tasks.OperatorChain$CopyingChainingOutput.collect(OperatorChain.java:316)
+	... 6 more
+Caused by: org.apache.flink.streaming.connectors.kafka.testutils.SuccessException
+	at org.apache.flink.streaming.connectors.kafka.KafkaConsumerTestBase$12.flatMap(KafkaConsumerTestBase.java:1275)
+	at org.apache.flink.streaming.connectors.kafka.KafkaConsumerTestBase$12.flatMap(KafkaConsumerTestBase.java:1255)
+	at org.apache.flink.streaming.api.operators.StreamFlatMap.processElement(StreamFlatMap.java:46)
+	at org.apache.flink.streaming.runtime.tasks.OperatorChain$CopyingChainingOutput.collect(OperatorChain.java:316)
+	... 11 more
+01/20/2016 16:31:05	Job execution switched to status FAILED.
+Tests run: 17, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 106.039 sec - in org.apache.flink.streaming.connectors.kafka.KafkaITCase
+
+Results :
+
+Tests run: 18, Failures: 0, Errors: 0, Skipped: 0

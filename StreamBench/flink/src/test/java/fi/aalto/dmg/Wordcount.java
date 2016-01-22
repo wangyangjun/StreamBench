@@ -24,7 +24,7 @@ public class Wordcount {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         DataStream<Tuple2<String, Integer>> counts = env
-                .socketTextStream("localhost", 9999)
+                .socketTextStream("master", 9999)
                 .flatMap(new Splitter())
                 .keyBy(new KeySelector<Tuple2<String,Integer>, String>() {
                     @Override

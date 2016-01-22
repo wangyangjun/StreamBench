@@ -5,8 +5,10 @@ import fi.aalto.dmg.frame.functions.FilterFunction;
 import fi.aalto.dmg.frame.functions.FlatMapFunction;
 import fi.aalto.dmg.frame.functions.MapFunction;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
+import fi.aalto.dmg.statistics.Latency;
 import fi.aalto.dmg.statistics.Throughput;
 import fi.aalto.dmg.util.TimeDurations;
+import fi.aalto.dmg.util.WithTime;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.typeutils.TypeExtractor;
@@ -215,9 +217,13 @@ public class FlinkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
     @Override
     public void sink(int parallelism) {
         this.dataStream.addSink(new SinkFunction<T>() {
+            Latency latency = new Latency("sink");
+            Throughput throughput = new Throughput("sink");
+
             @Override
             public void invoke(T value) throws Exception {
-
+//                latency.execute((WithTime<? extends Object>) value);
+                throughput.execute();
             }
         });
     }

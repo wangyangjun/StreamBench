@@ -112,7 +112,8 @@ public class SparkOperatorCreater extends OperatorCreator implements Serializabl
     public void Start() {
         jssc.addStreamingListener(new PerformanceStreamingListener());
 
-        jssc.checkpoint("/tmp/log-analyzer-streaming");
+//        jssc.checkpoint("/tmp/log-analyzer-streaming");
+        jssc.checkpoint("hdfs://master:8020/usr/warehouse/wordcount/checkpoint");
         jssc.start();
         jssc.awaitTermination();
     }

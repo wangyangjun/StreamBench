@@ -20,9 +20,9 @@ public class FlinkOperatorCreator extends OperatorCreator {
 
     public FlinkOperatorCreator(String name) throws IOException {
         super(name);
-        properties = new Properties();
+//        properties = new Properties();
         env = StreamExecutionEnvironment.getExecutionEnvironment();
-        properties.load(this.getClass().getClassLoader().getResourceAsStream("flink-cluster.properties"));
+//        properties.load(this.getClass().getClassLoader().getResourceAsStream("flink-cluster.properties"));
     }
 
     @Override
@@ -47,8 +47,9 @@ public class FlinkOperatorCreator extends OperatorCreator {
         properties.put("group.id", group);
         properties.put("topic", topics);
         properties.put("auto.commit.enable", false);
-        properties.put("auto.offset.reset", "offset");
+        properties.put("auto.offset.reset", offset);
 
+        env.setParallelism(parallelism);
         DataStream<String> stream = env
                 .addSource(new FlinkKafkaConsumer082<String>(topics, new SimpleStringSchema(), properties));
         DataStream<WithTime<String>> withTimeDataStream = stream.map(new MapFunction<String, WithTime<String>>() {
@@ -74,7 +75,7 @@ public class FlinkOperatorCreator extends OperatorCreator {
         properties.put("group.id", group);
         properties.put("topic", topics);
         properties.put("auto.commit.enable", false);
-        properties.put("auto.offset.reset", "earliest");
+        properties.put("auto.offset.reset", offset);
 
         DataStream<String> stream = env
                 .addSource(new FlinkKafkaConsumer082<String>(topics, new SimpleStringSchema(), properties));
