@@ -53,8 +53,8 @@ public class WordCountDataGenerator {
             StringBuilder messageBuilder = new StringBuilder();
             for(int l = 0; l < 10; ++l){
                 // get word length
-                int number = messageGenerator.nextInt(1, 5000);
-//                int number = zipfGenerator.next();
+//                int number = messageGenerator.nextInt(1, 5000);
+                int number = zipfGenerator.next();
                 messageBuilder.append(Utils.intToString(number)).append(" ");
             }
             throughput.execute();
