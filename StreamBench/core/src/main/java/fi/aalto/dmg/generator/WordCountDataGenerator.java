@@ -1,6 +1,7 @@
 package fi.aalto.dmg.generator;
 
 import fi.aalto.dmg.statistics.Throughput;
+import fi.aalto.dmg.util.Constant;
 import fi.aalto.dmg.util.FastZipfGenerator;
 import fi.aalto.dmg.util.Utils;
 import org.apache.commons.math3.random.*;
@@ -33,7 +34,7 @@ public class WordCountDataGenerator {
         // 10  ---- 6K/s
         // 50  ---- 15K/s
         // 100 ---- 27K/s
-        int SLEEP_FREQUENCY = 1000;
+        int SLEEP_FREQUENCY = 1;
         if(args.length > 0) {
             SLEEP_FREQUENCY = Integer.parseInt(args[0]);
         }
@@ -51,12 +52,15 @@ public class WordCountDataGenerator {
         for (long sent_sentences = 0; sent_sentences < SENTENCE_NUM; ++sent_sentences) {
             double sentence_length = messageGenerator.nextGaussian(10, 1);
             StringBuilder messageBuilder = new StringBuilder();
-            for(int l = 0; l < 10; ++l){
-                // get word length
+            for(int l = 0; l < sentence_length; ++l){
+                // TODO: switch between Uniform words or skewed words
 //                int number = messageGenerator.nextInt(1, 5000);
                 int number = zipfGenerator.next();
                 messageBuilder.append(Utils.intToString(number)).append(" ");
             }
+
+            // Add timestamp
+            messageBuilder.append(Constant.TimeSeparator).append(System.currentTimeMillis());
             throughput.execute();
             ProducerRecord<String, String> newRecord = new ProducerRecord<String, String>(TOPIC, messageBuilder.toString());
             producer.send(newRecord);
@@ -66,7 +70,7 @@ public class WordCountDataGenerator {
                 Thread.sleep(1);
             }
         }
-        System.out.println("Latency: " + String.valueOf(System.currentTimeMillis()-time));
+        logger.info("Latency: " + String.valueOf(System.currentTimeMillis()-time));
     }
 }
 

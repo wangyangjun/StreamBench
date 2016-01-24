@@ -1,5 +1,6 @@
 package fi.aalto.dmg.frame;
 
+import fi.aalto.dmg.util.Constant;
 import fi.aalto.dmg.util.WithTime;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -55,6 +56,10 @@ public class FlinkOperatorCreator extends OperatorCreator {
         DataStream<WithTime<String>> withTimeDataStream = stream.map(new MapFunction<String, WithTime<String>>() {
             @Override
             public WithTime<String> map(String value) throws Exception {
+                String[] list = value.split(Constant.TimeSeparatorRegex);
+                if(list.length == 2) {
+                    return new WithTime<String>(list[0], Long.parseLong(list[1]));
+                }
                 return new WithTime<String>(value, System.currentTimeMillis());
             }
         });
