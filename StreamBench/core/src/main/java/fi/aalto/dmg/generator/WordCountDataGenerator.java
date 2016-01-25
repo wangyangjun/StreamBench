@@ -34,7 +34,7 @@ public class WordCountDataGenerator {
         // 10  ---- 6K/s
         // 50  ---- 15K/s
         // 100 ---- 27K/s
-        int SLEEP_FREQUENCY = 2;
+        int SLEEP_FREQUENCY = 5;
         if(args.length > 0) {
             SLEEP_FREQUENCY = Integer.parseInt(args[0]);
         }
@@ -57,6 +57,11 @@ public class WordCountDataGenerator {
 //                int number = messageGenerator.nextInt(1, 5000);
                 int number = zipfGenerator.next();
                 messageBuilder.append(Utils.intToString(number)).append(" ");
+
+                // control data generate speed
+                if(sent_sentences%SLEEP_FREQUENCY == 0) {
+                    Thread.sleep(1);
+                }
             }
 
             // Add timestamp
@@ -65,10 +70,10 @@ public class WordCountDataGenerator {
             ProducerRecord<String, String> newRecord = new ProducerRecord<String, String>(TOPIC, messageBuilder.toString());
             producer.send(newRecord);
 
-            // control data generate speed
-            if(sent_sentences%SLEEP_FREQUENCY == 0) {
-                Thread.sleep(1);
-            }
+//            // control data generate speed
+//            if(sent_sentences%SLEEP_FREQUENCY == 0) {
+//                Thread.sleep(1);
+//            }
         }
         logger.info("Latency: " + String.valueOf(System.currentTimeMillis()-time));
     }
