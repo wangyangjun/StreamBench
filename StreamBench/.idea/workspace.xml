@@ -41,8 +41,8 @@
       <file leaf-file-name="WordCountDataGenerator.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/generator/WordCountDataGenerator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.44672132">
-              <caret line="36" column="31" selection-start-line="36" selection-start-column="31" selection-end-line="36" selection-end-column="31" />
+            <state vertical-scroll-proportion="0.66188526">
+              <caret line="76" column="9" selection-start-line="76" selection-start-column="9" selection-end-line="76" selection-end-column="9" />
               <folding />
             </state>
           </provider>
@@ -1331,7 +1331,7 @@
       <workItem from="1452763347357" duration="3720000" />
       <workItem from="1452814623658" duration="70125000" />
       <workItem from="1453494226384" duration="131000" />
-      <workItem from="1453494480271" duration="29844000" />
+      <workItem from="1453494480271" duration="30637000" />
     </task>
     <servers />
   </component>
@@ -1368,7 +1368,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="816315000" />
+    <option name="totallyTimeSpent" value="817108000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1884,8 +1884,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/generator/WordCountDataGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.44672132">
-          <caret line="36" column="31" selection-start-line="36" selection-start-column="31" selection-end-line="36" selection-end-column="31" />
+        <state vertical-scroll-proportion="0.66188526">
+          <caret line="76" column="9" selection-start-line="76" selection-start-column="9" selection-end-line="76" selection-end-column="9" />
           <folding />
         </state>
       </provider>
