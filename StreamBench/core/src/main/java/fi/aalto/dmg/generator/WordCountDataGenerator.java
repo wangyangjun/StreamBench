@@ -18,7 +18,7 @@ import java.util.Properties;
  */
 public class WordCountDataGenerator {
     private static final Logger logger = Logger.getLogger(WordCountDataGenerator.class);
-    private static long SENTENCE_NUM = 30000000;
+    private static long SENTENCE_NUM = 100000000;
     private static int ZIPF_SIZE = 10000;
     private static double ZIPF_EXPONENT = 1;
     private static String TOPIC = "WordCount";
@@ -70,10 +70,10 @@ public class WordCountDataGenerator {
             ProducerRecord<String, String> newRecord = new ProducerRecord<String, String>(TOPIC, messageBuilder.toString());
             producer.send(newRecord);
 
-            // control data generate speed
-            if(sent_sentences%SLEEP_FREQUENCY == 0) {
-                Thread.sleep(1);
-            }
+//            // control data generate speed
+//            if(sent_sentences%SLEEP_FREQUENCY == 0) {
+//                Thread.sleep(1);
+//            }
         }
         logger.info("Latency: " + String.valueOf(System.currentTimeMillis()-time));
     }

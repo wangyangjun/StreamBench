@@ -28,3 +28,4 @@ public class Latency implements Serializable{
         }
     }
 }
+
