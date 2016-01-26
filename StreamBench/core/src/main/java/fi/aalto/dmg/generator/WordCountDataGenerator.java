@@ -34,7 +34,7 @@ public class WordCountDataGenerator {
         // 10  ---- 6K/s
         // 50  ---- 15K/s
         // 100 ---- 27K/s
-        int SLEEP_FREQUENCY = 1;
+        int SLEEP_FREQUENCY = 100;
         if(args.length > 0) {
             SLEEP_FREQUENCY = Integer.parseInt(args[0]);
         }
@@ -71,9 +71,9 @@ public class WordCountDataGenerator {
             producer.send(newRecord);
 
 //            // control data generate speed
-//            if(sent_sentences%SLEEP_FREQUENCY == 0) {
-//                Thread.sleep(1);
-//            }
+            if(sent_sentences%SLEEP_FREQUENCY == 0) {
+                Thread.sleep(1);
+            }
         }
         logger.info("Latency: " + String.valueOf(System.currentTimeMillis()-time));
     }

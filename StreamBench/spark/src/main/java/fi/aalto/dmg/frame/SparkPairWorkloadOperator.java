@@ -229,7 +229,7 @@ public class SparkPairWorkloadOperator<K,V> implements PairWorkloadOperator<K,V>
     @Override
     public void sink(int parallelism) {
         this.pairDStream = this.pairDStream.filter(new PairLatencySinkFunction<K,V>());
-        this.pairDStream.print();
+        this.pairDStream.print(1);
     }
 }
 

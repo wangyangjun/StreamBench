@@ -1,6 +1,7 @@
 package fi.aalto.dmg.frame;
 
 import fi.aalto.dmg.statistics.PerformanceStreamingListener;
+import fi.aalto.dmg.util.Constant;
 import fi.aalto.dmg.util.WithTime;
 import kafka.serializer.StringDecoder;
 import org.apache.spark.SparkConf;
@@ -31,6 +32,10 @@ public class SparkOperatorCreater extends OperatorCreator implements Serializabl
             = new Function<Tuple2<String, String>, WithTime<String>>() {
         @Override
         public WithTime<String> call(Tuple2<String, String> stringStringTuple2) throws Exception {
+            String[] list = stringStringTuple2._2().split(Constant.TimeSeparatorRegex);
+            if(list.length == 2) {
+                return new WithTime<String>(list[0], Long.parseLong(list[1]));
+            }
             return new WithTime<>(stringStringTuple2._2(), System.currentTimeMillis());
         }
     };
