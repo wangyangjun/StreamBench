@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
  */
 public class SkewedWordCount {
     private static final Logger logger = Logger.getLogger(SkewedWordCount.class);
-    private static long SENTENCE_NUM = 100000000;
+    private static long SENTENCE_NUM = 1000000000;
     private static int ZIPF_SIZE = 10000;
     private static double ZIPF_EXPONENT = 1;
     private static String TOPIC = "WordCount";
@@ -55,7 +55,7 @@ public class SkewedWordCount {
             }
 
             // Add timestamp
-//            messageBuilder.append(Constant.TimeSeparator).append(System.currentTimeMillis());
+            messageBuilder.append(Constant.TimeSeparator).append(System.currentTimeMillis());
 
             throughput.execute();
             ProducerRecord<String, String> newRecord = new ProducerRecord<String, String>(TOPIC, messageBuilder.toString());
