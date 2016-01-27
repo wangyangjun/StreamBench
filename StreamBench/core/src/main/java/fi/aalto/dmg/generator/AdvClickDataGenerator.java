@@ -2,11 +2,9 @@ package fi.aalto.dmg.generator;
 
 import fi.aalto.dmg.statistics.Throughput;
 import org.apache.commons.math3.random.RandomDataGenerator;
-import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.log4j.Logger;
 
-import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,7 +17,7 @@ import org.apache.kafka.clients.producer.KafkaProducer;
  * Created by jun on 17/11/15.
  */
 public class AdvClickDataGenerator {
-    private static final Logger logger = Logger.getLogger(WordCountDataGenerator.class);
+    private static final Logger logger = Logger.getLogger(SkewedWordCount.class);
     private static String ADV_TOPIC = "Advertisement";
     private static String CLICK_TOPIC = "AdvClick";
     private static double LAMBDA = 1;
