@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6d9a9d57-ef9e-4bb6-b667-e4deb25fdef8" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/generator/UniformWordCount.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/generator/WordCountDataGenerator.java" afterPath="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/generator/SkewedWordCount.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/generator/AdvClickDataGenerator.java" afterPath="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/generator/AdvClickDataGenerator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/generator/UniformWordCount.java" afterPath="$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/generator/UniformWordCount.java" />
     </list>
     <ignored path="StreamBench.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -44,7 +42,7 @@
         <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/generator/SkewedWordCount.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="78" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="78" selection-end-column="0" />
+              <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -53,8 +51,8 @@
       <file leaf-file-name="UniformWordCount.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/generator/UniformWordCount.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.3475177">
-              <caret line="60" column="19" selection-start-line="60" selection-start-column="19" selection-end-line="60" selection-end-column="19" />
+            <state vertical-scroll-proportion="0.39007092">
+              <caret line="33" column="32" selection-start-line="33" selection-start-column="32" selection-end-line="33" selection-end-column="32" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -1372,7 +1370,7 @@
       <workItem from="1452763347357" duration="3720000" />
       <workItem from="1452814623658" duration="70125000" />
       <workItem from="1453494226384" duration="131000" />
-      <workItem from="1453494480271" duration="46294000" />
+      <workItem from="1453494480271" duration="46889000" />
     </task>
     <servers />
   </component>
@@ -1409,7 +1407,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="832765000" />
+    <option name="totallyTimeSpent" value="833360000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1934,15 +1932,15 @@
     <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/generator/SkewedWordCount.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="78" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="78" selection-end-column="0" />
+          <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/main/java/fi/aalto/dmg/generator/UniformWordCount.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.3475177">
-          <caret line="60" column="19" selection-start-line="60" selection-start-column="19" selection-end-line="60" selection-end-column="19" />
+        <state vertical-scroll-proportion="0.39007092">
+          <caret line="33" column="32" selection-start-line="33" selection-start-column="32" selection-end-line="33" selection-end-column="32" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

@@ -31,7 +31,7 @@ public class UniformWordCount {
         // 10  ---- 6K/s
         // 50  ---- 15K/s
         // 100 ---- 27K/s
-        int SLEEP_FREQUENCY = 150;
+        int SLEEP_FREQUENCY = 10;
         if(args.length > 0) {
             SLEEP_FREQUENCY = Integer.parseInt(args[0]);
         }
