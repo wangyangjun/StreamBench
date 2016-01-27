@@ -24,6 +24,7 @@
     <module>storm</module>
     <module>spark</module>
     <module>flink</module>
+    <module>generator</module>
   </modules>
   <dependencies>
     <dependency>

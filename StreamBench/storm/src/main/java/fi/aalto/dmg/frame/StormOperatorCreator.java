@@ -35,7 +35,11 @@ public class StormOperatorCreator extends OperatorCreator implements Serializabl
 
         conf = new Config();
         conf.setDebug(true);
-//        conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 2000);
+
+        // ack enabled
+//        conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 200);
+
+        // ack disable
         conf.put(Config.TOPOLOGY_ACKER_EXECUTORS, 0);
 
         topologyBuilder = new TopologyBuilder();

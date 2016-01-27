@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/StreamBench.iml" filepath="$PROJECT_DIR$/StreamBench.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/flink/flink.iml" filepath="$PROJECT_DIR$/flink/flink.iml" />
+      <module fileurl="file://$PROJECT_DIR$/generator/generator.iml" filepath="$PROJECT_DIR$/generator/generator.iml" />
       <module fileurl="file://$PROJECT_DIR$/spark/spark.iml" filepath="$PROJECT_DIR$/spark/spark.iml" />
       <module fileurl="file://$PROJECT_DIR$/storm/storm.iml" filepath="$PROJECT_DIR$/storm/storm.iml" />
     </modules>
