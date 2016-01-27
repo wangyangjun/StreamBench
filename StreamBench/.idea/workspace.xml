@@ -104,8 +104,8 @@
       <file leaf-file-name="SkewedWordCount.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/generator/src/main/java/fi/aalto/dmg/generator/SkewedWordCount.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6875">
-              <caret line="59" column="33" selection-start-line="59" selection-start-column="33" selection-end-line="59" selection-end-column="33" />
+            <state vertical-scroll-proportion="0.25">
+              <caret line="34" column="29" selection-start-line="34" selection-start-column="29" selection-end-line="34" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -1257,7 +1257,7 @@
       <workItem from="1452763347357" duration="3720000" />
       <workItem from="1452814623658" duration="70125000" />
       <workItem from="1453494226384" duration="131000" />
-      <workItem from="1453494480271" duration="56961000" />
+      <workItem from="1453494480271" duration="57884000" />
     </task>
     <servers />
   </component>
@@ -1294,7 +1294,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="843432000" />
+    <option name="totallyTimeSpent" value="844355000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1795,8 +1795,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/generator/src/main/java/fi/aalto/dmg/generator/SkewedWordCount.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6875">
-          <caret line="59" column="33" selection-start-line="59" selection-start-column="33" selection-end-line="59" selection-end-column="33" />
+        <state vertical-scroll-proportion="0.25">
+          <caret line="34" column="29" selection-start-line="34" selection-start-column="29" selection-end-line="34" selection-end-column="29" />
           <folding />
         </state>
       </provider>
