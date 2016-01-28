@@ -25,8 +25,8 @@ public class ClickedAdvertisement extends Workload implements Serializable {
 
     private static final Logger logger = Logger.getLogger(WordCount.class);
 
-    public ClickedAdvertisement(OperatorCreator creater) throws WorkloadException {
-        super(creater);
+    public ClickedAdvertisement(OperatorCreator creator) throws WorkloadException {
+        super(creator);
     }
 
     private static class TimeAssigner implements AssignTimeFunction<Long>, Serializable{
@@ -46,13 +46,14 @@ public class ClickedAdvertisement extends Workload implements Serializable {
 
             PairWorkloadOperator<String, Tuple2<Long, Long>> clicksWithCreateTime = advertisements.join(
                     "Join",
+                    parallelism,
                     clicks,
-                    new TimeDurations(TimeUnit.MINUTES, 1),
-                    new TimeDurations(TimeUnit.SECONDS, 10),
+                    new TimeDurations(TimeUnit.SECONDS, 20),
+                    new TimeDurations(TimeUnit.SECONDS, 5),
                     new TimeAssigner(),
                     new TimeAssigner());
 
-            clicksWithCreateTime.mapValue(UserFunctions.mapToWithTime, "MapToWithTime",parallelism, true)
+            clicksWithCreateTime.mapValue(UserFunctions.mapToWithTime, "MapToWithTime", parallelism, true)
                     .sink(parallelism);
         }
         catch (Exception e){

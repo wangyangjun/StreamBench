@@ -87,7 +87,7 @@ public interface PairWorkloadOperator<K, V> extends Serializable{
      * @return joined stream
      */
     <R> PairWorkloadOperator<K, Tuple2<V,R>> join(
-            String componentId, PairWorkloadOperator<K,R> joinStream,
+            String componentId, int parallelism, PairWorkloadOperator<K,R> joinStream,
             TimeDurations windowDuration, TimeDurations joinWindowDuration) throws WorkloadException;
 
     /**
@@ -107,7 +107,7 @@ public interface PairWorkloadOperator<K, V> extends Serializable{
      * @return joined stream
      */
     <R> PairWorkloadOperator<K, Tuple2<V,R>> join(
-            String componentId, PairWorkloadOperator<K,R> joinStream,
+            String componentId, int parallelism, PairWorkloadOperator<K,R> joinStream,
             TimeDurations windowDuration, TimeDurations windowDuration2,
             AssignTimeFunction<V> eventTimeAssigner1, AssignTimeFunction<R> eventTimeAssigner2) throws WorkloadException;
 

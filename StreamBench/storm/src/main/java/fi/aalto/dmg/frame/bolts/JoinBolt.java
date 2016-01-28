@@ -16,6 +16,8 @@ import scala.Tuple3;
 import java.util.LinkedList;
 
 /**
+ * In the benchmark, we use one side join
+ *
  * Join two streams <K,V> <K,R> on K=K
  * emit Values(K, Tuple2<V,R>)
  * Created by jun on 17/11/15.
@@ -31,7 +33,7 @@ public class JoinBolt<K,V,R> extends BaseBasicBolt {
 
     // time, key, value
     private LinkedList<Tuple3<Long, K, V>> dataContainer1;
-    private LinkedList<Tuple3<Long, K,R>> dataContainer2;
+    private LinkedList<Tuple3<Long, K, R>> dataContainer2;
 
     // event time assigner
     private AssignTimeFunction<V> eventTimeAssigner1;
@@ -60,11 +62,11 @@ public class JoinBolt<K,V,R> extends BaseBasicBolt {
         this(component1, windowDuration1, component2, windowDuration2);
         this.eventTimeAssigner1 = eventTimeAssigner1;
         this.eventTimeAssigner2 = eventTimeAssigner2;
-        logger.error("New JoinBolt!");
     }
 
     @Override
     public void execute(Tuple tuple, BasicOutputCollector collector) {
+//        logger.warn("execute:" + tuple.toString());
         // get current time
         long currentTime = System.currentTimeMillis();
         if(tuple.getSourceComponent().equals(this.component1)){
@@ -76,7 +78,7 @@ public class JoinBolt<K,V,R> extends BaseBasicBolt {
             }
 
             // add at the end of the list
-            dataContainer1.add(new Tuple3<Long, K, V>(currentTime, key, value));
+            dataContainer1.addLast(new Tuple3<>(currentTime, key, value));
             // join
             int expiredDataNum = 0;
             for(Tuple3<Long, K, R> element2 : dataContainer2){
@@ -84,8 +86,8 @@ public class JoinBolt<K,V,R> extends BaseBasicBolt {
                 if(element2._1()+component2_window_milliseconds<currentTime){
                     expiredDataNum++;
                 } else if( element2._2().equals(key)){
-                    logger.error("emit:" + currentTime);
                     collector.emit(new Values(key, new Tuple2<V,R>(value, element2._3())));
+//                    logger.warn("Join:" + tuple.toString());
                     break;
                 }
             }
@@ -104,17 +106,21 @@ public class JoinBolt<K,V,R> extends BaseBasicBolt {
 
             dataContainer2.push(new Tuple3<Long, K, R>(currentTime, key, value));
             // join
+//            boolean emit = false;
             int expiredDataNum = 0;
             for(Tuple3<Long, K, V> element1 : dataContainer1){
                 // clean expired data
                 if(element1._1()+component1_window_milliseconds<currentTime){
                     expiredDataNum++;
-                    logger.error("expired");
                 } else if( element1._2().equals(key)){
                     collector.emit(new Values(key, new Tuple2<V,R>(element1._3(), value)));
+//                    emit = true;
                     break;
                 }
             }
+//            if(!emit) {
+//                logger.warn("Join failed:" + tuple.toString() + String.valueOf(dataContainer1.size()));
+//            }
             // clean expired data
             for(int i=0; i<expiredDataNum; ++i){
                 dataContainer1.removeFirst();

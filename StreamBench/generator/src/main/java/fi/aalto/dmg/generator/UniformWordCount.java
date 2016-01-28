@@ -2,7 +2,6 @@ package fi.aalto.dmg.generator;
 
 import fi.aalto.dmg.statistics.Throughput;
 import fi.aalto.dmg.util.Constant;
-import fi.aalto.dmg.util.FastZipfGenerator;
 import fi.aalto.dmg.util.Utils;
 import org.apache.commons.math3.random.RandomDataGenerator;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -41,7 +40,7 @@ public class UniformWordCount {
         long time = System.currentTimeMillis();
 
         if(null==producer){
-            producer = Generator.createProducer();
+            producer = Generator.createWCProducer();
         }
 
         Throughput throughput = new Throughput("SkewedWordCount");

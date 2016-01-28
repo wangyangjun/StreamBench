@@ -40,7 +40,7 @@ public class SkewedWordCount {
         long time = System.currentTimeMillis();
 
         if(null==producer){
-            producer = Generator.createProducer();
+            producer = Generator.createWCProducer();
         }
 
         FastZipfGenerator zipfGenerator = new FastZipfGenerator(ZIPF_SIZE, ZIPF_EXPONENT);

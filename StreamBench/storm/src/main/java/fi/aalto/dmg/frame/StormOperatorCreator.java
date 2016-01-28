@@ -57,7 +57,10 @@ public class StormOperatorCreator extends OperatorCreator implements Serializabl
         BrokerHosts hosts = new ZkHosts(zkConStr);
         SpoutConfig spoutConfig = new SpoutConfig(hosts, topics, "/" + topics, UUID.randomUUID().toString());
         spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
-        spoutConfig.ignoreZkOffsets = true;
+        spoutConfig.startOffsetTime = kafka.api.OffsetRequest.LatestTime();
+        spoutConfig.fetchSizeBytes = 1024;
+        spoutConfig.bufferSizeBytes = 1024;
+//        spoutConfig.ignoreZkOffsets = true;
 
         topologyBuilder.setSpout("spout", new KafkaSpout(spoutConfig), parallelism);
         topologyBuilder.setBolt("addTime", new WithTimeBolt<String>(), parallelism).localOrShuffleGrouping("spout");
@@ -76,7 +79,10 @@ public class StormOperatorCreator extends OperatorCreator implements Serializabl
         BrokerHosts hosts = new ZkHosts(zkConStr);
         SpoutConfig spoutConfig = new SpoutConfig(hosts, topics, "/" + topics, UUID.randomUUID().toString());
         spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
-        spoutConfig.ignoreZkOffsets = true;
+        spoutConfig.startOffsetTime = kafka.api.OffsetRequest.LatestTime();
+        spoutConfig.fetchSizeBytes = 1024;
+        spoutConfig.bufferSizeBytes = 1024;
+//        spoutConfig.ignoreZkOffsets = true;
 
         topologyBuilder.setSpout(componentId, new KafkaSpout(spoutConfig), parallelism);
         return new StormOperator<>(topologyBuilder, componentId);

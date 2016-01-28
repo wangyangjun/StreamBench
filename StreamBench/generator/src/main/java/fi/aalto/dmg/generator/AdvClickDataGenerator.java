@@ -19,8 +19,8 @@ public class AdvClickDataGenerator {
     private static final Logger logger = Logger.getLogger(SkewedWordCount.class);
     private static String ADV_TOPIC = "Advertisement";
     private static String CLICK_TOPIC = "AdvClick";
-    private static double CLICK_LAMBDA = 1;
-    private static double CLICK_PROBABILITY = 0.1;
+    private static double CLICK_LAMBDA = 3;
+    private static double CLICK_PROBABILITY = 0.05;
 
     private static long ADV_NUM = 100000000;
     private static KafkaProducer<String, String> producer;
@@ -41,7 +41,7 @@ public class AdvClickDataGenerator {
         generator.reSeed(10000000L);
         // subthread use variable in main thread
         if(null==producer){
-            producer = Generator.createProducer();
+            producer = Generator.createWCProducer();
         }
         // for loop to generate advertisement
         for (long i = 0; i < ADV_NUM; ++i) {
@@ -85,7 +85,7 @@ public class AdvClickDataGenerator {
             double deltaT = clickGenerator.nextExponential(CLICK_LAMBDA);
             // TODO: write to kafka topic
             try {
-                Thread.sleep((long)(deltaT*36000));
+                Thread.sleep((long)(deltaT*3600));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
