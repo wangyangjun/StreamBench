@@ -6,7 +6,14 @@ python StreamBench/script/cluster-command.py kafka "java -cp /home/cloud-user/St
 
 python StreamBench/script/cluster-command.py kafka "java -cp /home/cloud-user/StreamBench/jars/data-generator.jar fi.aalto.dmg.generator.SkewedWordCount &"
 
+python StreamBench/script/cluster-command.py kafka "java -cp /home/cloud-user/StreamBench/jars/data-generator.jar fi.aalto.dmg.generator.AdvClickDataGenerator &"
+
 
 /usr/local/spark/bin/spark-submit --class fi.aalto.dmg.App --master spark://master:7077 --conf "spark.executor.extraJavaOptions=-Dlog4j.configuration=log4j.properties" --executor-memory 4G spark-1.0-SNAPSHOT-jar-with-dependencies.jar &
 
 /usr/local/kafka/bin/kafka-topics.sh --create --zookeeper zoo1:2181 --replication-factor 1 --partitions 32 --topic WordCount
+
+/usr/local/kafka/bin/kafka-topics.sh --create --zookeeper zoo1:2181 --replication-factor 1 --partitions 32 --topic Advertisement
+
+/usr/local/kafka/bin/kafka-topics.sh --create --zookeeper zoo1:2181 --replication-factor 1 --partitions 32 --topic AdvClick
+

@@ -5,6 +5,7 @@ import fi.aalto.dmg.frame.OperatorCreator;
 import fi.aalto.dmg.frame.PairWorkloadOperator;
 import fi.aalto.dmg.frame.WorkloadOperator;
 import fi.aalto.dmg.frame.functions.AssignTimeFunction;
+import fi.aalto.dmg.frame.functions.MapFunction;
 import fi.aalto.dmg.frame.functions.MapPairFunction;
 import fi.aalto.dmg.frame.userfunctions.UserFunctions;
 import fi.aalto.dmg.util.TimeDurations;
@@ -42,15 +43,17 @@ public class ClickedAdvertisement extends Workload implements Serializable {
                     .mapToPair(UserFunctions.mapToStringLongPair, "Extractor", parallelism);
             PairWorkloadOperator<String, Long> clicks = kafkaStreamOperator2("click")
                     .mapToPair(UserFunctions.mapToStringLongPair, "Extractor2", parallelism );
-//            clicks.print();
-            PairWorkloadOperator<String, Tuple2<Long, Long>> clicksWithCreatTime = advertisements.join(
+
+            PairWorkloadOperator<String, Tuple2<Long, Long>> clicksWithCreateTime = advertisements.join(
                     "Join",
                     clicks,
                     new TimeDurations(TimeUnit.MINUTES, 1),
-                    new TimeDurations(TimeUnit.MINUTES, 1),
+                    new TimeDurations(TimeUnit.SECONDS, 10),
                     new TimeAssigner(),
                     new TimeAssigner());
-            clicksWithCreatTime.print();
+
+            clicksWithCreateTime.mapValue(UserFunctions.mapToWithTime, "MapToWithTime",parallelism, true)
+                    .sink(parallelism);
         }
         catch (Exception e){
             logger.error(e.getMessage());

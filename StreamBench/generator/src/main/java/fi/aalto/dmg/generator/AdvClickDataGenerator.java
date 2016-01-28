@@ -19,11 +19,10 @@ public class AdvClickDataGenerator {
     private static final Logger logger = Logger.getLogger(SkewedWordCount.class);
     private static String ADV_TOPIC = "Advertisement";
     private static String CLICK_TOPIC = "AdvClick";
-    private static double LAMBDA = 1;
-    private static double CLICK_LAMBDA = 0.3;
-    private static double CLICK_PROBABILITY = 0.05;
+    private static double CLICK_LAMBDA = 1;
+    private static double CLICK_PROBABILITY = 0.1;
 
-    private static long ADV_NUM = 10000000;
+    private static long ADV_NUM = 100000000;
     private static KafkaProducer<String, String> producer;
 
 
@@ -45,15 +44,15 @@ public class AdvClickDataGenerator {
             producer = Generator.createProducer();
         }
         // for loop to generate advertisement
-        for (long i = 0; i < 100; ++i) {
+        for (long i = 0; i < ADV_NUM; ++i) {
             // advertisement id
             String advId = UUID.randomUUID().toString();
             long timestamp = System.currentTimeMillis();
-            // TODO: write to kafka topic
-            // write (t, advId) to kafka or wait t then write advId to kafka?
             producer.send(new ProducerRecord<>(ADV_TOPIC, advId, String.format("%d\t%s", timestamp, advId)));
-//            System.out.println(timestamp + "\t" + advId);
+//            System.out.println("Shown: " + System.currentTimeMillis() + "\t" + advId);
+
             throughput.execute();
+
             // whether customer clicked this advertisement
             if(generator.nextUniform(0,1)<=CLICK_PROBABILITY){
                 cachedPool.submit(new ClickThread(advId));
@@ -86,13 +85,13 @@ public class AdvClickDataGenerator {
             double deltaT = clickGenerator.nextExponential(CLICK_LAMBDA);
             // TODO: write to kafka topic
             try {
-                Thread.sleep((long)(deltaT*60*60));
+                Thread.sleep((long)(deltaT*36000));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             producer.send(new ProducerRecord<>(CLICK_TOPIC, advId,
                     String.format("%d\t%s", System.currentTimeMillis(), advId)));
-//            System.out.println("Clicked: " + timestamp + "\t" + advId);
+//            System.out.println("Clicked: " + String.valueOf(deltaT) + "\t" + advId);
         }
     }
 }

@@ -162,4 +162,12 @@ public class UserFunctions {
             return null;
         }
     };
+
+    public static MapFunction<Tuple2<Long,Long>, WithTime<Tuple2<Long, Long>>> mapToWithTime
+            = new MapFunction<Tuple2<Long,Long>, WithTime<Tuple2<Long, Long>>>() {
+        @Override
+        public WithTime<Tuple2<Long, Long>> map(Tuple2<Long, Long> var1) {
+            return new WithTime<>(var1, var1._2());
+        }
+    };
 }
