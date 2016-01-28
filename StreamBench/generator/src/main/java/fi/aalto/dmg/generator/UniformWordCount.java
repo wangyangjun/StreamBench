@@ -15,7 +15,8 @@ import org.apache.log4j.Logger;
 
 public class UniformWordCount {
     private static final Logger logger = Logger.getLogger(SkewedWordCount.class);
-    private static long SENTENCE_NUM = 100000000;
+    private static long SENTENCE_NUM = 1000000000;
+
     private static int ZIPF_SIZE = 10000;
     private static double ZIPF_EXPONENT = 1;
     private static String TOPIC = "WordCount";
@@ -31,7 +32,7 @@ public class UniformWordCount {
         // 10  ---- 6K/s
         // 50  ---- 15K/s
         // 100 ---- 27K/s
-        int SLEEP_FREQUENCY = 10;
+        int SLEEP_FREQUENCY = 100;
         if(args.length > 0) {
             SLEEP_FREQUENCY = Integer.parseInt(args[0]);
         }
@@ -43,7 +44,6 @@ public class UniformWordCount {
             producer = Generator.createProducer();
         }
 
-        FastZipfGenerator zipfGenerator = new FastZipfGenerator(ZIPF_SIZE, ZIPF_EXPONENT);
         Throughput throughput = new Throughput("SkewedWordCount");
         // for loop to generate message
         for (long sent_sentences = 0; sent_sentences < SENTENCE_NUM; ++sent_sentences) {
