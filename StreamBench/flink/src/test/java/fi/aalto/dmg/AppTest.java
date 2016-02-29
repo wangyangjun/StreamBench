@@ -4,6 +4,8 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+import java.util.ArrayList;
+
 /**
  * Unit test for simple App.
  */
@@ -38,6 +40,5 @@ public class AppTest
         Object o = str;
         System.out.println(o.hashCode());
 
-        assertTrue( true );
     }
 }

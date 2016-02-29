@@ -12,7 +12,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spark.version>1.5.0</spark.version>
+    <spark.version>1.5.1</spark.version>
     <storm.version>0.10.0</storm.version>
     <flink.version>0.10.1</flink.version>
     <junit.version>4.4</junit.version>

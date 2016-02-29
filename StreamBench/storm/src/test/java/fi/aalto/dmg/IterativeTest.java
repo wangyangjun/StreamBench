@@ -39,8 +39,11 @@ public class IterativeTest {
         builder.setSpout("spout", new NumberSpout());
         builder.setBolt("minusone", new MinusOne())
                 .shuffleGrouping("spout")
-                .shuffleGrouping("minusone", "GreaterThanZero");
+                .shuffleGrouping("DoNothing", "GreaterThanZero");
 
+
+        builder.setBolt("DoNothing", new Filter())
+                .shuffleGrouping("minusone");
 
         Config conf = new Config();
         conf.setDebug(true);
@@ -86,6 +89,24 @@ public class IterativeTest {
         @Override
         public void execute(Tuple tuple, BasicOutputCollector collector) {
             int i = tuple.getInteger(0) - 1;
+            collector.emit(new Values(i));
+        }
+
+        @Override
+        public void declareOutputFields(OutputFieldsDeclarer declarer) {
+            declarer.declare(new Fields("Value"));
+        }
+
+        @Override
+        public Map<String, Object> getComponentConfiguration() {
+            return null;
+        }
+    }
+
+    public static class Filter extends BaseBasicBolt {
+        @Override
+        public void execute(Tuple tuple, BasicOutputCollector collector) {
+            int i = tuple.getInteger(0);
             if( i > 0) {
                 System.out.println(i);
                 collector.emit("GreaterThanZero", new Values(i));
@@ -105,7 +126,5 @@ public class IterativeTest {
             return null;
         }
     }
-
-
 
 }

@@ -1,4 +1,4 @@
-package org.apache.flink.streaming.api.operators;
+package api.operators;
 
 import org.apache.flink.api.common.functions.JoinFunction;
 import org.apache.flink.api.common.typeutils.TypeSerializer;
@@ -6,13 +6,19 @@ import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.core.memory.DataInputView;
 import org.apache.flink.runtime.state.StateBackend;
 import org.apache.flink.runtime.state.StateHandle;
+import org.apache.flink.shaded.com.google.common.cache.Cache;
+import org.apache.flink.shaded.com.google.common.cache.CacheBuilder;
+import org.apache.flink.streaming.api.operators.AbstractUdfStreamOperator;
+import org.apache.flink.streaming.api.operators.TwoInputStreamOperator;
 import org.apache.flink.streaming.api.watermark.Watermark;
-import org.apache.flink.streaming.runtime.operators.windowing.buffers.HeapWindowBuffer;
 import org.apache.flink.streaming.runtime.streamrecord.MultiplexingStreamRecordSerializer;
 import org.apache.flink.streaming.runtime.streamrecord.StreamRecord;
 import org.apache.flink.streaming.runtime.tasks.StreamTaskState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static java.util.Objects.requireNonNull;
 
@@ -30,8 +36,12 @@ public class StreamJoinOperator<K, IN1, IN2, OUT>
     private static final long serialVersionUID = 8650694601687319011L;
     private static final Logger LOG = LoggerFactory.getLogger(StreamJoinOperator.class);
 
-    private HeapWindowBuffer<IN1> stream1Buffer;
-    private HeapWindowBuffer<IN2> stream2Buffer;
+//    private HeapWindowBuffer<IN1> stream1Buffer;
+//    private HeapWindowBuffer<IN2> stream2Buffer;
+
+    private Cache<K, StreamRecord<IN1>> stream1Buffer;
+    private Cache<K, StreamRecord<IN2>> stream2Buffer;
+
     private final KeySelector<IN1, K> keySelector1;
     private final KeySelector<IN2, K> keySelector2;
     private long stream1WindowLength;
@@ -75,8 +85,15 @@ public class StreamJoinOperator<K, IN1, IN2, OUT>
             throw new IllegalStateException("Input serializer was not set.");
         }
 
-        this.stream1Buffer = new HeapWindowBuffer.Factory<IN1>().create();
-        this.stream2Buffer = new HeapWindowBuffer.Factory<IN2>().create();
+//        this.stream1Buffer = new HeapWindowBuffer.Factory<IN1>().create();
+//        this.stream2Buffer = new HeapWindowBuffer.Factory<IN2>().create();
+        stream1Buffer = CacheBuilder.newBuilder()
+                .expireAfterWrite(stream1WindowLength, TimeUnit.MILLISECONDS)
+                .build();
+        stream2Buffer = CacheBuilder.newBuilder()
+                .expireAfterWrite(stream2WindowLength, TimeUnit.MILLISECONDS)
+                .build();
+
     }
 
     /**
@@ -88,26 +105,19 @@ public class StreamJoinOperator<K, IN1, IN2, OUT>
         if (setProcessingTime) {
             element.replace(element.getValue(), System.currentTimeMillis());
         }
-        stream1Buffer.storeElement(element);
 
         if (setProcessingTime) {
             IN1 item1 = element.getValue();
             long time1 = element.getTimestamp();
 
-            int expiredDataNum = 0;
-            for (StreamRecord<IN2> record2 : stream2Buffer.getElements()) {
-                IN2 item2 = record2.getValue();
-                long time2 = record2.getTimestamp();
-                if (time2 < time1 && time2 + this.stream2WindowLength >= time1) {
-                    if (keySelector1.getKey(item1).equals(keySelector2.getKey(item2))) {
-                        output.collect(new StreamRecord<>(userFunction.join(item1, item2)));
-                    }
-                } else {
-                    expiredDataNum++;
-                }
+            StreamRecord<IN2> record = stream2Buffer.getIfPresent(keySelector1.getKey(element.getValue()));
+            if(record != null) {
+                output.collect(new StreamRecord<>(userFunction.join(item1, record.getValue())));
+            } else {
+                stream1Buffer.put(keySelector1.getKey(element.getValue()), element);
             }
-            // clean data
-            stream2Buffer.removeElements(expiredDataNum);
+        } else {
+            stream1Buffer.put(keySelector1.getKey(element.getValue()), element);
         }
     }
 
@@ -116,26 +126,19 @@ public class StreamJoinOperator<K, IN1, IN2, OUT>
         if (setProcessingTime) {
             element.replace(element.getValue(), System.currentTimeMillis());
         }
-        stream2Buffer.storeElement(element);
 
         if (setProcessingTime) {
             IN2 item2 = element.getValue();
             long time2 = element.getTimestamp();
 
-            int expiredDataNum = 0;
-            for (StreamRecord<IN1> record1 : stream1Buffer.getElements()) {
-                IN1 item1 = record1.getValue();
-                long time1 = record1.getTimestamp();
-                if (time1 <= time2 && time1 + this.stream1WindowLength >= time2) {
-                    if (keySelector1.getKey(item1).equals(keySelector2.getKey(item2))) {
-                        output.collect(new StreamRecord<>(userFunction.join(item1, item2)));
-                    }
-                } else {
-                    expiredDataNum++;
-                }
+            StreamRecord<IN1> record = stream1Buffer.getIfPresent(keySelector2.getKey(element.getValue()));
+            if(record != null) {
+                output.collect(new StreamRecord<>(userFunction.join(record.getValue(), item2)));
+            } else {
+                stream2Buffer.put(keySelector2.getKey(element.getValue()), element);
             }
-            // clean data
-            stream1Buffer.removeElements(expiredDataNum);
+        } else {
+            stream2Buffer.put(keySelector2.getKey(element.getValue()), element);
         }
     }
 
@@ -148,52 +151,33 @@ public class StreamJoinOperator<K, IN1, IN2, OUT>
         if(setProcessingTime)
             return;
         // process elements after currentWatermark and lower than watermark
-        for (StreamRecord<IN1> record1 : stream1Buffer.getElements()) {
-            if(record1.getTimestamp() >= this.currentWatermark
-                    && record1.getTimestamp() < watermark){
-                for (StreamRecord<IN2> record2 : stream2Buffer.getElements()) {
-                    if(keySelector1.getKey(record1.getValue()).equals(keySelector2.getKey(record2.getValue()))) {
-                        if (record1.getTimestamp() >= record2.getTimestamp()
-                                && record2.getTimestamp() + this.stream2WindowLength >= record1.getTimestamp()) {
-                            output.collect(new StreamRecord<>(userFunction.join(record1.getValue(), record2.getValue())));
-                        }
-                    }
+        for (Map.Entry<K, StreamRecord<IN1>> record1 : stream1Buffer.asMap().entrySet()) {
+            if(record1.getValue().getTimestamp() >= this.currentWatermark
+                    && record1.getValue().getTimestamp() < watermark){
+                StreamRecord<IN2> record2 = stream2Buffer.getIfPresent(record1.getKey());
+                if(record2 != null) {
+                    stream1Buffer.invalidate(record1.getKey());
+                    stream2Buffer.invalidate(record1.getKey());
+                    output.collect(new StreamRecord<OUT>(
+                            userFunction.join(record1.getValue().getValue(), record2.getValue()))
+                    );
                 }
             }
         }
 
-        for (StreamRecord<IN2> record2 : stream2Buffer.getElements()) {
-            if(record2.getTimestamp() >= this.currentWatermark
-                    && record2.getTimestamp() < watermark){
-                for (StreamRecord<IN1> record1 : stream1Buffer.getElements()) {
-                    if(keySelector1.getKey(record1.getValue()).equals(keySelector2.getKey(record2.getValue()))) {
-                        if (record2.getTimestamp() > record1.getTimestamp()
-                                && record1.getTimestamp() + this.stream1WindowLength >= record2.getTimestamp()) {
-                            output.collect(new StreamRecord<>(userFunction.join(record1.getValue(), record2.getValue())));
-                        }
-                    }
+        for (Map.Entry<K, StreamRecord<IN2>> record2 : stream2Buffer.asMap().entrySet()) {
+            if(record2.getValue().getTimestamp() >= this.currentWatermark
+                    && record2.getValue().getTimestamp() < watermark){
+                StreamRecord<IN1> record1 = stream1Buffer.getIfPresent(record2.getKey());
+                if(record1 != null) {
+                    stream1Buffer.invalidate(record2.getKey());
+                    stream2Buffer.invalidate(record2.getKey());
+                    output.collect(new StreamRecord<OUT>(
+                            userFunction.join(record1.getValue(), record2.getValue().getValue()))
+                    );
                 }
             }
         }
-
-        // clean data
-        int stream1Expired = 0;
-        for (StreamRecord<IN1> record1 : stream1Buffer.getElements()) {
-            if (record1.getTimestamp() + this.stream1WindowLength < watermark) {
-                stream1Expired++;
-            } else
-                break;
-        }
-        stream1Buffer.removeElements(stream1Expired);
-
-        int stream2Expired = 0;
-        for (StreamRecord<IN2> record2 : stream2Buffer.getElements()) {
-            if (record2.getTimestamp() + this.stream2WindowLength < watermark) {
-                stream2Expired++;
-            } else
-                break;
-        }
-        stream2Buffer.removeElements(stream2Expired);
     }
 
     @Override
@@ -246,14 +230,14 @@ public class StreamJoinOperator<K, IN1, IN2, OUT>
         out.writeLong(stream2WindowLength);
 
         MultiplexingStreamRecordSerializer<IN1> recordSerializer1 = new MultiplexingStreamRecordSerializer<>(inputSerializer1);
-        out.writeInt(stream1Buffer.size());
-        for (StreamRecord<IN1> element: stream1Buffer.getElements()) {
+        out.writeLong(stream1Buffer.size());
+        for (StreamRecord<IN1> element: stream1Buffer.asMap().values()) {
             recordSerializer1.serialize(element, out);
         }
 
         MultiplexingStreamRecordSerializer<IN2> recordSerializer2 = new MultiplexingStreamRecordSerializer<>(inputSerializer2);
-        out.writeInt(stream2Buffer.size());
-        for (StreamRecord<IN2> element: stream2Buffer.getElements()) {
+        out.writeLong(stream2Buffer.size());
+        for (StreamRecord<IN2> element: stream2Buffer.asMap().values()) {
             recordSerializer2.serialize(element, out);
         }
 
@@ -274,17 +258,19 @@ public class StreamJoinOperator<K, IN1, IN2, OUT>
         stream1WindowLength = in.readLong();
         stream2WindowLength = in.readLong();
 
-        int numElements = in.readInt();
+        long numElements = in.readLong();
 
         MultiplexingStreamRecordSerializer<IN1> recordSerializer1 = new MultiplexingStreamRecordSerializer<>(inputSerializer1);
         for (int i = 0; i < numElements; i++) {
-            stream1Buffer.storeElement(recordSerializer1.deserialize(in).<IN1>asRecord());
+            StreamRecord<IN1> record = recordSerializer1.deserialize(in).<IN1>asRecord();
+            stream1Buffer.put(keySelector1.getKey(record.getValue()), record);
         }
 
-        int numElements2 = in.readInt();
+        long numElements2 = in.readLong();
         MultiplexingStreamRecordSerializer<IN2> recordSerializer2 = new MultiplexingStreamRecordSerializer<>(inputSerializer2);
         for (int i = 0; i < numElements2; i++) {
-            stream2Buffer.storeElement(recordSerializer2.deserialize(in).<IN2>asRecord());
+            StreamRecord<IN2> record = recordSerializer2.deserialize(in).<IN2>asRecord();
+            stream2Buffer.put(keySelector2.getKey(record.getValue()), record);
         }
     }
 

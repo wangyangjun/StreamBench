@@ -1,6 +1,7 @@
 package fi.aalto.dmg.frame;
 
 import fi.aalto.dmg.util.Constant;
+import fi.aalto.dmg.util.Point;
 import fi.aalto.dmg.util.WithTime;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -27,13 +28,13 @@ public class FlinkOperatorCreator extends OperatorCreator {
     }
 
     @Override
-    public WorkloadOperator<WithTime<String>> createOperatorFromKafkaWithTime(String zkConStr,
-                                                                              String kafkaServers,
-                                                                              String group,
-                                                                              String topics,
-                                                                              String offset,
-                                                                              String componentId,
-                                                                              int parallelism) {
+    public WorkloadOperator<WithTime<String>> stringStreamFromKafkaWithTime(String zkConStr,
+                                                                            String kafkaServers,
+                                                                            String group,
+                                                                            String topics,
+                                                                            String offset,
+                                                                            String componentId,
+                                                                            int parallelism) {
         /*
         * Note that the Kafka source is expecting the following parameters to be set
         *  - "bootstrap.servers" (comma separated list of kafka brokers)
@@ -63,17 +64,47 @@ public class FlinkOperatorCreator extends OperatorCreator {
                 return new WithTime<String>(value, System.currentTimeMillis());
             }
         });
-        return new FlinkWorkloadOperator<>(withTimeDataStream);
+        return new FlinkWorkloadOperator<>(withTimeDataStream, parallelism);
     }
 
     @Override
-    public WorkloadOperator<String> createOperatorFromKafka(String zkConStr,
-                                                            String kafkaServers,
-                                                            String group,
-                                                            String topics,
-                                                            String offset,
-                                                            String componentId,
-                                                            int parallelism) {
+    public WorkloadOperator<Point> pointStreamFromKafka(String zkConStr, String kafkaServers, String group, String topics, String offset, String componentId, int parallelism) {
+        Properties properties = new Properties();
+        properties.put("bootstrap.servers", kafkaServers);
+        properties.put("zookeeper.connect", zkConStr);
+        properties.put("group.id", group);
+        properties.put("topic", topics);
+        properties.put("auto.commit.enable", false);
+        properties.put("auto.offset.reset", offset);
+
+        env.setParallelism(parallelism);
+        DataStream<String> stream = env
+                .addSource(new FlinkKafkaConsumer082<String>(topics, new SimpleStringSchema(), properties));
+        DataStream<Point> pointStream = stream.map(new MapFunction<String, Point>() {
+            @Override
+            public Point map(String value) throws Exception {
+                String[] list = value.split(Constant.TimeSeparatorRegex);
+                long time = System.currentTimeMillis();
+                if(list.length == 2) {
+                    time = Long.parseLong(list[1]);
+                }
+                String[] strs = list[0].split("\t");
+                Double x = Double.parseDouble(strs[0]);
+                Double y = Double.parseDouble(strs[1]);
+                return new Point(x, y, time);
+            }
+        });
+        return new FlinkWorkloadOperator<>(pointStream, parallelism);
+    }
+
+    @Override
+    public WorkloadOperator<String> stringStreamFromKafka(String zkConStr,
+                                                          String kafkaServers,
+                                                          String group,
+                                                          String topics,
+                                                          String offset,
+                                                          String componentId,
+                                                          int parallelism) {
         Properties properties = new Properties();
         properties.put("bootstrap.servers", kafkaServers);
         properties.put("zookeeper.connect", zkConStr);
@@ -84,7 +115,7 @@ public class FlinkOperatorCreator extends OperatorCreator {
 
         DataStream<String> stream = env
                 .addSource(new FlinkKafkaConsumer082<String>(topics, new SimpleStringSchema(), properties));
-        return new FlinkWorkloadOperator<>(stream);
+        return new FlinkWorkloadOperator<>(stream, parallelism);
     }
 
     @Override

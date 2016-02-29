@@ -14,7 +14,9 @@ import backtype.storm.generated.AuthorizationException;
 import backtype.storm.generated.InvalidTopologyException;
 import backtype.storm.spout.SchemeAsMultiScheme;
 import backtype.storm.topology.TopologyBuilder;
+import fi.aalto.dmg.frame.bolts.ExtractPointBolt;
 import fi.aalto.dmg.frame.bolts.WithTimeBolt;
+import fi.aalto.dmg.util.Point;
 import fi.aalto.dmg.util.WithTime;
 import storm.kafka.*;
 
@@ -46,13 +48,13 @@ public class StormOperatorCreator extends OperatorCreator implements Serializabl
     }
 
     @Override
-    public WorkloadOperator<WithTime<String>> createOperatorFromKafkaWithTime(String zkConStr,
-                                                                              String kafkaServers,
-                                                                              String group,
-                                                                              String topics,
-                                                                              String offset,
-                                                                              String componentId,
-                                                                              int parallelism) {
+    public WorkloadOperator<WithTime<String>> stringStreamFromKafkaWithTime(String zkConStr,
+                                                                            String kafkaServers,
+                                                                            String group,
+                                                                            String topics,
+                                                                            String offset,
+                                                                            String componentId,
+                                                                            int parallelism) {
         conf.setNumWorkers(parallelism);
         BrokerHosts hosts = new ZkHosts(zkConStr);
         SpoutConfig spoutConfig = new SpoutConfig(hosts, topics, "/" + topics, UUID.randomUUID().toString());
@@ -64,17 +66,33 @@ public class StormOperatorCreator extends OperatorCreator implements Serializabl
 
         topologyBuilder.setSpout("spout", new KafkaSpout(spoutConfig), parallelism);
         topologyBuilder.setBolt("addTime", new WithTimeBolt<String>(), parallelism).localOrShuffleGrouping("spout");
-        return new StormOperator<>(topologyBuilder, "addTime");
+        return new StormOperator<>(topologyBuilder, "addTime", parallelism);
     }
 
     @Override
-    public WorkloadOperator<String> createOperatorFromKafka(String zkConStr,
-                                                            String kafkaServers,
-                                                            String group,
-                                                            String topics,
-                                                            String offset,
-                                                            String componentId,
-                                                            int parallelism) {
+    public WorkloadOperator<Point> pointStreamFromKafka(String zkConStr, String kafkaServers, String group, String topics, String offset, String componentId, int parallelism) {
+        conf.setNumWorkers(parallelism);
+        BrokerHosts hosts = new ZkHosts(zkConStr);
+        SpoutConfig spoutConfig = new SpoutConfig(hosts, topics, "/" + topics, UUID.randomUUID().toString());
+        spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
+        spoutConfig.startOffsetTime = kafka.api.OffsetRequest.LatestTime();
+        spoutConfig.fetchSizeBytes = 1024;
+        spoutConfig.bufferSizeBytes = 1024;
+//        spoutConfig.ignoreZkOffsets = true;
+
+        topologyBuilder.setSpout("spout", new KafkaSpout(spoutConfig), parallelism);
+        topologyBuilder.setBolt("extractPoint", new ExtractPointBolt(), parallelism).localOrShuffleGrouping("spout");
+        return new StormOperator<>(topologyBuilder, "extractPoint", parallelism);
+    }
+
+    @Override
+    public WorkloadOperator<String> stringStreamFromKafka(String zkConStr,
+                                                          String kafkaServers,
+                                                          String group,
+                                                          String topics,
+                                                          String offset,
+                                                          String componentId,
+                                                          int parallelism) {
         conf.setNumWorkers(parallelism);
         BrokerHosts hosts = new ZkHosts(zkConStr);
         SpoutConfig spoutConfig = new SpoutConfig(hosts, topics, "/" + topics, UUID.randomUUID().toString());
@@ -85,23 +103,23 @@ public class StormOperatorCreator extends OperatorCreator implements Serializabl
 //        spoutConfig.ignoreZkOffsets = true;
 
         topologyBuilder.setSpout(componentId, new KafkaSpout(spoutConfig), parallelism);
-        return new StormOperator<>(topologyBuilder, componentId);
+        return new StormOperator<>(topologyBuilder, componentId, parallelism);
     }
 
     @Override
     public void Start() {
         // TODO: switch between local and cluster
-        try {
-            StormSubmitter.submitTopologyWithProgressBar("WordCount", conf, topologyBuilder.createTopology());
-        } catch (AlreadyAliveException e) {
-            e.printStackTrace();
-        } catch (InvalidTopologyException e) {
-            e.printStackTrace();
-        } catch (AuthorizationException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            StormSubmitter.submitTopologyWithProgressBar("WordCount", conf, topologyBuilder.createTopology());
+//        } catch (AlreadyAliveException e) {
+//            e.printStackTrace();
+//        } catch (InvalidTopologyException e) {
+//            e.printStackTrace();
+//        } catch (AuthorizationException e) {
+//            e.printStackTrace();
+//        }
 
-//        LocalCluster cluster = new LocalCluster();
-//        cluster.submitTopology("word-count", conf, topologyBuilder.createTopology());
+        LocalCluster cluster = new LocalCluster();
+        cluster.submitTopology("word-count", conf, topologyBuilder.createTopology());
     }
 }

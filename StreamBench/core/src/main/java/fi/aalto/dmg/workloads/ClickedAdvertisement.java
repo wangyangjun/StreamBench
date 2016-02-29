@@ -40,21 +40,21 @@ public class ClickedAdvertisement extends Workload implements Serializable {
         try {
 
             PairWorkloadOperator<String, Long> advertisements = kafkaStreamOperator("advertisement")
-                    .mapToPair(UserFunctions.mapToStringLongPair, "Extractor", parallelism);
+                    .mapToPair(UserFunctions.mapToStringLongPair, "Extractor");
             PairWorkloadOperator<String, Long> clicks = kafkaStreamOperator2("click")
-                    .mapToPair(UserFunctions.mapToStringLongPair, "Extractor2", parallelism );
-
+                    .mapToPair(UserFunctions.mapToStringLongPair, "Extractor2" );
+//            advertisements.print();
+//            clicks.print();
             PairWorkloadOperator<String, Tuple2<Long, Long>> clicksWithCreateTime = advertisements.join(
                     "Join",
-                    parallelism,
                     clicks,
                     new TimeDurations(TimeUnit.SECONDS, 20),
-                    new TimeDurations(TimeUnit.SECONDS, 5),
+                    new TimeDurations(TimeUnit.SECONDS, 20),
                     new TimeAssigner(),
                     new TimeAssigner());
 
-            clicksWithCreateTime.mapValue(UserFunctions.mapToWithTime, "MapToWithTime", parallelism, true)
-                    .sink(parallelism);
+            clicksWithCreateTime.mapValue(UserFunctions.mapToWithTime, "MapToWithTime", true)
+                    .sink();
         }
         catch (Exception e){
             logger.error(e.getMessage());

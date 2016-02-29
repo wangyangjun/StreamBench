@@ -18,122 +18,96 @@ import scala.Tuple2;
 /**
  * Created by yangjun.wang on 23/10/15.
  */
-public class SparkWorkloadOperator<T> extends OperatorBase implements WorkloadOperator<T> {
+public class SparkWorkloadOperator<T> extends WorkloadOperator<T> {
     private static final long serialVersionUID = 1265982206392632383L;
     private JavaDStream<T> dStream;
 
-    public SparkWorkloadOperator(JavaDStream<T> stream){
+    public SparkWorkloadOperator(JavaDStream<T> stream, int parallelism){
+        super(parallelism);
         dStream = stream;
     }
-
 
     @Override
     public <R> WorkloadOperator<R> map(MapFunction<T, R> fun,
                                        String componentId,
-                                       int parallelism,
                                        boolean logThroughput) {
-        return map(fun, componentId, parallelism);
+        return map(fun, componentId);
     }
 
     @Override
     public <R> WorkloadOperator<R> map(final MapFunction<T, R> fun,
-                                       String componentId,
-                                       int parallelism) {
+                                       String componentId) {
         JavaDStream<R> newStream = dStream.map(new FunctionImpl<>(fun));
-        return new SparkWorkloadOperator<R>(newStream);
+        return new SparkWorkloadOperator<R>(newStream, parallelism);
     }
 
     @Override
-    public <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun,
-                                                       String componentId,
-                                                       int parallelism,
-                                                       boolean logThroughput) {
-        return mapToPair(fun, componentId, parallelism);
+    public <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId, boolean logThroughput) {
+        return mapToPair(fun, componentId);
     }
 
     @Override
-    public <K, V> PairWorkloadOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun,
-                                                       String componentId,
-                                                       int parallelism) {
+    public <K, V> PairWorkloadOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun, String componentId) {
         JavaPairDStream<K,V> pairDStream = dStream.mapToPair(new PairFunctionImpl<>(fun));
-        return new SparkPairWorkloadOperator<>(pairDStream);
+        return new SparkPairWorkloadOperator<>(pairDStream, parallelism);
     }
 
     @Override
     public WorkloadOperator<T> reduce(ReduceFunction<T> fun,
                                       String componentId,
-                                      int parallelism,
                                       boolean logThroughput) {
-        return reduce(fun, componentId, parallelism);
+        return reduce(fun, componentId);
     }
 
     @Override
-    public WorkloadOperator<T> reduce(final ReduceFunction<T> fun,
-                                      String componentId,
-                                      int parallelism) {
+    public WorkloadOperator<T> reduce(final ReduceFunction<T> fun, String componentId) {
         JavaDStream<T> newStream = dStream.reduce(new ReduceFunctionImpl<>(fun));
-        return new SparkWorkloadOperator<>(newStream);
+        return new SparkWorkloadOperator<>(newStream, parallelism);
     }
 
     @Override
-    public WorkloadOperator<T> filter(FilterFunction<T> fun,
-                                      String componentId,
-                                      int parallelism,
-                                      boolean logThroughput) {
-        return filter(fun, componentId, parallelism);
+    public WorkloadOperator<T> filter(FilterFunction<T> fun, String componentId, boolean logThroughput) {
+        return filter(fun, componentId);
     }
 
     @Override
-    public WorkloadOperator<T> filter(final FilterFunction<T> fun,
-                                      String componentId,
-                                      int parallelism) {
+    public WorkloadOperator<T> filter(final FilterFunction<T> fun, String componentId) {
         JavaDStream<T> newStream = dStream.filter(new FilterFunctionImpl<>(fun));
-        return new SparkWorkloadOperator<>(newStream);
-    }
-
-    @Override
-    public WorkloadOperator<T> iterative(MapFunction<T, T> mapFunction,
-                                         FilterFunction<T> iterativeFunction,
-                                         String componentId,
-                                         int parallelism) {
-        return null;
+        return new SparkWorkloadOperator<>(newStream, parallelism);
     }
 
     @Override
     public <R> WorkloadOperator<R> flatMap(FlatMapFunction<T, R> fun,
                                            String componentId,
-                                           int parallelism,
                                            boolean logThroughput) {
-        return flatMap(fun, componentId, parallelism);
+        return flatMap(fun, componentId);
     }
 
     @Override
     public <R> WorkloadOperator<R> flatMap(final FlatMapFunction<T, R> fun,
-                                           String componentId,
-                                           int parallelism) {
+                                           String componentId) {
         JavaDStream<R> newStream = dStream.flatMap(new FlatMapFunctionImpl<>(fun));
-        return new SparkWorkloadOperator<>(newStream);
+        return new SparkWorkloadOperator<>(newStream, parallelism);
     }
+
 
     @Override
     public <K, V> PairWorkloadOperator<K, V> flatMapToPair(final FlatMapPairFunction<T, K, V> fun,
                                                            String componentId,
-                                                           int parallelism,
                                                            boolean logThroughput) {
-        return flatMapToPair(fun, componentId, parallelism);
+        return flatMapToPair(fun, componentId);
     }
 
     @Override
     public <K, V> PairWorkloadOperator<K, V> flatMapToPair(final FlatMapPairFunction<T, K, V> fun,
-                                                           String componentId,
-                                                           int parallelism) {
+                                                           String componentId) {
         JavaPairDStream<K,V> pairDStream = dStream.flatMapToPair(new PairFlatMapFunction<T, K, V>() {
             @Override
             public Iterable<Tuple2<K, V>> call(T t) throws Exception {
                 return fun.flatMapToPair(t);
             }
         });
-        return new SparkPairWorkloadOperator<>(pairDStream);
+        return new SparkPairWorkloadOperator<>(pairDStream, parallelism);
     }
 
     @Override
@@ -148,18 +122,16 @@ public class SparkWorkloadOperator<T> extends OperatorBase implements WorkloadOp
         Duration slideDurations = Utils.timeDurationsToSparkDuration(slideDuration);
 
         JavaDStream<T> windowedStream = dStream.window(windowDurations, slideDurations);
-        return new SparkWindowedWorkloadOperator<>(windowedStream);
+        return new SparkWindowedWorkloadOperator<>(windowedStream, parallelism);
+    }
+
+    @Override
+    public void sink() {
+
     }
 
     @Override
     public void print() {
-        this.dStream.print();
-        // this.dStream.foreach(new PrintFunctionImpl<T>());
-    }
 
-    @Override
-    public void sink(int parallelism) {
-        this.dStream.print();
     }
-
 }

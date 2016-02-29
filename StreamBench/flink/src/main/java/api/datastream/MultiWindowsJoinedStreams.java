@@ -1,4 +1,4 @@
-package org.apache.flink.streaming.api.datastream;
+package api.datastream;
 
 import org.apache.flink.api.common.functions.CoGroupFunction;
 import org.apache.flink.api.common.functions.JoinFunction;
@@ -7,6 +7,8 @@ import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.operators.translation.WrappingFunction;
 import org.apache.flink.api.java.typeutils.TypeExtractor;
 import org.apache.flink.streaming.api.TimeCharacteristic;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.transformations.TwoInputTransformation;
 import org.apache.flink.streaming.api.windowing.assigners.WindowAssigner;
@@ -73,7 +75,7 @@ public class MultiWindowsJoinedStreams<T1, T2> {
      */
     public <KEY> Where<KEY> where(KeySelector<T1, KEY> keySelector)  {
         TypeInformation<KEY> keyType = TypeExtractor.getKeySelectorTypes(keySelector, input1.getType());
-        return new Where<>(input1.clean(keySelector), keyType);
+        return new Where<>(input1.getExecutionEnvironment().clean(keySelector), keyType);
     }
 
     // ------------------------------------------------------------------------
@@ -119,7 +121,7 @@ public class MultiWindowsJoinedStreams<T1, T2> {
                             "first key = " + this.keyType + " , second key = " + otherKey);
                 }
 
-                return new EqualTo(input2.clean(keySelector));
+                return new EqualTo(input2.getExecutionEnvironment().clean(keySelector));
             }
 
             // --------------------------------------------------------------------

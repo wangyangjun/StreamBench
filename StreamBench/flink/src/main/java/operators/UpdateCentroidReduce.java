@@ -1,0 +1,60 @@
+package operators;
+
+import org.apache.flink.api.common.functions.ReduceFunction;
+import org.apache.flink.api.common.state.OperatorState;
+import org.apache.flink.api.common.typeutils.TypeSerializer;
+import org.apache.flink.streaming.api.operators.AbstractUdfStreamOperator;
+import org.apache.flink.streaming.api.operators.OneInputStreamOperator;
+import org.apache.flink.streaming.api.watermark.Watermark;
+import org.apache.flink.streaming.runtime.streamrecord.StreamRecord;
+
+/**
+ * Created by jun on 26/02/16.
+ */
+
+public class UpdateCentroidReduce<IN> extends AbstractUdfStreamOperator<IN, ReduceFunction<IN>>
+        implements OneInputStreamOperator<IN, IN> {
+
+    private static final long serialVersionUID = 1L;
+
+    private static final String STATE_NAME = "_op_state";
+
+    private transient OperatorState<IN> values;
+
+    private TypeSerializer<IN> serializer;
+
+
+    public UpdateCentroidReduce(ReduceFunction<IN> reducer, TypeSerializer<IN> serializer) {
+        super(reducer);
+        this.serializer = serializer;
+    }
+
+    @Override
+    public void open() throws Exception {
+        super.open();
+        values = createKeyValueState(STATE_NAME, serializer, null);
+    }
+
+    @Override
+    public void processElement(StreamRecord<IN> element) throws Exception {
+        IN value = element.getValue();
+        IN currentValue = values.value();
+
+        if (currentValue != null) {
+            IN reduced = userFunction.reduce(currentValue, value);
+            values.update(reduced);
+            output.collect(element.replace(reduced));
+        } else {
+            values.update(value);
+            output.collect(element.replace(value));
+        }
+    }
+
+    @Override
+    public void processWatermark(Watermark mark) throws Exception {
+        output.emitWatermark(mark);
+    }
+
+
+}
+

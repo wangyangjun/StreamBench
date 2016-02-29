@@ -1,5 +1,6 @@
 package fi.aalto.dmg.frame;
 
+import fi.aalto.dmg.util.Point;
 import fi.aalto.dmg.util.WithTime;
 
 import java.io.Serializable;
@@ -23,21 +24,29 @@ abstract public class OperatorCreator implements Serializable {
      * topics: Topic1,Topic2
      * offset smallest
      **/
-    abstract public WorkloadOperator<WithTime<String>> createOperatorFromKafkaWithTime(String zkConStr,
-                                                                               String kafkaServers,
-                                                                               String group,
-                                                                               String topics,
-                                                                               String offset,
-                                                                               String componentId,
-                                                                               int parallelism);
+    abstract public WorkloadOperator<WithTime<String>> stringStreamFromKafkaWithTime(String zkConStr,
+                                                                                     String kafkaServers,
+                                                                                     String group,
+                                                                                     String topics,
+                                                                                     String offset,
+                                                                                     String componentId,
+                                                                                     int parallelism);
 
-    abstract public WorkloadOperator<String> createOperatorFromKafka(String zkConStr,
-                                                                               String kafkaServers,
-                                                                               String group,
-                                                                               String topics,
-                                                                               String offset,
-                                                                               String componentId,
-                                                                               int parallelism);
+    abstract public WorkloadOperator<Point> pointStreamFromKafka(String zkConStr,
+                                                               String kafkaServers,
+                                                               String group,
+                                                               String topics,
+                                                               String offset,
+                                                               String componentId,
+                                                               int parallelism);
+
+    abstract public WorkloadOperator<String> stringStreamFromKafka(String zkConStr,
+                                                                   String kafkaServers,
+                                                                   String group,
+                                                                   String topics,
+                                                                   String offset,
+                                                                   String componentId,
+                                                                   int parallelism);
 
     /**
      * Start streaming analysis job

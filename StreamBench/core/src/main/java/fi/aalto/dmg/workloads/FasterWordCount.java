@@ -28,10 +28,10 @@ public class FasterWordCount extends Workload implements Serializable {
 
             WorkloadOperator<String> operator = kafkaStreamOperator("source");
             PairWorkloadOperator<String, WithTime<Integer>> counts =
-                    operator.flatMapToPair(UserFunctions.flatMapToPairAddTime, "splitter", parallelism)
-                            .reduceByKey(UserFunctions.sumReduceWithTime, "sum", parallelism, true)
-                            .updateStateByKey(UserFunctions.sumReduceWithTime, "accumulate", parallelism);
-            counts.sink(parallelism);
+                    operator.flatMapToPair(UserFunctions.flatMapToPairAddTime, "splitter")
+                            .reduceByKey(UserFunctions.sumReduceWithTime, "sum", true)
+                            .updateStateByKey(UserFunctions.sumReduceWithTime, "accumulate");
+            counts.sink();
         }
         catch (Exception e){
             logger.error(e.getMessage());

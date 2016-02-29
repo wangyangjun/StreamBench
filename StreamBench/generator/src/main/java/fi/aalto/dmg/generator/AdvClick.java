@@ -87,7 +87,7 @@ public class AdvClick {
                 advList.add(new Advertisement(advId, timestamp+deltaT));
             }
 
-            if(i%1000 == 0){
+            if(i%100 == 0){
                 cachedPool.submit(new ClickThread(advList));
                 advList = new ArrayList<>();
             }

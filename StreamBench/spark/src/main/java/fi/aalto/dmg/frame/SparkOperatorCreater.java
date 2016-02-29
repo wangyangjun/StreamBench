@@ -6,13 +6,13 @@ import fi.aalto.dmg.util.WithTime;
 import kafka.serializer.StringDecoder;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.function.Function;
+import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaDStream;
+import org.apache.spark.streaming.api.java.JavaPairDStream;
 import org.apache.spark.streaming.api.java.JavaPairInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka.KafkaUtils;
-import org.apache.spark.streaming.scheduler.StatsReportListener;
-import org.apache.spark.streaming.ui.StreamingJobProgressListener;
 import scala.Tuple2;
 
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class SparkOperatorCreater extends OperatorCreator implements Serializabl
     public JavaStreamingContext jssc;
     private Properties properties;
 
-    private static Function<Tuple2<String, String>, WithTime<String>> mapFunction
+    private static Function<Tuple2<String, String>, WithTime<String>> mapFunctionWithTime
             = new Function<Tuple2<String, String>, WithTime<String>>() {
         @Override
         public WithTime<String> call(Tuple2<String, String> stringStringTuple2) throws Exception {
@@ -37,6 +37,14 @@ public class SparkOperatorCreater extends OperatorCreator implements Serializabl
                 return new WithTime<String>(list[0], Long.parseLong(list[1]));
             }
             return new WithTime<>(stringStringTuple2._2(), System.currentTimeMillis());
+        }
+    };
+
+    private static Function<Tuple2<String, String>, String> mapFunction
+            = new Function<Tuple2<String, String>, String>() {
+        @Override
+        public String call(Tuple2<String, String> stringStringTuple2) throws Exception {
+            return stringStringTuple2._2();
         }
     };
 
@@ -50,13 +58,13 @@ public class SparkOperatorCreater extends OperatorCreator implements Serializabl
     }
 
     @Override
-    public SparkWorkloadOperator<WithTime<String>> createOperatorFromKafkaWithTime(String zkConStr,
-                                                                                   String kafkaServers,
-                                                                                   String group,
-                                                                                   String topics,
-                                                                                   String offset,
-                                                                                   String componentId,
-                                                                                   int parallelism) {
+    public SparkWorkloadOperator<WithTime<String>> stringStreamFromKafkaWithTime(String zkConStr,
+                                                                                 String kafkaServers,
+                                                                                 String group,
+                                                                                 String topics,
+                                                                                 String offset,
+                                                                                 String componentId,
+                                                                                 int parallelism) {
         HashSet<String> topicsSet = new HashSet<>(Arrays.asList(topics.split(",")));
         HashMap<String, String> kafkaParams = new HashMap<>();
         kafkaParams.put("metadata.broker.list", kafkaServers);
@@ -73,26 +81,26 @@ public class SparkOperatorCreater extends OperatorCreator implements Serializabl
                 topicsSet
         );
 
-        JavaDStream<WithTime<String>> lines = messages.map(mapFunction);
+        JavaDStream<WithTime<String>> lines = messages.map(mapFunctionWithTime);
 
-        return new SparkWorkloadOperator<>(lines);
+        return new SparkWorkloadOperator<>(lines, parallelism);
     }
 
     @Override
-    public WorkloadOperator<String> createOperatorFromKafka(String zkConStr,
-                                                            String kafkaServers,
-                                                            String group,
-                                                            String topics,
-                                                            String offset,
-                                                            String componentId,
-                                                            int parallelism) {
+    public WorkloadOperator<String> stringStreamFromKafka(String zkConStr,
+                                                          String kafkaServers,
+                                                          String group,
+                                                          String topics,
+                                                          String offset,
+                                                          String componentId,
+                                                          int parallelism) {
         HashSet<String> topicsSet = new HashSet<>(Arrays.asList(topics.split(",")));
         HashMap<String, String> kafkaParams = new HashMap<>();
         kafkaParams.put("metadata.broker.list", kafkaServers);
         kafkaParams.put("auto.offset.reset", offset);
 
         // Create direct kafka stream with brokers and topics
-        JavaPairInputDStream<String, String> messages = KafkaUtils.createDirectStream(
+        JavaPairDStream<String, String> messages = KafkaUtils.createDirectStream(
                 jssc,
                 String.class,
                 String.class,
@@ -102,14 +110,9 @@ public class SparkOperatorCreater extends OperatorCreator implements Serializabl
                 topicsSet
         );
 
-        JavaDStream<String> lines = messages.map(new Function<Tuple2<String, String>, String>() {
-            @Override
-            public String call(Tuple2<String, String> stringStringTuple2) throws Exception {
-                return stringStringTuple2._2();
-            }
-        });
+        JavaDStream<String> lines = messages.map(mapFunction);
 
-        return new SparkWorkloadOperator<>(lines);
+        return new SparkWorkloadOperator<>(lines, parallelism);
     }
 
 
@@ -118,7 +121,7 @@ public class SparkOperatorCreater extends OperatorCreator implements Serializabl
         jssc.addStreamingListener(new PerformanceStreamingListener());
 
 //        jssc.checkpoint("/tmp/log-analyzer-streaming");
-        jssc.checkpoint("hdfs://master:8020/usr/warehouse/wordcount/checkpoint");
+//        jssc.checkpoint("hdfs://master:8020/usr/warehouse/wordcount/checkpoint");
         jssc.start();
         jssc.awaitTermination();
     }

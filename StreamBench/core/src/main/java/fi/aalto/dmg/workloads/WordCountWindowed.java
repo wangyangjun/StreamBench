@@ -43,11 +43,11 @@ public class WordCountWindowed  extends Workload implements Serializable {
             // Flink doesn't support shuffle().window()
             // Actually Flink does keyGrouping().window().update()
             // It is the same situation to Spark streaming
-            WorkloadOperator<WithTime<String>> operator = kafkaStreamOperatorWithTime("source");
+            WorkloadOperator<WithTime<String>> operator = stringStreamWithTime("source");
             PairWorkloadOperator<String, WithTime<Integer>> counts =
-                    operator.flatMap(UserFunctions.splitFlatMapWithTime, "splitter", parallelism)
-                            .mapToPair(UserFunctions.mapToStrIntPairWithTime, "pair", parallelism)
-                            .reduceByKeyAndWindow(UserFunctions.sumReduceWithTime, "counter", parallelism,
+                    operator.flatMap(UserFunctions.splitFlatMapWithTime, "splitter")
+                            .mapToPair(UserFunctions.mapToStrIntPairWithTime, "pair")
+                            .reduceByKeyAndWindow(UserFunctions.sumReduceWithTime, "counter",
                                     new TimeDurations(TimeUnit.SECONDS, 1), new TimeDurations(TimeUnit.SECONDS, 1));
             counts.print();
 

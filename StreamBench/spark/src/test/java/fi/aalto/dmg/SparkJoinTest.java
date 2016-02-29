@@ -38,7 +38,7 @@ public class SparkJoinTest {
             public Tuple2<String, Long> call(String w) throws Exception {
                 return new Tuple2<>(w, 1L);
             }
-        }).window(Durations.seconds(30));
+        }).window(Durations.seconds(30), Durations.seconds(10));
 
         JavaReceiverInputDStream<String> lines2 = ssc.socketTextStream("127.0.0.1", 9998);
         JavaPairDStream<String, Long> nameAgeStream = lines2.mapToPair(new PairFunction<String, String, Long>() {
@@ -51,7 +51,7 @@ public class SparkJoinTest {
                     age = Long.parseLong(list[1]);
                 return new Tuple2<String, Long>(name, age);
             }
-        }).window(Durations.seconds(10));
+        }).window(Durations.seconds(10), Durations.seconds(10));
 
 //        nameStream.print();
 //        nameAgeStream.print();
