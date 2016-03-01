@@ -1,5 +1,6 @@
 package fi.aalto.dmg.frame;
 
+import fi.aalto.dmg.exceptions.UnsupportOperatorException;
 import fi.aalto.dmg.frame.functions.*;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaPairDStream;
@@ -16,27 +17,12 @@ public class SparkWindowedWorkloadOperator<T> extends WindowedWorkloadOperator<T
         dStream = stream;
     }
 
-
-    @Override
-    public <R> WorkloadOperator<R> mapPartition(MapPartitionFunction<T, R> fun,
-                                                String componentId,
-                                                boolean logThroughput) {
-        return mapPartition(fun, componentId);
-    }
-
     @Override
     public <R> WorkloadOperator<R> mapPartition(MapPartitionFunction<T, R> fun,
                                                 String componentId) {
 
         JavaDStream<R> newStream = dStream.mapPartitions(new MapPartitionFunctionImpl<>(fun));
         return new SparkWorkloadOperator<>(newStream, parallelism);
-    }
-
-    @Override
-    public <R> WorkloadOperator<R> map(MapFunction<T, R> fun,
-                                       String componentId,
-                                       boolean logThroughput) {
-        return map(fun, componentId);
     }
 
     @Override
@@ -48,23 +34,9 @@ public class SparkWindowedWorkloadOperator<T> extends WindowedWorkloadOperator<T
 
     @Override
     public WorkloadOperator<T> filter(FilterFunction<T> fun,
-                                      String componentId,
-                                      boolean logThroughput) {
-        return filter(fun, componentId);
-    }
-
-    @Override
-    public WorkloadOperator<T> filter(FilterFunction<T> fun,
                                       String componentId) {
         JavaDStream<T> newStream = dStream.filter(new FilterFunctionImpl<>(fun));
         return new SparkWorkloadOperator<>(newStream, parallelism);
-    }
-
-    @Override
-    public WorkloadOperator<T> reduce(ReduceFunction<T> fun,
-                                      String componentId,
-                                      boolean logThroughput) {
-        return reduce(fun, componentId);
     }
 
     @Override
@@ -76,16 +48,14 @@ public class SparkWindowedWorkloadOperator<T> extends WindowedWorkloadOperator<T
 
     @Override
     public <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun,
-                                                       String componentId,
-                                                       boolean logThroughput) {
-        return mapToPair(fun, componentId);
-    }
-
-    @Override
-    public <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun,
                                                        String componentId) {
         JavaPairDStream<K,V> pairDStream = dStream.mapToPair(new PairFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(pairDStream, parallelism);
+    }
+
+    @Override
+    public void closeWith(OperatorBase stream, boolean broadcast) throws UnsupportOperatorException {
+        throw new UnsupportOperatorException("don't support operator");
     }
 
     @Override

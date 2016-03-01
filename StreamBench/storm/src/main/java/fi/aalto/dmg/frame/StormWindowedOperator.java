@@ -38,33 +38,10 @@ public class StormWindowedOperator<T> extends WindowedWorkloadOperator<T>  {
         this.slideDuration = slideDuration;
     }
 
-
-    @Override
-    public <R> WorkloadOperator<R> mapPartition(MapPartitionFunction<T, R> fun, String componentId, boolean logThroughput) {
-        try {
-            WindowMapPartitionBolt<T, R> bolt = new WindowMapPartitionBolt<>(fun, windowDuration, slideDuration);
-            if(logThroughput) {
-                bolt.enableThroughput(componentId);
-            }
-            topologyBuilder.setBolt(componentId, bolt, parallelism).localOrShuffleGrouping(preComponentId);
-        } catch (DurationException e) {
-            e.printStackTrace();
-        }
-        return new StormOperator<>(topologyBuilder, componentId, parallelism);
-    }
-
     @Override
     public <R> WorkloadOperator<R> mapPartition(MapPartitionFunction<T, R> fun, String componentId) {
-        return mapPartition(fun, componentId, false);
-    }
-
-    @Override
-    public <R> WorkloadOperator<R> map(MapFunction<T, R> fun, String componentId, boolean logThroughput) {
         try {
-            WindowMapBolt<T, R> bolt = new WindowMapBolt<>(fun, windowDuration, slideDuration);
-            if(logThroughput) {
-                bolt.enableThroughput(componentId);
-            }
+            WindowMapPartitionBolt<T, R> bolt = new WindowMapPartitionBolt<>(fun, windowDuration, slideDuration);
             topologyBuilder.setBolt(componentId, bolt, parallelism).localOrShuffleGrouping(preComponentId);
         } catch (DurationException e) {
             e.printStackTrace();
@@ -74,16 +51,8 @@ public class StormWindowedOperator<T> extends WindowedWorkloadOperator<T>  {
 
     @Override
     public <R> WorkloadOperator<R> map(MapFunction<T, R> fun, String componentId) {
-        return map(fun, componentId, false);
-    }
-
-    @Override
-    public WorkloadOperator<T> filter(FilterFunction<T> fun, String componentId, boolean logThroughput) {
         try {
-            WindowFilterBolt<T> bolt = new WindowFilterBolt<>(fun, windowDuration, slideDuration);
-            if(logThroughput) {
-                bolt.enableThroughput(componentId);
-            }
+            WindowMapBolt<T, R> bolt = new WindowMapBolt<>(fun, windowDuration, slideDuration);
             topologyBuilder.setBolt(componentId, bolt, parallelism).localOrShuffleGrouping(preComponentId);
         } catch (DurationException e) {
             e.printStackTrace();
@@ -93,16 +62,8 @@ public class StormWindowedOperator<T> extends WindowedWorkloadOperator<T>  {
 
     @Override
     public WorkloadOperator<T> filter(FilterFunction<T> fun, String componentId) {
-        return filter(fun, componentId, false);
-    }
-
-    @Override
-    public WorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId, boolean logThroughput) {
         try {
-            WindowReduceBolt<T> bolt = new WindowReduceBolt<>(fun, windowDuration, slideDuration);
-            if(logThroughput) {
-                bolt.enableThroughput(componentId);
-            }
+            WindowFilterBolt<T> bolt = new WindowFilterBolt<>(fun, windowDuration, slideDuration);
             topologyBuilder.setBolt(componentId, bolt, parallelism).localOrShuffleGrouping(preComponentId);
         } catch (DurationException e) {
             e.printStackTrace();
@@ -112,26 +73,24 @@ public class StormWindowedOperator<T> extends WindowedWorkloadOperator<T>  {
 
     @Override
     public WorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId) {
-        return reduce(fun, componentId, false);
+        try {
+            WindowReduceBolt<T> bolt = new WindowReduceBolt<>(fun, windowDuration, slideDuration);
+            topologyBuilder.setBolt(componentId, bolt, parallelism).localOrShuffleGrouping(preComponentId);
+        } catch (DurationException e) {
+            e.printStackTrace();
+        }
+        return new StormOperator<>(topologyBuilder, componentId, parallelism);
     }
 
     @Override
-    public <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId, boolean logThroughput) {
+    public <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId) {
         try {
             WindowMapToPairBolt<T, K, V> bolt = new WindowMapToPairBolt<>(fun, windowDuration, slideDuration);
-            if(logThroughput) {
-                bolt.enableThroughput(componentId);
-            }
             topologyBuilder.setBolt(componentId, bolt, parallelism).localOrShuffleGrouping(preComponentId);
         } catch (DurationException e) {
             e.printStackTrace();
         }
         return new StormPairOperator<>(topologyBuilder, componentId, parallelism);
-    }
-
-    @Override
-    public <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId) {
-        return mapToPair(fun, componentId, false);
     }
 
     @Override

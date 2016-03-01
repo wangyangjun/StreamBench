@@ -16,7 +16,6 @@ abstract public class WorkloadOperator<T> extends OperatorBase implements Serial
     }
 
     /** Map T to R for each entity */
-    abstract public <R> WorkloadOperator<R> map(MapFunction<T, R> fun, String componentId, boolean logThroughput);
     abstract public <R> WorkloadOperator<R> map(MapFunction<T, R> fun, String componentId);
 
     /** Map for iterative operator only */
@@ -24,24 +23,19 @@ abstract public class WorkloadOperator<T> extends OperatorBase implements Serial
     abstract public <R> WorkloadOperator<R> map(MapWithInitListFunction<T, R> fun, List<T> initList, String componentId, Class<R> outputClass) throws UnsupportOperatorException;
 
     /** Map T to Pair<K,V>, return PairWorkloadOperator */
-    abstract public <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId, boolean logThroughput);
     abstract public <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun, String componentId);
 
     /** reduce on whole stream */
-    abstract public WorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId, boolean logThroughput);
     abstract public WorkloadOperator<T> reduce(ReduceFunction<T> fun, String componentId);
 
     /** filter entity if fun(entity) is false */
-    abstract public WorkloadOperator<T> filter(FilterFunction<T> fun, String componentId, boolean logThroughput);
     abstract public WorkloadOperator<T> filter(FilterFunction<T> fun, String componentId);
 
 
     /** Map T to iterable<R> */
-    abstract public <R> WorkloadOperator<R> flatMap(FlatMapFunction<T, R> fun, String componentId, boolean logThroughput);
     abstract public <R> WorkloadOperator<R> flatMap(FlatMapFunction<T, R> fun, String componentId);
 
     /** Map T to Pair<K,V>, return PairWorkloadOperator */
-    abstract public <K, V> PairWorkloadOperator<K, V> flatMapToPair(FlatMapPairFunction<T, K, V> fun, String componentId, boolean logThroughput);
     abstract public <K, V> PairWorkloadOperator<K, V> flatMapToPair(FlatMapPairFunction<T, K, V> fun, String componentId);
 
     abstract public WindowedWorkloadOperator<T> window(TimeDurations windowDuration);

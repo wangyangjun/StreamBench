@@ -33,29 +33,10 @@ public class StormPairOperator<K, V> extends PairWorkloadOperator<K,V> {
         return new StormGroupedOperator<>(topologyBuilder, this.preComponentId, parallelism);
     }
 
-    @Override
-    public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput) {
-        PairReduceBolt<K, V> bolt = new PairReduceBolt<>(fun);
-        if(logThroughput){
-            bolt.enableThroughput(componentId);
-        }
-        topologyBuilder.setBolt(componentId, bolt, parallelism)
-                .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
-        return new StormPairOperator<>(topologyBuilder, componentId, parallelism);
-    }
-
     // Set bolt with fieldsGrouping
     @Override
     public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId) {
-        return reduceByKey(fun, componentId, false);
-    }
-
-    @Override
-    public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<V, R> fun, String componentId, boolean logThroughput) {
-        MapValueBolt<V, R> bolt = new MapValueBolt<>(fun);
-        if(logThroughput){
-            bolt.enableThroughput(componentId);
-        }
+        PairReduceBolt<K, V> bolt = new PairReduceBolt<>(fun);
         topologyBuilder.setBolt(componentId, bolt, parallelism)
                 .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
         return new StormPairOperator<>(topologyBuilder, componentId, parallelism);
@@ -63,57 +44,28 @@ public class StormPairOperator<K, V> extends PairWorkloadOperator<K,V> {
 
     @Override
     public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<V, R> fun, String componentId) {
-        return mapValue(fun, componentId, false);
-    }
-
-    @Override
-    public <R> WorkloadOperator<R> map(MapFunction<Tuple2<K, V>, R> fun, String componentId, boolean logThroughput) {
-        PairMapBolt<K, V, R> bolt = new PairMapBolt<>(fun);
-        if(logThroughput){
-            bolt.enableThroughput(componentId);
-        }
-        topologyBuilder.setBolt(componentId, bolt, parallelism)
-                .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
-        return new StormOperator<>(topologyBuilder, componentId, parallelism);
-    }
-
-    @Override
-    public <R> WorkloadOperator<R> map(MapFunction<Tuple2<K, V>, R> fun, String componentId) {
-        return map(fun, componentId, false);
-    }
-
-    @Override
-    public <R> WorkloadOperator<R> map(MapFunction<Tuple2<K, V>, R> fun, String componentId, Class<R> outputClass) {
-        return map(fun, componentId, outputClass, false);
-    }
-
-    @Override
-    public <R> WorkloadOperator<R> map(MapFunction<Tuple2<K, V>, R> fun, String componentId, Class<R> outputClass, boolean logThroughput) {
-        return map(fun, componentId, logThroughput);
-    }
-
-    @Override
-    public <R> PairWorkloadOperator<K, R> flatMapValue(FlatMapFunction<V, R> fun, String componentId, boolean logThroughput) {
-        FlatMapValueBolt<V, R> bolt = new FlatMapValueBolt<>(fun);
-        if(logThroughput){
-            bolt.enableThroughput(componentId);
-        }
+        MapValueBolt<V, R> bolt = new MapValueBolt<>(fun);
         topologyBuilder.setBolt(componentId, bolt, parallelism)
                 .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
         return new StormPairOperator<>(topologyBuilder, componentId, parallelism);
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> flatMapValue(FlatMapFunction<V, R> fun, String componentId) {
-        return flatMapValue(fun, componentId, false);
+    public <R> WorkloadOperator<R> map(MapFunction<Tuple2<K, V>, R> fun, String componentId) {
+        PairMapBolt<K, V, R> bolt = new PairMapBolt<>(fun);
+        topologyBuilder.setBolt(componentId, bolt, parallelism)
+                .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
+        return new StormOperator<>(topologyBuilder, componentId, parallelism);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId, boolean logThroughput) {
-        PairFilterBolt<K, V> bolt = new PairFilterBolt<>(fun);
-        if(logThroughput){
-            bolt.enableThroughput(componentId);
-        }
+    public <R> WorkloadOperator<R> map(MapFunction<Tuple2<K, V>, R> fun, String componentId, Class<R> outputClass) {
+        return map(fun, componentId);
+    }
+
+    @Override
+    public <R> PairWorkloadOperator<K, R> flatMapValue(FlatMapFunction<V, R> fun, String componentId) {
+        FlatMapValueBolt<V, R> bolt = new FlatMapValueBolt<>(fun);
         topologyBuilder.setBolt(componentId, bolt, parallelism)
                 .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
         return new StormPairOperator<>(topologyBuilder, componentId, parallelism);
@@ -121,12 +73,10 @@ public class StormPairOperator<K, V> extends PairWorkloadOperator<K,V> {
 
     @Override
     public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId) {
-        return filter(fun, componentId, false);
-    }
-
-    @Override
-    public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput) {
-        return null;
+        PairFilterBolt<K, V> bolt = new PairFilterBolt<>(fun);
+        topologyBuilder.setBolt(componentId, bolt, parallelism)
+                .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
+        return new StormPairOperator<>(topologyBuilder, componentId, parallelism);
     }
 
     // Set bolt with fieldsGrouping
@@ -136,18 +86,8 @@ public class StormPairOperator<K, V> extends PairWorkloadOperator<K,V> {
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration, boolean logThroughput) {
-        return null;
-    }
-
-    @Override
     public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration) {
         return reduceByKeyAndWindow(fun, componentId, windowDuration, windowDuration);
-    }
-
-    @Override
-    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration, TimeDurations slideDuration, boolean logThroughput) {
-        return null;
     }
 
     @Override

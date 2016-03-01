@@ -2,6 +2,8 @@ package fi.aalto.dmg.frame.userfunctions;
 
 import com.google.common.base.Optional;
 import fi.aalto.dmg.frame.functions.*;
+import fi.aalto.dmg.statistics.Latency;
+import fi.aalto.dmg.statistics.Throughput;
 import fi.aalto.dmg.util.Point;
 import fi.aalto.dmg.util.WithTime;
 import org.slf4j.Logger;
@@ -79,7 +81,10 @@ public class UserFunctions {
     };
 
     public static ReduceFunction<WithTime<Integer>> sumReduceWithTime = new ReduceFunction<WithTime<Integer>>() {
+
+        Throughput throughput = new Throughput("WordCountReduce");
         public WithTime<Integer> reduce(WithTime<Integer> var1, WithTime<Integer> var2) throws Exception {
+            throughput.execute();
             return new WithTime<>(var1.getValue()+var2.getValue(), Math.max(var1.getTime(), var2.getTime()));
         }
     };
@@ -167,8 +172,10 @@ public class UserFunctions {
 
     public static MapFunction<Tuple2<Long,Long>, WithTime<Tuple2<Long, Long>>> mapToWithTime
             = new MapFunction<Tuple2<Long,Long>, WithTime<Tuple2<Long, Long>>>() {
+        Throughput throughput = new Throughput("MapToWithTime");
         @Override
         public WithTime<Tuple2<Long, Long>> map(Tuple2<Long, Long> var1) {
+            throughput.execute();
             return new WithTime<>(var1, var1._2());
         }
     };
@@ -187,10 +194,18 @@ public class UserFunctions {
 
     public static MapWithInitListFunction<Point, Point> assign
             = new MapWithInitListFunction<Point, Point>() {
+
+        Latency latency = new Latency("CentroidAssign");
+        Throughput throughput = new Throughput("CentroidAssign");
+
         @Override
         public Point map(Point var1, List<Point> list) {
 
             if( var1.isCentroid()) {
+                // log latency and throughput
+                throughput.execute();
+                latency.execute(var1.getTime());
+
                 list.set(var1.id, var1);
                 return null;
             } else {
@@ -222,7 +237,7 @@ public class UserFunctions {
                 @Override
                 public Tuple2<Long, Point> reduce(Tuple2<Long, Point> var1, Tuple2<Long, Point> var2) throws Exception {
                     double x = var1._2.x+var2._2.x;
-                    double y = var1._2.x+var2._2.x;
+                    double y = var1._2.y+var2._2.y;
                     long time = Math.max(var1._2.getTime(), var2._2.getTime());
                     return new Tuple2<>(var1._1 + var2._1, new Point(x, y, time));
                 }

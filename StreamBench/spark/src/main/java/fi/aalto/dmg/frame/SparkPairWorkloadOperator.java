@@ -34,30 +34,15 @@ public class SparkPairWorkloadOperator<K,V> extends PairWorkloadOperator<K,V> {
     }
 
     @Override
-    public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput) {
-        return reduceByKey(fun, componentId);
-    }
-
-    @Override
     public PairWorkloadOperator<K, V> reduceByKey(final ReduceFunction<V> fun, String componentId) {
         JavaPairDStream<K,V> newStream = pairDStream.reduceByKey(new ReduceFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(newStream, parallelism);
     }
 
     @Override
-    public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<V, R> fun, String componentId, boolean logThroughput) {
-        return mapValue(fun, componentId);
-    }
-
-    @Override
     public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<V, R> fun, String componentId) {
         JavaPairDStream<K,R> newStream = pairDStream.mapValues(new FunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(newStream, parallelism);
-    }
-
-    @Override
-    public <R> WorkloadOperator<R> map(MapFunction<Tuple2<K, V>, R> fun, String componentId, boolean logThroughput) {
-        return null;
     }
 
     @Override
@@ -71,36 +56,15 @@ public class SparkPairWorkloadOperator<K,V> extends PairWorkloadOperator<K,V> {
     }
 
     @Override
-    public <R> WorkloadOperator<R> map(MapFunction<Tuple2<K, V>, R> fun, String componentId, Class<R> outputClass, boolean logThroughput) {
-        return null;
-    }
-
-    @Override
-    public <R> PairWorkloadOperator<K, R> flatMapValue(FlatMapFunction<V, R> fun, String componentId, boolean logThroughput) {
-        return flatMapValue(fun, componentId);
-    }
-
-    @Override
     public <R> PairWorkloadOperator<K, R> flatMapValue(FlatMapFunction<V, R> fun, String componentId) {
         JavaPairDStream<K,R> newStream = pairDStream.flatMapValues(new FlatMapValuesFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(newStream, parallelism);
     }
 
     @Override
-    public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId,
-                                             boolean logThroughput) {
-        return filter(fun, componentId);
-    }
-
-    @Override
     public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId) {
         JavaPairDStream<K,V> newStream = pairDStream.filter(new FilterFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(newStream, parallelism);
-    }
-
-    @Override
-    public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput) {
-        return updateStateByKey(fun, componentId);
     }
 
     @Override
@@ -112,20 +76,8 @@ public class SparkPairWorkloadOperator<K,V> extends PairWorkloadOperator<K,V> {
 
     @Override
     public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId,
-                                                           TimeDurations windowDuration, boolean logThroughput) {
-        return reduceByKeyAndWindow(fun, componentId, windowDuration);
-    }
-
-    @Override
-    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId,
                                                            TimeDurations windowDuration) {
         return reduceByKeyAndWindow(fun, componentId, windowDuration, windowDuration);
-    }
-
-    @Override
-    public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId,
-                                                           TimeDurations windowDuration, TimeDurations slideDuration, boolean logThroughput) {
-        return reduceByKeyAndWindow(fun, componentId, windowDuration, slideDuration);
     }
 
     @Override

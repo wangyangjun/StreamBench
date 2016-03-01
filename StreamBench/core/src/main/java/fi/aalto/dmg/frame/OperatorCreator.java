@@ -32,6 +32,9 @@ abstract public class OperatorCreator implements Serializable {
                                                                                      String componentId,
                                                                                      int parallelism);
 
+    /**
+     * Consume point stream from kafka for workload 3
+     */
     abstract public WorkloadOperator<Point> pointStreamFromKafka(String zkConStr,
                                                                String kafkaServers,
                                                                String group,

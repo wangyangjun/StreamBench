@@ -19,7 +19,6 @@ abstract public class PairWorkloadOperator<K, V> extends OperatorBase{
     abstract public GroupedWorkloadOperator<K,V> groupByKey();
 
     // TODO: translate to reduce on each node, then group merge
-    abstract public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput);
     abstract public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun, String componentId);
 
     /**
@@ -29,30 +28,19 @@ abstract public class PairWorkloadOperator<K, V> extends OperatorBase{
      * @param <R>
      * @return maped PairWorkloadOperator<K,R>
      */
-    abstract public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<V, R> fun, String componentId, boolean logThroughput);
     abstract public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<V, R> fun, String componentId);
 
-    abstract public <R> WorkloadOperator<R> map(MapFunction<Tuple2<K,V>, R> fun, String componentId, boolean logThroughput);
     abstract public <R> WorkloadOperator<R> map(MapFunction<Tuple2<K,V>, R> fun, String componentId);
     abstract public <R> WorkloadOperator<R> map(MapFunction<Tuple2<K,V>, R> fun, String componentId, Class<R> outputClass);
-    abstract public <R> WorkloadOperator<R> map(MapFunction<Tuple2<K,V>, R> fun, String componentId, Class<R> outputClass, boolean logThroughput);
 
-    abstract public <R> PairWorkloadOperator<K, R> flatMapValue(FlatMapFunction<V, R> fun, String componentId, boolean logThroughput);
     abstract public <R> PairWorkloadOperator<K, R> flatMapValue(FlatMapFunction<V, R> fun, String componentId);
 
-    abstract public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K,V>> fun, String componentId, boolean logThroughput);
     abstract public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K,V>> fun, String componentId);
 
-    abstract public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId, boolean logThroughput);
     abstract public PairWorkloadOperator<K, V> updateStateByKey(ReduceFunction<V> fun, String componentId);
 
 
-    abstract public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId,
-                                                    TimeDurations windowDuration, boolean logThroughput);
     abstract public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration);
-
-    abstract public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId,
-                                                    TimeDurations windowDuration, TimeDurations slideDuration, boolean logThroughput);
 
     /**
      * Pre-aggregation -> key group -> reduce
@@ -107,7 +95,6 @@ abstract public class PairWorkloadOperator<K, V> extends OperatorBase{
             String componentId, PairWorkloadOperator<K,R> joinStream,
             TimeDurations windowDuration, TimeDurations windowDuration2,
             AssignTimeFunction<V> eventTimeAssigner1, AssignTimeFunction<R> eventTimeAssigner2) throws WorkloadException;
-
 
     abstract public void sink();
 }

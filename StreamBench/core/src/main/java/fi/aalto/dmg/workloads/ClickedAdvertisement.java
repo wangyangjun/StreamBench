@@ -53,7 +53,7 @@ public class ClickedAdvertisement extends Workload implements Serializable {
                     new TimeAssigner(),
                     new TimeAssigner());
 
-            clicksWithCreateTime.mapValue(UserFunctions.mapToWithTime, "MapToWithTime", true)
+            clicksWithCreateTime.mapValue(UserFunctions.mapToWithTime, "MapToWithTime")
                     .sink();
         }
         catch (Exception e){

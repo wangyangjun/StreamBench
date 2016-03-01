@@ -27,5 +27,13 @@ public class Latency implements Serializable{
             logger.warn(String.format(this.loggerName + ":\t%d", latency));
         }
     }
+
+    public void execute(long time){
+        long latency = System.currentTimeMillis() - time;
+        // probability to log 0.001
+        if(Math.random() < 0.01) {
+            logger.warn(String.format(this.loggerName + ":\t%d", latency));
+        }
+    }
 }
 
