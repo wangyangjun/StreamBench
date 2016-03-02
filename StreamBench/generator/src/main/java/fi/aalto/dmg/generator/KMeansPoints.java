@@ -17,10 +17,9 @@ import java.util.Random;
 
 public class KMeansPoints {
     private static final Logger logger = Logger.getLogger(SkewedWordCount.class);
-    private static long POINT_NUM = 1000;
+    private static long POINT_NUM = 100000000;
     private static String TOPIC = "KMeans";
     private static KafkaProducer<String, String> producer;
-
 
     public static List<Tuple2<Double, Double>> centroids = new ArrayList<>();
 
@@ -86,15 +85,14 @@ public class KMeansPoints {
             double x = centroids.get(centroid_index)._1() + point_random.nextDouble() * 10 - 5;
             double y = centroids.get(centroid_index)._2() + point_random.nextDouble() * 10 - 5;
 
-            StringBuilder messageBuilder = new StringBuilder();
-            messageBuilder.append(String.valueOf(x))
-                    .append("\t")
-                    .append(String.valueOf(y))
-                    .append(Constant.TimeSeparator)
-                    .append(String.valueOf(System.currentTimeMillis()));
+            String messageBuilder = String.valueOf(x) +
+                    "\t" +
+                    String.valueOf(y) +
+                    Constant.TimeSeparator +
+                    String.valueOf(System.currentTimeMillis());
 
             throughput.execute();
-            ProducerRecord<String, String> newRecord = new ProducerRecord<String, String>(TOPIC, messageBuilder.toString());
+            ProducerRecord<String, String> newRecord = new ProducerRecord<String, String>(TOPIC, messageBuilder);
             producer.send(newRecord);
 
             // control data generate speed

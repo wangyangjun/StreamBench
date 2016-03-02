@@ -19,3 +19,4 @@ python StreamBench/script/cluster-command.py kafka "java -cp /home/cloud-user/St
 
 /usr/local/kafka/bin/kafka-topics.sh --create --zookeeper zoo1:2181 --replication-factor 1 --partitions 32 --topic AdvClick
 
+/usr/local/kafka/bin/kafka-topics.sh --create --zookeeper zoo1:2181 --replication-factor 1 --partitions 32 --topic KMeans

@@ -34,13 +34,6 @@ public class KMeans extends Workload implements Serializable {
         super(creator);
     }
 
-    private static class TimeAssigner implements AssignTimeFunction<Long>, Serializable{
-        @Override
-        public long assign(Long var1) {
-            return var1;
-        }
-    }
-
     public static List<Point> InitCentroids(){
         List<Point> initCentroids = new ArrayList<>();
         initCentroids.add(new Point(0, 0.0, 0.0));
