@@ -192,7 +192,7 @@ public class FlinkWorkloadOperator<T> extends WorkloadOperator<T> {
             @Override
             public void invoke(T value) throws Exception {
 //                latency.execute((WithTime<? extends Object>) value);
-                throughput.execute();
+//                throughput.execute();
             }
         });
     }

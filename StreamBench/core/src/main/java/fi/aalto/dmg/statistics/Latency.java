@@ -23,7 +23,7 @@ public class Latency implements Serializable{
     public void execute(WithTime<? extends Object> withTime){
         long latency = System.currentTimeMillis() - withTime.getTime();
         // probability to log 0.001
-        if(Math.random() < 0.01) {
+        if(Math.random() < 0.001) {
             logger.warn(String.format(this.loggerName + ":\t%d", latency));
         }
     }
@@ -31,7 +31,7 @@ public class Latency implements Serializable{
     public void execute(long time){
         long latency = System.currentTimeMillis() - time;
         // probability to log 0.001
-        if(Math.random() < 0.01) {
+        if(Math.random() < 0.001) {
             logger.warn(String.format(this.loggerName + ":\t%d", latency));
         }
     }

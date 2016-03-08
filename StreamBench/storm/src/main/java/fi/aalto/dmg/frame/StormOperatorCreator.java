@@ -39,11 +39,11 @@ public class StormOperatorCreator extends OperatorCreator implements Serializabl
         conf.setDebug(true);
 
         // ack enabled
-//        conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 200);
+        conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 1000);
 
         // ack disable
-        conf.put(Config.TOPOLOGY_ACKER_EXECUTORS, 0);
-
+//        conf.put(Config.TOPOLOGY_ACKER_EXECUTORS, 0);
+        conf.put(Config.TOPOLOGY_MESSAGE_TIMEOUT_SECS, 60);
         topologyBuilder = new TopologyBuilder();
     }
 
@@ -109,17 +109,17 @@ public class StormOperatorCreator extends OperatorCreator implements Serializabl
     @Override
     public void Start() {
         // TODO: switch between local and cluster
-//        try {
-//            StormSubmitter.submitTopologyWithProgressBar("WordCount", conf, topologyBuilder.createTopology());
-//        } catch (AlreadyAliveException e) {
-//            e.printStackTrace();
-//        } catch (InvalidTopologyException e) {
-//            e.printStackTrace();
-//        } catch (AuthorizationException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            StormSubmitter.submitTopologyWithProgressBar("WordCount", conf, topologyBuilder.createTopology());
+        } catch (AlreadyAliveException e) {
+            e.printStackTrace();
+        } catch (InvalidTopologyException e) {
+            e.printStackTrace();
+        } catch (AuthorizationException e) {
+            e.printStackTrace();
+        }
 
-        LocalCluster cluster = new LocalCluster();
-        cluster.submitTopology("word-count", conf, topologyBuilder.createTopology());
+//        LocalCluster cluster = new LocalCluster();
+//        cluster.submitTopology("word-count", conf, topologyBuilder.createTopology());
     }
 }

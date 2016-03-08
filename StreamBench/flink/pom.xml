@@ -74,7 +74,7 @@
                             <classifier>assembly</classifier>
                             <archive>
                                 <manifestEntries>
-                                    <program-class>fi.aalto.dmg.App</program-class>
+                                    <program-class>fi.aalto.dmg.KMeans</program-class>
                                 </manifestEntries>
                             </archive>
                         </configuration>

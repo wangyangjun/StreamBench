@@ -83,7 +83,7 @@ public class KMeans extends Workload implements Serializable {
             List<Point> initCentroids = InitCentroids();
             WorkloadOperator<Point> assigned_points = points.map(UserFunctions.assign, initCentroids, "assign", Point.class);
             WorkloadOperator<Point> centroids = assigned_points
-                    .mapToPair(UserFunctions.pointMapToPair, "keyGroup")
+                    .mapToPair(UserFunctions.pointMapToPair, "mapToPair")
                     .reduceByKey(UserFunctions.pointAggregator, "aggregator")
                     .map(UserFunctions.computeCentroid, "centroid", Point.class);
             points.closeWith(centroids, true);

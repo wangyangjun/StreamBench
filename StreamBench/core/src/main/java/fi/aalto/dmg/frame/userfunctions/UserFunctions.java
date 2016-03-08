@@ -196,14 +196,12 @@ public class UserFunctions {
             = new MapWithInitListFunction<Point, Point>() {
 
         Latency latency = new Latency("CentroidAssign");
-        Throughput throughput = new Throughput("CentroidAssign");
 
         @Override
         public Point map(Point var1, List<Point> list) {
 
             if( var1.isCentroid()) {
-                // log latency and throughput
-                throughput.execute();
+                // log latency
                 latency.execute(var1.getTime());
 
                 list.set(var1.id, var1);
@@ -246,8 +244,11 @@ public class UserFunctions {
 
     public static MapFunction<Tuple2<Integer, Tuple2<Long, Point>>, Point> computeCentroid
             = new MapFunction<Tuple2<Integer, Tuple2<Long, Point>>, Point>() {
+        Throughput throughput = new Throughput("Centroid");
+
         @Override
         public Point map(Tuple2<Integer, Tuple2<Long, Point>> var1) {
+            throughput.execute();
             long counts = var1._2()._1();
             double x = var1._2._2.x/counts;
             double y = var1._2._2.y/counts;
