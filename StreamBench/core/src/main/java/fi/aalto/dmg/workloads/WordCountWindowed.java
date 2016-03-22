@@ -35,8 +35,8 @@ public class WordCountWindowed  extends Workload implements Serializable {
     @Override
     public void Process() throws WorkloadException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         try {
-            int hosts = Integer.parseInt(this.getProperties().getProperty("hosts"));
-            int cores = Integer.parseInt(this.getProperties().getProperty("cores"));
+            int hosts = Integer.parseInt(properties.getProperty("hosts"));
+            int cores = Integer.parseInt(properties.getProperty("cores"));
             int parallelism = hosts*cores;
 
 

@@ -31,7 +31,6 @@ public class WordCount extends Workload implements Serializable{
     }
 
 
-
     public void Process() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         try {
 

@@ -51,7 +51,7 @@ public class SparkJoinTest {
                     age = Long.parseLong(list[1]);
                 return new Tuple2<String, Long>(name, age);
             }
-        }).window(Durations.seconds(10), Durations.seconds(10));
+        }).window(Durations.seconds(11), Durations.seconds(11));
 
 //        nameStream.print();
 //        nameAgeStream.print();

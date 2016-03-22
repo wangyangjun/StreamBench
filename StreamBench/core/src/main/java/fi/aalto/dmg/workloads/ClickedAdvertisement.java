@@ -24,9 +24,14 @@ public class ClickedAdvertisement extends Workload implements Serializable {
     private static final long serialVersionUID = -7308411680185973067L;
 
     private static final Logger logger = Logger.getLogger(WordCount.class);
+    private int stream1Window;
+    private int stream2Window;
 
     public ClickedAdvertisement(OperatorCreator creator) throws WorkloadException {
         super(creator);
+
+        stream1Window = Integer.parseInt(properties.getProperty("stream1.window"));
+        stream2Window = Integer.parseInt(properties.getProperty("stream2.window"));
     }
 
     private static class TimeAssigner implements AssignTimeFunction<Long>, Serializable{
@@ -48,8 +53,8 @@ public class ClickedAdvertisement extends Workload implements Serializable {
             PairWorkloadOperator<String, Tuple2<Long, Long>> clicksWithCreateTime = advertisements.join(
                     "Join",
                     clicks,
-                    new TimeDurations(TimeUnit.SECONDS, 20),
-                    new TimeDurations(TimeUnit.SECONDS, 20),
+                    new TimeDurations(TimeUnit.SECONDS, stream1Window),
+                    new TimeDurations(TimeUnit.SECONDS, stream2Window),
                     new TimeAssigner(),
                     new TimeAssigner());
 

@@ -1,6 +1,8 @@
 package fi.aalto.dmg;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -18,5 +20,10 @@ public class SetTest {
         }
 
         System.out.println(String.format("%05d", 123));
+
+        int i = 0;
+        while(i<10){
+            System.out.println(++i);
+        }
     }
 }

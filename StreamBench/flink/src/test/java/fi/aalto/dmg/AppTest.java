@@ -3,6 +3,10 @@ package fi.aalto.dmg;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.api.java.typeutils.ResultTypeQueryable;
+import org.apache.flink.streaming.api.functions.source.SourceFunction;
 
 import java.util.ArrayList;
 
@@ -40,5 +44,23 @@ public class AppTest
         Object o = str;
         System.out.println(o.hashCode());
 
+    }
+
+    class MySourceFunction implements SourceFunction<Tuple2<Double, Integer>>, ResultTypeQueryable<Tuple2<Double, Integer>>{
+
+        @Override
+        public TypeInformation<Tuple2<Double, Integer>> getProducedType() {
+            return null;
+        }
+
+        @Override
+        public void run(SourceContext<Tuple2<Double, Integer>> ctx) throws Exception {
+
+        }
+
+        @Override
+        public void cancel() {
+
+        }
     }
 }

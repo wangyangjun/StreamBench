@@ -17,16 +17,89 @@ import java.util.concurrent.TimeUnit;
  * Created by jun on 28/01/16.
  */
 
-public class AdvClick {
+public class AdvClick extends Generator {
     private static final Logger logger = Logger.getLogger(SkewedWordCount.class);
-    private static String ADV_TOPIC = "Advertisement";
-    private static String CLICK_TOPIC = "AdvClick";
-    private static double CLICK_LAMBDA = 10;
-    private static double CLICK_PROBABILITY = 0.3;
+    private static String ADV_TOPIC;
+    private static String CLICK_TOPIC;
+    private double clickLambda;
+    private double clickProbability;
 
     private static long ADV_NUM = 100000000;
     private static KafkaProducer<String, String> producer;
 
+    public AdvClick(){
+        super();
+        producer = createSmallBufferProducer();
+
+        ADV_TOPIC = properties.getProperty("topic1", "Advertisement");
+        CLICK_TOPIC = properties.getProperty("topic2", "AdvClick");
+
+        clickProbability = Double.parseDouble(properties.getProperty("click.probability", "0.3"));
+        clickLambda = Double.parseDouble(properties.getProperty("click.lambda", "10"));
+    }
+
+    public void generate(int sleep_frequency) throws InterruptedException {
+        Throughput throughput = new Throughput(this.getClass().getSimpleName());
+        long time = System.currentTimeMillis();
+
+        // Obtain a cached thread pool
+        ExecutorService cachedPool = Executors.newCachedThreadPool();
+
+        RandomDataGenerator generator = new RandomDataGenerator();
+        generator.reSeed(10000000L);
+        // subthread use variable in main thread
+        // for loop to generate advertisement
+
+        ArrayList<Advertisement> advList = new ArrayList<>();
+        for (long i = 1; i < ADV_NUM; ++i) {
+            // advertisement id
+            String advId = UUID.randomUUID().toString();
+            long timestamp = System.currentTimeMillis();
+            producer.send(new ProducerRecord<>(ADV_TOPIC, advId, String.format("%d\t%s", timestamp, advId)));
+//            System.out.println("Shown: " + System.currentTimeMillis() + "\t" + advId);
+
+            // whether customer clicked this advertisement
+            if(generator.nextUniform(0,1)<= clickProbability){
+//                long deltaT = (long)generator.nextExponential(clickLambda)*1000;
+                long deltaT = (long)generator.nextGaussian(clickLambda, 1)*1000;
+//                System.out.println(deltaT);
+                advList.add(new Advertisement(advId, timestamp+deltaT));
+            }
+
+            if(i%100 == 0){
+                cachedPool.submit(new ClickThread(advList));
+                advList = new ArrayList<>();
+            }
+
+            throughput.execute();
+            // control data generate speed
+            if(i%sleep_frequency == 0) {
+                Thread.sleep(1);
+            }
+
+            cachedPool.shutdown();
+            try {
+                cachedPool.awaitTermination(1, TimeUnit.MINUTES);
+            } catch (InterruptedException e) {
+            }
+
+        }
+        logger.info("Latency: " + String.valueOf(System.currentTimeMillis()-time));
+
+    }
+
+    public static void main( String[] args ) throws InterruptedException {
+        int SLEEP_FREQUENCY = 1000;
+        if(args.length > 0) {
+            SLEEP_FREQUENCY = Integer.parseInt(args[0]);
+        }
+
+        if(args.length > 1) {
+            ADV_NUM = Long.parseLong(args[1]);
+        }
+        new AdvClick().generate(SLEEP_FREQUENCY);
+
+    }
 
     static class Advertisement implements Comparable<Advertisement>{
         Advertisement(String id, long time) {
@@ -46,64 +119,6 @@ public class AdvClick {
             else
                 return -1;
         }
-    }
-
-    public static void main( String[] args ) throws InterruptedException {
-        int SLEEP_FREQUENCY = 1000;
-        if(args.length > 0) {
-            SLEEP_FREQUENCY = Integer.parseInt(args[0]);
-        }
-
-        if(args.length > 1) {
-            ADV_NUM = Long.parseLong(args[1]);
-        }
-
-        Throughput throughput = new Throughput("AdvDataGenerator");
-
-        // Obtain a cached thread pool
-        ExecutorService cachedPool = Executors.newCachedThreadPool();
-
-        RandomDataGenerator generator = new RandomDataGenerator();
-        generator.reSeed(10000000L);
-        // subthread use variable in main thread
-        if(null==producer){
-            producer = Generator.createADVProducer();
-        }
-        // for loop to generate advertisement
-
-        ArrayList<Advertisement> advList = new ArrayList<>();
-        for (long i = 1; i < ADV_NUM; ++i) {
-            // advertisement id
-            String advId = UUID.randomUUID().toString();
-            long timestamp = System.currentTimeMillis();
-            producer.send(new ProducerRecord<>(ADV_TOPIC, advId, String.format("%d\t%s", timestamp, advId)));
-//            System.out.println("Shown: " + System.currentTimeMillis() + "\t" + advId);
-
-            // whether customer clicked this advertisement
-            if(generator.nextUniform(0,1)<=CLICK_PROBABILITY){
-//                long deltaT = (long)generator.nextExponential(CLICK_LAMBDA)*1000;
-                long deltaT = (long)generator.nextGaussian(CLICK_LAMBDA, 1)*1000;
-//                System.out.println(deltaT);
-                advList.add(new Advertisement(advId, timestamp+deltaT));
-            }
-
-            if(i%100 == 0){
-                cachedPool.submit(new ClickThread(advList));
-                advList = new ArrayList<>();
-            }
-
-            throughput.execute();
-            // control data generate speed
-            if(i%SLEEP_FREQUENCY == 0) {
-                Thread.sleep(1);
-            }
-        }
-        cachedPool.shutdown();
-        try {
-            cachedPool.awaitTermination(1, TimeUnit.MINUTES);
-        } catch (InterruptedException e) {
-        }
-
     }
 
     static class ClickThread implements Runnable{

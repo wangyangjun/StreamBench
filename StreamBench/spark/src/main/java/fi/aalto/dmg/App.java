@@ -2,7 +2,10 @@ package fi.aalto.dmg;
 
 import com.google.common.collect.Lists;
 import fi.aalto.dmg.exceptions.WorkloadException;
+import fi.aalto.dmg.frame.OperatorCreator;
+import fi.aalto.dmg.frame.SparkOperatorCreater;
 import fi.aalto.dmg.workloads.WordCount;
+import fi.aalto.dmg.workloads.Workload;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import org.apache.spark.SparkConf;
@@ -34,8 +37,12 @@ public class App
     public static void main( String[] args ) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
 
         System.out.println("Start...");
-        String[] testArgs = {"WordCount"}; // WordCount WordCountWindowed ClickedAdvertisement
-        BenchStarter.main(testArgs);
+        // WordCount WordCountWindowed ClickedAdvertisement
+        OperatorCreator operatorCreator = new SparkOperatorCreater("WordCount");
+        Workload workload = new WordCount(operatorCreator);
+        workload.Start();
+
+//        BenchStarter.StartWorkload("WordCount");
 
     }
 }

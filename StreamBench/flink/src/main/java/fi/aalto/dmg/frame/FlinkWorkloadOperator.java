@@ -54,32 +54,45 @@ public class FlinkWorkloadOperator<T> extends WorkloadOperator<T> {
     }
 
     @Override
-    public <R> WorkloadOperator<R> map(MapWithInitListFunction<T, R> fun, List<T> initList, String componentId) throws UnsupportOperatorException {
-        if(!this.iterative_enabled)
-            throw new UnsupportOperatorException("");
-        iterativeStream = dataStream.iterate();
-        MapFunctionWithInitList<T, R> map = new MapFunctionWithInitList<>(fun, initList);
-//
+    public <R> WorkloadOperator<R> map(final MapWithInitListFunction<T, R> fun, List<T> initList, String componentId) throws UnsupportOperatorException {
+        final MapFunctionWithInitList<T, R> map = new MapFunctionWithInitList<>(fun, initList);
         TypeExtractor.getForClass(Point.class);
         TypeInformation<R> outType = TypeExtractor.getMapReturnTypes(dataStream.getExecutionEnvironment().clean(map), dataStream.getType(),
                 Utils.getCallLocationName(), true);
-        DataStream<R> newDataStream =
-                iterativeStream.transform("Map", outType, new PointAssignMap<>(dataStream.getExecutionEnvironment().clean(map)));
+
+        DataStream<R> newDataStream;
+        if(this.iterative_enabled) {
+            iterativeStream = dataStream.iterate();
+            newDataStream =
+                    iterativeStream.transform("Map", outType, new PointAssignMap<>(dataStream.getExecutionEnvironment().clean(map)));
+
+        } else {
+            newDataStream =
+                    dataStream.transform("Map", outType, new PointAssignMap<>(dataStream.getExecutionEnvironment().clean(map)));
+        }
         return new FlinkWorkloadOperator<>(newDataStream, this.getParallelism());
 
     }
 
     @Override
     public <R> WorkloadOperator<R> map(MapWithInitListFunction<T, R> fun, List<T> initList, String componentId, Class<R> outputClass) throws UnsupportOperatorException {
-        if(!this.iterative_enabled)
-            throw new UnsupportOperatorException("");
-        iterativeStream = dataStream.iterate();
-        MapFunctionWithInitList<T, R> map = new MapFunctionWithInitList<>(fun, initList);
-//
+        final MapFunctionWithInitList<T, R> map = new MapFunctionWithInitList<>(fun, initList);
         TypeInformation<R> outType = TypeExtractor.getForClass(outputClass);
-        DataStream<R> newDataStream =
-                iterativeStream.transform("Map", outType, new PointAssignMap<>(dataStream.getExecutionEnvironment().clean(map)));
+        DataStream<R> newDataStream;
+        if(this.iterative_enabled) {
+            iterativeStream = dataStream.iterate();
+            newDataStream =
+                    iterativeStream.transform("Map",
+                            outType,
+                            new PointAssignMap<>(dataStream.getExecutionEnvironment().clean(map)));
+        } else {
+            newDataStream =
+                    dataStream.transform("Map",
+                            outType,
+                            new PointAssignMap<>(dataStream.getExecutionEnvironment().clean(map)));
+        }
         return new FlinkWorkloadOperator<>(newDataStream, this.getParallelism());
+
     }
 
     @Override

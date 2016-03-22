@@ -1,6 +1,11 @@
 package fi.aalto.dmg;
 
 import fi.aalto.dmg.exceptions.WorkloadException;
+import fi.aalto.dmg.frame.OperatorCreator;
+import fi.aalto.dmg.frame.SparkOperatorCreater;
+import fi.aalto.dmg.workloads.ClickedAdvertisement;
+import fi.aalto.dmg.workloads.WordCount;
+import fi.aalto.dmg.workloads.Workload;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -14,7 +19,11 @@ public class AdvClick {
     public static void main( String[] args ) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
 
         System.out.println("Start...");
-        String[] testArgs = {"ClickedAdvertisement"};
-        BenchStarter.main(testArgs);
+
+        OperatorCreator operatorCreator = new SparkOperatorCreater("WordCount");
+        Workload workload = new ClickedAdvertisement(operatorCreator);
+        workload.Start();
+
+//        BenchStarter.StartWorkload("ClickedAdvertisement");
     }
 }

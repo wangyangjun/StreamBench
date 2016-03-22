@@ -1,6 +1,10 @@
 package fi.aalto.dmg;
 
 import fi.aalto.dmg.exceptions.WorkloadException;
+import fi.aalto.dmg.frame.FlinkOperatorCreator;
+import fi.aalto.dmg.frame.OperatorCreator;
+import fi.aalto.dmg.workloads.WordCount;
+import fi.aalto.dmg.workloads.Workload;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.api.java.functions.KeySelector;
@@ -27,55 +31,13 @@ public class App
     public static void main( String[] args ) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
 
         logger.warn("Start...");
-        String[] testArgs = {"WordCount"}; // WordCount WordCountWindowed FasterWordCount, ClickedAdvertisement
-        BenchStarter.main(testArgs);
+
+        // WordCount WordCountWindowed FasterWordCount, ClickedAdvertisement
+        OperatorCreator operatorCreator = new FlinkOperatorCreator("WordCount");
+        Workload workload = new WordCount(operatorCreator);
+        workload.Start();
+
+//        BenchStarter.StartWorkload("WordCount");
 
     }
-
-    /*
-    public static void main(String[] args) throws Exception {
-
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-
-        DataStream<Tuple2<String, Integer>> counts = env
-                .socketTextStream("master", 9999)
-                .flatMap(new Splitter())
-                .keyBy(new KeySelector<Tuple2<String,Integer>, String>() {
-                    @Override
-                    public String getKey(Tuple2<String, Integer> value) throws Exception {
-                        return value.f0;
-                    }
-                })
-                .reduce(new ReduceFunction<Tuple2<String, Integer>>() {
-                    @Override
-                    public Tuple2<String, Integer> reduce(Tuple2<String, Integer> value1, Tuple2<String, Integer> value2) throws Exception {
-                        return new Tuple2<>(value1.f0, value1.f1 + value2.f1);
-                    }
-                });
-//        counts.flatMap(new FlatMapFunction<Tuple2<String,Integer>, Object>() {
-//            @Override
-//            public void flatMap(Tuple2<String, Integer> value, Collector<Object> out) throws Exception {
-//                System.out.println(value);
-//            }
-//        });
-
-        counts.addSink(new SinkFunction<Tuple2<String, Integer>>() {
-            @Override
-            public void invoke(Tuple2<String, Integer> value) throws Exception {
-                System.out.println(value.toString());
-            }
-        });
-
-        env.execute("Socket Stream WordCount");
-    }
-
-    public static class Splitter implements FlatMapFunction<String, Tuple2<String, Integer>> {
-        @Override
-        public void flatMap(String sentence, Collector<Tuple2<String, Integer>> out) throws Exception {
-            for (String word: sentence.split(" ")) {
-                out.collect(new Tuple2<>(word, 1));
-            }
-        }
-    }
-    */
 }

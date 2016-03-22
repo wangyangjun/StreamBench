@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import fi.aalto.dmg.frame.functions.*;
 import fi.aalto.dmg.statistics.Latency;
 import fi.aalto.dmg.statistics.Throughput;
+import fi.aalto.dmg.util.Configure;
 import fi.aalto.dmg.util.Point;
 import fi.aalto.dmg.util.WithTime;
 import org.slf4j.Logger;
@@ -196,6 +197,7 @@ public class UserFunctions {
             = new MapWithInitListFunction<Point, Point>() {
 
         Latency latency = new Latency("CentroidAssign");
+//        Logger logger = LoggerFactory.getLogger("LatestCentroids");
 
         @Override
         public Point map(Point var1, List<Point> list) {
@@ -203,7 +205,10 @@ public class UserFunctions {
             if( var1.isCentroid()) {
                 // log latency
                 latency.execute(var1.getTime());
-
+                // log list for test
+//                if(Math.random()<0.01) {
+//                    logger.warn(list.toString());
+//                }
                 list.set(var1.id, var1);
                 return null;
             } else {
@@ -244,6 +249,7 @@ public class UserFunctions {
 
     public static MapFunction<Tuple2<Integer, Tuple2<Long, Point>>, Point> computeCentroid
             = new MapFunction<Tuple2<Integer, Tuple2<Long, Point>>, Point>() {
+        Logger logger = LoggerFactory.getLogger("CentroidLogger");
         Throughput throughput = new Throughput("Centroid");
 
         @Override
@@ -252,7 +258,27 @@ public class UserFunctions {
             long counts = var1._2()._1();
             double x = var1._2._2.x/counts;
             double y = var1._2._2.y/counts;
+
+            double probability = 0.05;
+            if(Configure.kmeansCentroidsFrequency != null
+                    && Configure.kmeansCentroidsFrequency > 0) {
+                probability = Configure.kmeansCentroidsFrequency;
+            }
+
+            if(Math.random() < probability) {
+                logger.warn(String.format("\t%d\t%16.14f\t%16.14f", counts, x, y));
+            }
             return new Point(var1._1, x, y, var1._2._2.getTime());
+        }
+    };
+
+    public static MapWithInitListFunction<Point, Double> centroidConverge
+            = new MapWithInitListFunction<Point, Double>() {
+
+        @Override
+        public Double map(Point point, List<Point> list) {
+
+            return list.get(point.id).euclideanDistance(point);
         }
     };
 }

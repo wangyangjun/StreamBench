@@ -1,6 +1,9 @@
 package fi.aalto.dmg;
 
 import fi.aalto.dmg.exceptions.WorkloadException;
+import fi.aalto.dmg.frame.FlinkOperatorCreator;
+import fi.aalto.dmg.frame.OperatorCreator;
+import fi.aalto.dmg.workloads.Workload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,12 +15,16 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class KMeans
 {
-    private static Logger logger = LoggerFactory.getLogger(App.class);
-    public static void main( String[] args ) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
+    private static Logger logger = LoggerFactory.getLogger(KMeans.class);
 
+    public static void main( String[] args ) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
         logger.warn("Start...");
-        String[] testArgs = {"KMeans"};
-        BenchStarter.main(testArgs);
+
+        OperatorCreator operatorCreator = new FlinkOperatorCreator("KMeans");
+        Workload workload = new fi.aalto.dmg.workloads.KMeans(operatorCreator);
+        workload.Start();
+
+//        BenchStarter.StartWorkload("KMeans");
 
     }
 }

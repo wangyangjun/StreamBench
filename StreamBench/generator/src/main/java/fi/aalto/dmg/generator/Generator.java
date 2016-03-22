@@ -1,15 +1,32 @@
 package fi.aalto.dmg.generator;
 
+import fi.aalto.dmg.exceptions.WorkloadException;
+import fi.aalto.dmg.frame.OperatorCreator;
+import fi.aalto.dmg.util.Configure;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 
+import java.io.IOException;
 import java.util.Properties;
 
 /**
  * Created by jun on 08/01/16.
  */
 public class Generator {
-    public static KafkaProducer<String, String> createWCProducer(){
+
+    protected Properties properties;
+
+    public Generator() {
+        properties = new Properties();
+        String configFile = this.getClass().getSimpleName() + ".properties";
+        try {
+            properties.load(this.getClass().getClassLoader().getResourceAsStream(configFile));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static KafkaProducer<String, String> createBigBufferProducer(){
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ProducerConfig.RETRIES_CONFIG, "3");
@@ -36,7 +53,7 @@ public class Generator {
         return producer;
     }
 
-    public static KafkaProducer<String, String> createADVProducer(){
+    public static KafkaProducer<String, String> createSmallBufferProducer(){
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ProducerConfig.RETRIES_CONFIG, "3");

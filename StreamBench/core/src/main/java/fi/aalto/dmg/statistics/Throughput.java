@@ -1,5 +1,6 @@
 package fi.aalto.dmg.statistics;
 
+import fi.aalto.dmg.util.Configure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,12 @@ public class Throughput implements Serializable{
     }
 
     public void execute(){
-        execute(500);
+        if(Configure.throughputFrequency != null
+                && Configure.throughputFrequency > 0) {
+            execute(Configure.throughputFrequency);
+        } else {
+            execute(500);
+        }
     }
 
     public void execute(int logFrequency){

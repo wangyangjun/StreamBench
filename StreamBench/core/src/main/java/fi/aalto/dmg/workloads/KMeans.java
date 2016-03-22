@@ -16,10 +16,11 @@ import org.apache.log4j.Logger;
 import scala.Tuple2;
 import scala.Tuple3;
 
-import java.io.Serializable;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -30,48 +31,23 @@ public class KMeans extends Workload implements Serializable {
 
     private static final Logger logger = Logger.getLogger(KMeans.class);
 
+    private List<Point> initCentroids = new ArrayList<>();
+    private int centroidsNumber;
+
     public KMeans(OperatorCreator creator) throws WorkloadException {
         super(creator);
+        centroidsNumber = Integer.parseInt(properties.getProperty("centroids.number"));
+        loadCentroids();
     }
 
-    public static List<Point> InitCentroids(){
-        List<Point> initCentroids = new ArrayList<>();
-        initCentroids.add(new Point(0, 0.0, 0.0));
-        initCentroids.add(new Point(1, 0.0, 10.0));
-        initCentroids.add(new Point(2, 0.0, -10.0));
-        initCentroids.add(new Point(3, 10.0, 0.0));
-        initCentroids.add(new Point(4, 10.0, 10.0));
-        initCentroids.add(new Point(5, 10.0, -10.0));
-        initCentroids.add(new Point(6, -10.0, 0.0));
-        initCentroids.add(new Point(7, -10.0, 10.0));
-        initCentroids.add(new Point(8, -10.0, -10.0));
-
-        initCentroids.add(new Point(9, 20.0, 0.0));
-        initCentroids.add(new Point(10, -20.0, 0.0));
-        initCentroids.add(new Point(11, 0.0, 20.0));
-        initCentroids.add(new Point(12, 0.0, -20.0));
-        initCentroids.add(new Point(13, 10.0, -20.0));
-        initCentroids.add(new Point(14, 10.0, 20.0));
-        initCentroids.add(new Point(15, -10.0, -20.0));
-        initCentroids.add(new Point(16, -10.0, 20.0));
-        initCentroids.add(new Point(17, 20.0, -10.0));
-        initCentroids.add(new Point(18, 20.0, -20.0));
-        initCentroids.add(new Point(19, 20.0, 10.0));
-        initCentroids.add(new Point(20, 20.0, 20.0));
-        initCentroids.add(new Point(21, -20.0, -10.0));
-        initCentroids.add(new Point(22, -20.0, -20.0));
-        initCentroids.add(new Point(23, -20.0, 10.0));
-        initCentroids.add(new Point(24, -20.0, 20.0));
-
-        initCentroids.add(new Point(25, 0.0, 30.0));
-        initCentroids.add(new Point(26, 0.0, -30.0));
-        initCentroids.add(new Point(27, 30.0, 0.0));
-        initCentroids.add(new Point(28, -30.0, 0.0));
-        initCentroids.add(new Point(29, 10.0, 30.0));
-        initCentroids.add(new Point(30, 30.0, 10.0));
-        initCentroids.add(new Point(31, 30.0, -10.0));
-
-        return initCentroids;
+    // load real centroids which are used for data generation
+    private void loadCentroids(){
+        Random point_random = new Random(1786238718324L);
+        for(int i=0; i<centroidsNumber; i++){
+            double x = point_random.nextDouble() * 100 - 50;
+            double y = point_random.nextDouble() * 100 - 50;
+            initCentroids.add(new Point(i, x, y));
+        }
     }
 
     @Override
@@ -80,7 +56,6 @@ public class KMeans extends Workload implements Serializable {
             WorkloadOperator<Point> points = getPointStream("source");
             points.iterative(); // points iteration
 
-            List<Point> initCentroids = InitCentroids();
             WorkloadOperator<Point> assigned_points = points.map(UserFunctions.assign, initCentroids, "assign", Point.class);
             WorkloadOperator<Point> centroids = assigned_points
                     .mapToPair(UserFunctions.pointMapToPair, "mapToPair")

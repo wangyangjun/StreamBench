@@ -2,6 +2,7 @@ package fi.aalto.dmg.frame;
 
 import fi.aalto.dmg.statistics.PerformanceStreamingListener;
 import fi.aalto.dmg.util.Constant;
+import fi.aalto.dmg.util.Point;
 import fi.aalto.dmg.util.WithTime;
 import kafka.serializer.StringDecoder;
 import org.apache.spark.SparkConf;
@@ -84,6 +85,11 @@ public class SparkOperatorCreater extends OperatorCreator implements Serializabl
         JavaDStream<WithTime<String>> lines = messages.map(mapFunctionWithTime);
 
         return new SparkWorkloadOperator<>(lines, parallelism);
+    }
+
+    @Override
+    public WorkloadOperator<Point> pointStreamFromKafka(String zkConStr, String kafkaServers, String group, String topics, String offset, String componentId, int parallelism) {
+        return null;
     }
 
     @Override

@@ -110,7 +110,7 @@ public class StormOperatorCreator extends OperatorCreator implements Serializabl
     public void Start() {
         // TODO: switch between local and cluster
         try {
-            StormSubmitter.submitTopologyWithProgressBar("WordCount", conf, topologyBuilder.createTopology());
+            StormSubmitter.submitTopologyWithProgressBar(this.getAppName(), conf, topologyBuilder.createTopology());
         } catch (AlreadyAliveException e) {
             e.printStackTrace();
         } catch (InvalidTopologyException e) {

@@ -3,6 +3,7 @@ package fi.aalto.dmg.workloads;
 import fi.aalto.dmg.exceptions.WorkloadException;
 import fi.aalto.dmg.frame.OperatorCreator;
 import fi.aalto.dmg.frame.WorkloadOperator;
+import fi.aalto.dmg.util.Configure;
 import fi.aalto.dmg.util.Point;
 import fi.aalto.dmg.util.WithTime;
 import org.slf4j.Logger;
@@ -19,21 +20,23 @@ import java.util.Properties;
 abstract public class Workload implements Serializable{
     private static final Logger logger = LoggerFactory.getLogger(Workload.class);
 
-    private Properties properties;
+    protected Properties properties;
     private OperatorCreator operatorCreator;
     protected int parallelism;
 
-    public Workload(OperatorCreator creater) throws WorkloadException {
-        this.operatorCreator = creater;
+    public Workload(OperatorCreator creator) throws WorkloadException {
+        this.operatorCreator = creator;
+        Configure.LoadConfigure();
+        parallelism = Configure.clusterHosts*Configure.hostCores;
+
+        // load specific configure for each workload
         properties = new Properties();
         String configFile = this.getClass().getSimpleName() + ".properties";
         try {
             properties.load(this.getClass().getClassLoader().getResourceAsStream(configFile));
 
-            int hosts = Integer.parseInt(properties.getProperty("hosts"));
-            int cores = Integer.parseInt(properties.getProperty("cores"));
-            parallelism = hosts*cores;
-
+//            int hosts = Integer.parseInt(properties.getProperty("hosts"));
+//            int cores = Integer.parseInt(properties.getProperty("cores"));
         } catch (IOException e) {
             throw new WorkloadException("Read configure file " + configFile + " failed");
         } catch (Exception e) {
@@ -43,50 +46,47 @@ abstract public class Workload implements Serializable{
 
     }
 
-    protected Properties getProperties() {
-        return properties;
-    }
     protected OperatorCreator getOperatorCreator(){ return operatorCreator; }
 
     protected WorkloadOperator<WithTime<String>> stringStreamWithTime(String componentId){
-        String topic = this.getProperties().getProperty("topic");
-        String groupId = this.getProperties().getProperty("group.id");
-        String kafkaServers = this.getProperties().getProperty("bootstrap.servers");
-        String zkConnectStr = this.getProperties().getProperty("zookeeper.connect");
-        String offset = this.getProperties().getProperty("auto.offset.reset");
+        String topic = properties.getProperty("topic");
+        String groupId = properties.getProperty("group.id");
+        String kafkaServers = properties.getProperty("bootstrap.servers");
+        String zkConnectStr = properties.getProperty("zookeeper.connect");
+        String offset = properties.getProperty("auto.offset.reset");
 
         return this.getOperatorCreator().stringStreamFromKafkaWithTime(zkConnectStr,
                 kafkaServers, groupId, topic, offset, componentId, parallelism);
     }
 
     protected WorkloadOperator<Point> getPointStream(String componentId){
-        String topic = this.getProperties().getProperty("topic");
-        String groupId = this.getProperties().getProperty("group.id");
-        String kafkaServers = this.getProperties().getProperty("bootstrap.servers");
-        String zkConnectStr = this.getProperties().getProperty("zookeeper.connect");
-        String offset = this.getProperties().getProperty("auto.offset.reset");
+        String topic = properties.getProperty("topic");
+        String groupId = properties.getProperty("group.id");
+        String kafkaServers = properties.getProperty("bootstrap.servers");
+        String zkConnectStr = properties.getProperty("zookeeper.connect");
+        String offset = properties.getProperty("auto.offset.reset");
 
         return this.getOperatorCreator().pointStreamFromKafka(zkConnectStr,
                 kafkaServers, groupId, topic, offset, componentId, parallelism);
     }
 
     protected WorkloadOperator<String> kafkaStreamOperator(String componentId){
-        String topic = this.getProperties().getProperty("topic");
-        String groupId = this.getProperties().getProperty("group.id");
-        String kafkaServers = this.getProperties().getProperty("bootstrap.servers");
-        String zkConnectStr = this.getProperties().getProperty("zookeeper.connect");
-        String offset = this.getProperties().getProperty("auto.offset.reset");
+        String topic = properties.getProperty("topic");
+        String groupId = properties.getProperty("group.id");
+        String kafkaServers = properties.getProperty("bootstrap.servers");
+        String zkConnectStr = properties.getProperty("zookeeper.connect");
+        String offset = properties.getProperty("auto.offset.reset");
 
         return this.getOperatorCreator().stringStreamFromKafka(zkConnectStr,
                 kafkaServers, groupId, topic, offset, componentId, parallelism);
     }
 
     protected WorkloadOperator<String> kafkaStreamOperator2(String componentId){
-        String topic = this.getProperties().getProperty("topic2");
-        String groupId = this.getProperties().getProperty("group.id");
-        String kafkaServers = this.getProperties().getProperty("bootstrap.servers");
-        String zkConnectStr = this.getProperties().getProperty("zookeeper.connect");
-        String offset = this.getProperties().getProperty("auto.offset.reset");
+        String topic = properties.getProperty("topic2");
+        String groupId = properties.getProperty("group.id");
+        String kafkaServers = properties.getProperty("bootstrap.servers");
+        String zkConnectStr = properties.getProperty("zookeeper.connect");
+        String offset = properties.getProperty("auto.offset.reset");
 
         return this.getOperatorCreator().stringStreamFromKafka(zkConnectStr,
                 kafkaServers, groupId, topic, offset, componentId, parallelism);
