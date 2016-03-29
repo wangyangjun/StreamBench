@@ -20,3 +20,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;3. execute command `mvn clean package`;  
 &nbsp;&nbsp;&nbsp;&nbsp;3. get packaged jar file with dependencies -- flink-1.0-SNAPSHOT-jar-with-dependencies.jar;  
 &nbsp;&nbsp;&nbsp;&nbsp;4. start flink cluster and submit workload job: `/usr/local/flink/bin/flink run flink-1.0-SNAPSHOT-jar-with-dependencies.jar`;  
+
+**Log collection and statistic:**
+1. collect log files: `python StreamBench/script/logs-collection.py flink flink.tar`   
+
