@@ -7,7 +7,7 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import fi.aalto.dmg.frame.functions.MapFunction;
-import fi.aalto.dmg.statistics.Throughput;
+import fi.aalto.dmg.statistics.ThroughputLog;
 import org.apache.log4j.Logger;
 
 /**
@@ -20,19 +20,21 @@ public class MapValueBolt<V, R> extends BaseBasicBolt {
     private static final long serialVersionUID = 8892670349365399357L;
 
     private MapFunction<V, R> fun;
-    private Throughput throughput;
+    private ThroughputLog throughput;
 
     public MapValueBolt(MapFunction<V, R> function){
         this.fun = function;
     }
 
     public void enableThroughput(String loggerName) {
-        this.throughput = new Throughput(loggerName);
+        this.throughput = new ThroughputLog(loggerName);
     }
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
-        throughput.execute();
+        if(throughput != null) {
+            throughput.execute();
+        }
         Object o = input.getValue(1);
         try {
             R result = this.fun.map((V) o);

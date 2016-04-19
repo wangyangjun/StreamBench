@@ -1,7 +1,6 @@
 package fi.aalto.dmg.frame.functions;
 
-import fi.aalto.dmg.statistics.Throughput;
-import org.apache.log4j.Logger;
+import fi.aalto.dmg.statistics.ThroughputLog;
 import org.apache.spark.api.java.function.PairFunction;
 import scala.Tuple2;
 
@@ -12,7 +11,7 @@ public class PairFunctionImpl<T,K,V> implements PairFunction<T,K,V>  {
     private static final long serialVersionUID = -1342161519291972356L;
 
     private MapPairFunction<T,K,V> fun;
-    private Throughput throughput;
+    private ThroughputLog throughput;
     private boolean enableThroughput;
 
     public PairFunctionImpl(MapPairFunction<T,K,V> function){
@@ -22,7 +21,7 @@ public class PairFunctionImpl<T,K,V> implements PairFunction<T,K,V>  {
     public PairFunctionImpl(MapPairFunction<T,K,V> function, boolean enableThroughput){
         this(function);
         this.enableThroughput = enableThroughput;
-        throughput = new Throughput(PairFunctionImpl.class.getSimpleName());
+        throughput = new ThroughputLog(PairFunctionImpl.class.getSimpleName());
     }
 
     @Override

@@ -1,11 +1,8 @@
 package fi.aalto.dmg;
 
-import fi.aalto.dmg.generator.Generator;
-import fi.aalto.dmg.statistics.Throughput;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import scala.Tuple2;
 
 import java.util.Properties;
 

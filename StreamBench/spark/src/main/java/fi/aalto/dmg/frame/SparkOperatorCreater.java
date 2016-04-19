@@ -70,6 +70,8 @@ public class SparkOperatorCreater extends OperatorCreator implements Serializabl
         HashMap<String, String> kafkaParams = new HashMap<>();
         kafkaParams.put("metadata.broker.list", kafkaServers);
         kafkaParams.put("auto.offset.reset", offset);
+        kafkaParams.put("zookeeper.connect", zkConStr);
+        kafkaParams.put("group.id", group);
 
         // Create direct kafka stream with brokers and topics
         JavaPairInputDStream<String, String> messages = KafkaUtils.createDirectStream(
@@ -104,6 +106,8 @@ public class SparkOperatorCreater extends OperatorCreator implements Serializabl
         HashMap<String, String> kafkaParams = new HashMap<>();
         kafkaParams.put("metadata.broker.list", kafkaServers);
         kafkaParams.put("auto.offset.reset", offset);
+        kafkaParams.put("zookeeper.connect", zkConStr);
+        kafkaParams.put("group.id", group);
 
         // Create direct kafka stream with brokers and topics
         JavaPairDStream<String, String> messages = KafkaUtils.createDirectStream(

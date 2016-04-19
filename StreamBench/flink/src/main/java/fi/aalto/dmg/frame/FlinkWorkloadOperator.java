@@ -6,13 +6,12 @@ import fi.aalto.dmg.frame.functions.FilterFunction;
 import fi.aalto.dmg.frame.functions.FlatMapFunction;
 import fi.aalto.dmg.frame.functions.MapFunction;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
-import fi.aalto.dmg.statistics.Latency;
-import fi.aalto.dmg.statistics.Throughput;
+import fi.aalto.dmg.statistics.LatencyLog;
+import fi.aalto.dmg.statistics.ThroughputLog;
 import fi.aalto.dmg.util.Point;
 import fi.aalto.dmg.util.TimeDurations;
 import fi.aalto.dmg.util.MapFunctionWithInitList;
 
-import fi.aalto.dmg.util.WithTime;
 import operators.PointAssignMap;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.Utils;
@@ -25,7 +24,6 @@ import org.apache.flink.streaming.api.functions.sink.SinkFunction;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
-import org.apache.log4j.Logger;
 import scala.Tuple2;
 
 import java.util.List;
@@ -199,8 +197,8 @@ public class FlinkWorkloadOperator<T> extends WorkloadOperator<T> {
     @Override
     public void sink() {
         this.dataStream.addSink(new SinkFunction<T>() {
-            Latency latency = new Latency("sink");
-            Throughput throughput = new Throughput("sink");
+            LatencyLog latency = new LatencyLog("sink");
+            ThroughputLog throughput = new ThroughputLog("sink");
 
             @Override
             public void invoke(T value) throws Exception {

@@ -54,9 +54,15 @@ public class ClickedAdvertisement extends Workload implements Serializable {
                     "Join",
                     clicks,
                     new TimeDurations(TimeUnit.SECONDS, stream1Window),
-                    new TimeDurations(TimeUnit.SECONDS, stream2Window),
-                    new TimeAssigner(),
-                    new TimeAssigner());
+                    new TimeDurations(TimeUnit.SECONDS, stream2Window));
+
+//            PairWorkloadOperator<String, Tuple2<Long, Long>> clicksWithCreateTime = advertisements.join(
+//                    "Join",
+//                    clicks,
+//                    new TimeDurations(TimeUnit.SECONDS, stream1Window),
+//                    new TimeDurations(TimeUnit.SECONDS, stream2Window),
+//                    new TimeAssigner(),
+//                    new TimeAssigner());
 
             clicksWithCreateTime.mapValue(UserFunctions.mapToWithTime, "MapToWithTime")
                     .sink();

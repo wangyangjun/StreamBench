@@ -7,7 +7,7 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import fi.aalto.dmg.frame.functions.MapWithInitListFunction;
-import fi.aalto.dmg.statistics.Throughput;
+import fi.aalto.dmg.statistics.ThroughputLog;
 import org.apache.log4j.Logger;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class MapWithInitListBolt<T, R> extends BaseBasicBolt {
     private static final long serialVersionUID = -8469210976959462079L;
 
     private MapWithInitListFunction<T, R> fun;
-    private Throughput throughput;
+    private ThroughputLog throughput;
     private List<T> initList;
 
     public MapWithInitListBolt(MapWithInitListFunction<T, R> function, List<T> list){
@@ -31,7 +31,7 @@ public class MapWithInitListBolt<T, R> extends BaseBasicBolt {
     }
 
     public void enableThroughput(String loggerName) {
-        this.throughput = new Throughput(loggerName);
+        this.throughput = new ThroughputLog(loggerName);
     }
 
     @Override

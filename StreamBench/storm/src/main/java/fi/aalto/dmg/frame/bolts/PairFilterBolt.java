@@ -7,7 +7,7 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import fi.aalto.dmg.frame.functions.FilterFunction;
-import fi.aalto.dmg.statistics.Throughput;
+import fi.aalto.dmg.statistics.ThroughputLog;
 import org.apache.log4j.Logger;
 import scala.Tuple2;
 
@@ -22,14 +22,14 @@ public class PairFilterBolt<K,V> extends BaseBasicBolt {
     private static final long serialVersionUID = -3959145878061949596L;
 
     private FilterFunction<Tuple2<K,V>> fun;
-    private Throughput throughput;
+    private ThroughputLog throughput;
 
     public PairFilterBolt(FilterFunction<Tuple2<K, V>> function){
         this.fun = function;
     }
 
     public void enableThroughput(String loggerName) {
-        this.throughput = new Throughput(loggerName);
+        this.throughput = new ThroughputLog(loggerName);
     }
 
 

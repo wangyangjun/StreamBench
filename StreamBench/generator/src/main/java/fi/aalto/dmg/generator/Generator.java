@@ -10,9 +10,10 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
+ * abstract class of data generator
  * Created by jun on 08/01/16.
  */
-public class Generator {
+public abstract class Generator {
 
     protected Properties properties;
 

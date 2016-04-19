@@ -39,7 +39,7 @@ public class StormOperatorCreator extends OperatorCreator implements Serializabl
         conf.setDebug(true);
 
         // ack enabled
-        conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 1000);
+        conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 100);
 
         // ack disable
 //        conf.put(Config.TOPOLOGY_ACKER_EXECUTORS, 0);
@@ -60,6 +60,9 @@ public class StormOperatorCreator extends OperatorCreator implements Serializabl
         SpoutConfig spoutConfig = new SpoutConfig(hosts, topics, "/" + topics, UUID.randomUUID().toString());
         spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
         spoutConfig.startOffsetTime = kafka.api.OffsetRequest.LatestTime();
+        if( offset.endsWith("smallest")) {
+            spoutConfig.startOffsetTime = kafka.api.OffsetRequest.EarliestTime();
+        }
         spoutConfig.fetchSizeBytes = 1024;
         spoutConfig.bufferSizeBytes = 1024;
 //        spoutConfig.ignoreZkOffsets = true;
@@ -76,6 +79,9 @@ public class StormOperatorCreator extends OperatorCreator implements Serializabl
         SpoutConfig spoutConfig = new SpoutConfig(hosts, topics, "/" + topics, UUID.randomUUID().toString());
         spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
         spoutConfig.startOffsetTime = kafka.api.OffsetRequest.LatestTime();
+        if( offset.endsWith("smallest")) {
+            spoutConfig.startOffsetTime = kafka.api.OffsetRequest.EarliestTime();
+        }
         spoutConfig.fetchSizeBytes = 1024;
         spoutConfig.bufferSizeBytes = 1024;
 //        spoutConfig.ignoreZkOffsets = true;

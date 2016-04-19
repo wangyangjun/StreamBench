@@ -2,14 +2,12 @@ package fi.aalto.dmg.frame;
 
 import fi.aalto.dmg.exceptions.UnsupportOperatorException;
 import fi.aalto.dmg.frame.functions.*;
-import fi.aalto.dmg.statistics.Throughput;
 import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.WindowedStream;
 import org.apache.flink.streaming.api.functions.windowing.WindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.Window;
 import org.apache.flink.util.Collector;
-import org.apache.log4j.Logger;
 import scala.Tuple2;
 
 /**

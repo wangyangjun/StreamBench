@@ -2,26 +2,16 @@ package fi.aalto.dmg.workloads;
 
 import fi.aalto.dmg.exceptions.WorkloadException;
 import fi.aalto.dmg.frame.OperatorCreator;
-import fi.aalto.dmg.frame.PairWorkloadOperator;
 import fi.aalto.dmg.frame.WorkloadOperator;
-import fi.aalto.dmg.frame.functions.AssignTimeFunction;
-import fi.aalto.dmg.frame.functions.MapFunction;
-import fi.aalto.dmg.frame.functions.MapPairFunction;
-import fi.aalto.dmg.frame.functions.ReduceFunction;
 import fi.aalto.dmg.frame.userfunctions.UserFunctions;
 import fi.aalto.dmg.util.Point;
-import fi.aalto.dmg.util.TimeDurations;
-import fi.aalto.dmg.util.WithTime;
+import org.apache.commons.math3.exception.DimensionMismatchException;
 import org.apache.log4j.Logger;
-import scala.Tuple2;
-import scala.Tuple3;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by jun on 26/02/16.
@@ -31,23 +21,50 @@ public class KMeans extends Workload implements Serializable {
 
     private static final Logger logger = Logger.getLogger(KMeans.class);
 
-    private List<Point> initCentroids = new ArrayList<>();
+    private List<Point> initCentroids;
     private int centroidsNumber;
+    private int dimension;
 
     public KMeans(OperatorCreator creator) throws WorkloadException {
         super(creator);
         centroidsNumber = Integer.parseInt(properties.getProperty("centroids.number"));
-        loadCentroids();
+        dimension = Integer.parseInt(properties.getProperty("point.dimension", "2"));
+
+        initCentroids = loadInitCentroids();
     }
 
-    // load real centroids which are used for data generation
-    private void loadCentroids(){
-        Random point_random = new Random(1786238718324L);
-        for(int i=0; i<centroidsNumber; i++){
-            double x = point_random.nextDouble() * 100 - 50;
-            double y = point_random.nextDouble() * 100 - 50;
-            initCentroids.add(new Point(i, x, y));
+
+    private List<Point> loadInitCentroids(){
+        List<Point> centroids = new ArrayList<>();
+        BufferedReader br = null;
+        InputStream stream = null;
+        try {
+            String sCurrentLine;
+            stream = this.getClass().getClassLoader().getResourceAsStream("init-centroids.txt");
+
+            br = new BufferedReader(new InputStreamReader(stream));
+            while ((sCurrentLine = br.readLine()) != null) {
+                String[] strs = sCurrentLine.split(",");
+                if(strs.length != dimension){
+                    throw new DimensionMismatchException(strs.length, dimension);
+                }
+                double[] position = new double[dimension];
+                for(int i=0; i<dimension; i++) {
+                    position[i] = Double.valueOf(strs[i]);
+                }
+                centroids.add(new Point(position));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (stream != null) stream.close();
+                if (br != null)br.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
+        return centroids;
     }
 
     @Override

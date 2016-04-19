@@ -8,13 +8,11 @@ import backtype.storm.tuple.Values;
 import fi.aalto.dmg.exceptions.DurationException;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
-import fi.aalto.dmg.statistics.Throughput;
+import fi.aalto.dmg.statistics.ThroughputLog;
 import fi.aalto.dmg.util.BTree;
 import fi.aalto.dmg.util.TimeDurations;
 import org.apache.log4j.Logger;
-import scala.Tuple2;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +41,7 @@ public class WindowPairReduceByKeyBolt<K,V> extends WindowedBolt {
     }
 
     public void enableThroughput(String loggerName) {
-        this.throughput = new Throughput(loggerName);
+        this.throughput = new ThroughputLog(loggerName);
     }
 
     /**

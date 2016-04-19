@@ -8,8 +8,7 @@ import fi.aalto.dmg.frame.functions.FilterFunction;
 import fi.aalto.dmg.frame.functions.FlatMapFunction;
 import fi.aalto.dmg.frame.functions.MapFunction;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
-import fi.aalto.dmg.statistics.Latency;
-import fi.aalto.dmg.statistics.Throughput;
+import fi.aalto.dmg.statistics.LatencyLog;
 import fi.aalto.dmg.util.TimeDurations;
 import fi.aalto.dmg.util.WithTime;
 import org.apache.flink.api.common.functions.*;
@@ -347,9 +346,9 @@ public class FlinkPairWorkloadOperator<K,V> extends PairWorkloadOperator<K,V> {
             DataStream<Tuple2<K, Tuple2<V, R>>> joineStream =
                     new NoWindowJoinedStreams<>(dataStream1, dataStream2)
                     .where(keySelector1, keyTypeInfo)
-                    .buffer(Time.of(30, TimeUnit.SECONDS))
+                    .buffer(Time.of(windowDuration.toMilliSeconds(), TimeUnit.MILLISECONDS))
                     .equalTo(keySelector2, keyTypeInfo)
-                    .buffer(Time.of(30, TimeUnit.SECONDS))
+                    .buffer(Time.of(joinWindowDuration.toMilliSeconds(), TimeUnit.MILLISECONDS))
                     .apply(new JoinFunction<Tuple2<K,V>, Tuple2<K,R>, Tuple2<K, Tuple2<V,R>>>() {
                         @Override
                         public Tuple2<K, Tuple2<V, R>> join(Tuple2<K, V> first, Tuple2<K, R> second) throws Exception {
@@ -377,7 +376,7 @@ public class FlinkPairWorkloadOperator<K,V> extends PairWorkloadOperator<K,V> {
     public void sink() {
 //        this.dataStream.print();
         this.dataStream.addSink(new SinkFunction<Tuple2<K, V>>() {
-            Latency latency = new Latency("sink");
+            LatencyLog latency = new LatencyLog("sink");
 
             @Override
             public void invoke(Tuple2<K, V> value) throws Exception {

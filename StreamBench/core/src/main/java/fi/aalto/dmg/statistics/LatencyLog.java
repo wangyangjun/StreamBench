@@ -11,13 +11,13 @@ import java.io.Serializable;
 /**
  * Created by jun on 08/12/15.
  */
-public class Latency implements Serializable{
+public class LatencyLog implements Serializable{
 
     private static final long serialVersionUID = -8124631262741665559L;
-    private static Logger logger = LoggerFactory.getLogger(Latency.class);
+    private static Logger logger = LoggerFactory.getLogger(LatencyLog.class);
     private String loggerName;
 
-    public Latency(String loggerName) {
+    public LatencyLog(String loggerName) {
         this.loggerName = loggerName;
     }
 

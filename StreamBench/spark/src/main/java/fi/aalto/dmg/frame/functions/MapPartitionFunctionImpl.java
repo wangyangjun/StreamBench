@@ -2,7 +2,7 @@ package fi.aalto.dmg.frame.functions;
 
 import java.util.Iterator;
 
-import fi.aalto.dmg.Utils;
+import fi.aalto.dmg.util.Utils;
 import org.apache.spark.api.java.function.FlatMapFunction;
 
 /**

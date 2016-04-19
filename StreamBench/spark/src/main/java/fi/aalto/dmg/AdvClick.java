@@ -15,12 +15,11 @@ import java.util.regex.Pattern;
  * Created by jun on 01/02/16.
  */
 public class AdvClick {
-    private static final Pattern SPACE = Pattern.compile(" ");
     public static void main( String[] args ) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
 
         System.out.println("Start...");
 
-        OperatorCreator operatorCreator = new SparkOperatorCreater("WordCount");
+        OperatorCreator operatorCreator = new SparkOperatorCreater("AdvClick");
         Workload workload = new ClickedAdvertisement(operatorCreator);
         workload.Start();
 

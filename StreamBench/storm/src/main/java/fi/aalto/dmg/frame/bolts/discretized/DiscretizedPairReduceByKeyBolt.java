@@ -61,7 +61,8 @@ public class DiscretizedPairReduceByKeyBolt<K,V> extends DiscretizedBolt {
     public void processSlide(BasicOutputCollector collector, int slideIndex) {
         Map<K, V> slideMap = slideDataMap.get(slideIndex);
         for(Map.Entry<K, V> entry : slideMap.entrySet()) {
-            collector.emit(new Values(slideIndex, entry.getKey(), entry.getValue()));
+//            collector.emit(new Values(slideIndex, entry.getKey(), entry.getValue()));
+            collector.emit(new Values(entry.getKey(), entry.getValue()));
         }
         // clear data
         slideMap.clear();
@@ -70,7 +71,9 @@ public class DiscretizedPairReduceByKeyBolt<K,V> extends DiscretizedBolt {
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         super.declareOutputFields(declarer);
+//        declarer.declareStream(Utils.DEFAULT_STREAM_ID,
+//                new Fields(BoltConstants.OutputSlideIdField, BoltConstants.OutputKeyField, BoltConstants.OutputValueField));
         declarer.declareStream(Utils.DEFAULT_STREAM_ID,
-                new Fields(BoltConstants.OutputSlideIdField, BoltConstants.OutputKeyField, BoltConstants.OutputValueField));
+                new Fields(BoltConstants.OutputKeyField, BoltConstants.OutputValueField));
     }
 }

@@ -4,8 +4,8 @@ import backtype.storm.topology.BasicOutputCollector;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.base.BaseBasicBolt;
 import backtype.storm.tuple.Tuple;
-import fi.aalto.dmg.statistics.Latency;
-import fi.aalto.dmg.statistics.Throughput;
+import fi.aalto.dmg.statistics.LatencyLog;
+import fi.aalto.dmg.statistics.ThroughputLog;
 import fi.aalto.dmg.util.WithTime;
 import org.apache.log4j.Logger;
 
@@ -17,15 +17,15 @@ public class PairLatencyBolt<T> extends BaseBasicBolt {
     private static final long serialVersionUID = 5063888858772660110L;
 
     private static final Logger logger = Logger.getLogger(PairLatencyBolt.class);
-    private Latency latency;
-    private Throughput throughput;
+    private LatencyLog latency;
+    private ThroughputLog throughput;
 
     public PairLatencyBolt() {
-        latency = new Latency(this.getClass().getName());
+        latency = new LatencyLog(this.getClass().getName());
     }
 
     public void enableThroughput(String loggerName) {
-        this.throughput = new Throughput(loggerName);
+        this.throughput = new ThroughputLog(loggerName);
     }
 
     @Override

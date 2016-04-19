@@ -23,9 +23,11 @@ public class ExtractPointBolt extends BaseBasicBolt {
             time = Long.parseLong(list[1]);
         }
         String[] strs = list[0].split("\t");
-        Double x = Double.parseDouble(strs[0]);
-        Double y = Double.parseDouble(strs[1]);
-        collector.emit(new Values(new Point(x, y, time)));
+        double[] position = new double[strs.length];
+        for(int i=0; i<strs.length; i++) {
+            position[i] = Double.parseDouble(strs[i]);
+        }
+        collector.emit(new Values(new Point(position, time)));
 
     }
 

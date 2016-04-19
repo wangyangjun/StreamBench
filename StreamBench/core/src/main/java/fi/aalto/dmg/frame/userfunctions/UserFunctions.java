@@ -2,15 +2,15 @@ package fi.aalto.dmg.frame.userfunctions;
 
 import com.google.common.base.Optional;
 import fi.aalto.dmg.frame.functions.*;
-import fi.aalto.dmg.statistics.Latency;
-import fi.aalto.dmg.statistics.Throughput;
+import fi.aalto.dmg.statistics.CentroidLog;
+import fi.aalto.dmg.statistics.LatencyLog;
+import fi.aalto.dmg.statistics.ThroughputLog;
 import fi.aalto.dmg.util.Configure;
 import fi.aalto.dmg.util.Point;
 import fi.aalto.dmg.util.WithTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.Tuple2;
-import scala.Tuple3;
 
 import java.util.*;
 
@@ -83,9 +83,15 @@ public class UserFunctions {
 
     public static ReduceFunction<WithTime<Integer>> sumReduceWithTime = new ReduceFunction<WithTime<Integer>>() {
 
-        Throughput throughput = new Throughput("WordCountReduce");
+        ThroughputLog throughput = new ThroughputLog("WordCountReduce");
         public WithTime<Integer> reduce(WithTime<Integer> var1, WithTime<Integer> var2) throws Exception {
             throughput.execute();
+            return new WithTime<>(var1.getValue()+var2.getValue(), Math.max(var1.getTime(), var2.getTime()));
+        }
+    };
+
+    public static ReduceFunction<WithTime<Integer>> sumReduceWithTime2 = new ReduceFunction<WithTime<Integer>>() {
+        public WithTime<Integer> reduce(WithTime<Integer> var1, WithTime<Integer> var2) throws Exception {
             return new WithTime<>(var1.getValue()+var2.getValue(), Math.max(var1.getTime(), var2.getTime()));
         }
     };
@@ -173,7 +179,7 @@ public class UserFunctions {
 
     public static MapFunction<Tuple2<Long,Long>, WithTime<Tuple2<Long, Long>>> mapToWithTime
             = new MapFunction<Tuple2<Long,Long>, WithTime<Tuple2<Long, Long>>>() {
-        Throughput throughput = new Throughput("MapToWithTime");
+        ThroughputLog throughput = new ThroughputLog("MapToWithTime");
         @Override
         public WithTime<Tuple2<Long, Long>> map(Tuple2<Long, Long> var1) {
             throughput.execute();
@@ -187,16 +193,18 @@ public class UserFunctions {
         @Override
         public WithTime<Point> map(WithTime<String> var1) {
             String[] strs = var1.getValue().split("\t");
-            Double x = Double.parseDouble(strs[0]);
-            Double y = Double.parseDouble(strs[1]);
-            return new WithTime<>(new Point(x, y), var1.getTime());
+            double[] location = new double[strs.length];
+            for(int i=0; i<strs.length; i++){
+                location[i] = Double.parseDouble(strs[i]);
+            }
+            return new WithTime<>(new Point(location), var1.getTime());
         }
     };
 
     public static MapWithInitListFunction<Point, Point> assign
             = new MapWithInitListFunction<Point, Point>() {
 
-        Latency latency = new Latency("CentroidAssign");
+        LatencyLog latency = new LatencyLog("CentroidAssign");
 //        Logger logger = LoggerFactory.getLogger("LatestCentroids");
 
         @Override
@@ -222,7 +230,7 @@ public class UserFunctions {
                         minIndex = i;
                     }
                 }
-                return new Point(minIndex, var1.x, var1.y, var1.getTime());
+                return new Point(minIndex, var1.location, var1.getTime());
             }
         }
     };
@@ -239,10 +247,12 @@ public class UserFunctions {
             new ReduceFunction<Tuple2<Long, Point>>() {
                 @Override
                 public Tuple2<Long, Point> reduce(Tuple2<Long, Point> var1, Tuple2<Long, Point> var2) throws Exception {
-                    double x = var1._2.x+var2._2.x;
-                    double y = var1._2.y+var2._2.y;
+                    double[] location = new double[var1._2.dimension()];
+                    for(int i=0; i<location.length; i++) {
+                        location[i] = var1._2.location[i] + var2._2.location[i];
+                    }
                     long time = Math.max(var1._2.getTime(), var2._2.getTime());
-                    return new Tuple2<>(var1._1 + var2._1, new Point(x, y, time));
+                    return new Tuple2<>(var1._1 + var2._1, new Point(location, time));
                 }
             };
 
@@ -250,25 +260,20 @@ public class UserFunctions {
     public static MapFunction<Tuple2<Integer, Tuple2<Long, Point>>, Point> computeCentroid
             = new MapFunction<Tuple2<Integer, Tuple2<Long, Point>>, Point>() {
         Logger logger = LoggerFactory.getLogger("CentroidLogger");
-        Throughput throughput = new Throughput("Centroid");
-
+        ThroughputLog throughput = new ThroughputLog("Centroid");
+        CentroidLog centroidLog = new CentroidLog();
         @Override
         public Point map(Tuple2<Integer, Tuple2<Long, Point>> var1) {
             throughput.execute();
             long counts = var1._2()._1();
-            double x = var1._2._2.x/counts;
-            double y = var1._2._2.y/counts;
 
-            double probability = 0.05;
-            if(Configure.kmeansCentroidsFrequency != null
-                    && Configure.kmeansCentroidsFrequency > 0) {
-                probability = Configure.kmeansCentroidsFrequency;
+            double[] location = new double[var1._2._2.dimension()];
+            for(int i=0; i<location.length; i++) {
+                location[i] = var1._2._2.location[i]/counts;
             }
 
-            if(Math.random() < probability) {
-                logger.warn(String.format("\t%d\t%16.14f\t%16.14f", counts, x, y));
-            }
-            return new Point(var1._1, x, y, var1._2._2.getTime());
+            centroidLog.execute(counts,location);
+            return new Point(var1._1, location, var1._2._2.getTime());
         }
     };
 

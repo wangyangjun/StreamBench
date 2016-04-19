@@ -8,7 +8,7 @@ import backtype.storm.tuple.Values;
 import fi.aalto.dmg.exceptions.DurationException;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
 import fi.aalto.dmg.frame.functions.FilterFunction;
-import fi.aalto.dmg.statistics.Throughput;
+import fi.aalto.dmg.statistics.ThroughputLog;
 import fi.aalto.dmg.util.TimeDurations;
 import org.apache.log4j.Logger;
 
@@ -37,7 +37,7 @@ public class WindowFilterBolt<T> extends WindowedBolt {
     }
 
     public void enableThroughput(String loggerName) {
-        this.throughput = new Throughput(loggerName);
+        this.throughput = new ThroughputLog(loggerName);
     }
 
     /**

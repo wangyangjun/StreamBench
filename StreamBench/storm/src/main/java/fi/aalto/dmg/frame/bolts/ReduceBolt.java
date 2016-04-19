@@ -7,7 +7,7 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import fi.aalto.dmg.frame.functions.ReduceFunction;
-import fi.aalto.dmg.statistics.Throughput;
+import fi.aalto.dmg.statistics.ThroughputLog;
 import org.apache.log4j.Logger;
 
 /**
@@ -20,7 +20,7 @@ public class ReduceBolt<T> extends BaseBasicBolt {
     private T currentValue;
 
     ReduceFunction<T> fun;
-    Throughput throughput;
+    ThroughputLog throughput;
 
     public ReduceBolt(ReduceFunction<T> function){
         this.fun = function;
@@ -28,7 +28,7 @@ public class ReduceBolt<T> extends BaseBasicBolt {
     }
 
     public void enableThroughput(String loggerName) {
-        this.throughput = new Throughput(loggerName);
+        this.throughput = new ThroughputLog(loggerName);
     }
 
 

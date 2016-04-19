@@ -53,15 +53,15 @@ public class FlinkOperatorCreator extends OperatorCreator {
 
         env.setParallelism(parallelism);
         DataStream<String> stream = env
-                .addSource(new FlinkKafkaConsumer082<String>(topics, new SimpleStringSchema(), properties));
+                .addSource(new FlinkKafkaConsumer082<>(topics, new SimpleStringSchema(), properties));
         DataStream<WithTime<String>> withTimeDataStream = stream.map(new MapFunction<String, WithTime<String>>() {
             @Override
             public WithTime<String> map(String value) throws Exception {
                 String[] list = value.split(Constant.TimeSeparatorRegex);
                 if(list.length == 2) {
-                    return new WithTime<String>(list[0], Long.parseLong(list[1]));
+                    return new WithTime<>(list[0], Long.parseLong(list[1]));
                 }
-                return new WithTime<String>(value, System.currentTimeMillis());
+                return new WithTime<>(value, System.currentTimeMillis());
             }
         });
         return new FlinkWorkloadOperator<>(withTimeDataStream, parallelism);
@@ -79,7 +79,7 @@ public class FlinkOperatorCreator extends OperatorCreator {
 
         env.setParallelism(parallelism);
         DataStream<String> stream = env
-                .addSource(new FlinkKafkaConsumer082<String>(topics, new SimpleStringSchema(), properties));
+                .addSource(new FlinkKafkaConsumer082<>(topics, new SimpleStringSchema(), properties));
         DataStream<Point> pointStream = stream.map(new MapFunction<String, Point>() {
             @Override
             public Point map(String value) throws Exception {
@@ -89,9 +89,11 @@ public class FlinkOperatorCreator extends OperatorCreator {
                     time = Long.parseLong(list[1]);
                 }
                 String[] strs = list[0].split("\t");
-                Double x = Double.parseDouble(strs[0]);
-                Double y = Double.parseDouble(strs[1]);
-                return new Point(x, y, time);
+                double[] position = new double[strs.length];
+                for(int i=0; i<strs.length; i++) {
+                    position[i] = Double.parseDouble(strs[i]);
+                }
+                return new Point(position, time);
             }
         });
         return new FlinkWorkloadOperator<>(pointStream, parallelism);
@@ -114,7 +116,7 @@ public class FlinkOperatorCreator extends OperatorCreator {
         properties.put("auto.offset.reset", offset);
 
         DataStream<String> stream = env
-                .addSource(new FlinkKafkaConsumer082<String>(topics, new SimpleStringSchema(), properties));
+                .addSource(new FlinkKafkaConsumer082<>(topics, new SimpleStringSchema(), properties));
         return new FlinkWorkloadOperator<>(stream, parallelism);
     }
 

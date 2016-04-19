@@ -16,9 +16,17 @@ public class WithTimeBolt<T> extends BaseBasicBolt {
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
-
-        collector.emit(new Values(new WithTime<T>((T) input.getValue(0), System.currentTimeMillis())));
-
+        if(input.getValue(0) instanceof String){
+            String value = (String)input.getValue(0);
+            String[] list = value.split(Constant.TimeSeparatorRegex);
+            if(list.length == 2) {
+                collector.emit(new Values(new WithTime<T>((T)list[0], Long.parseLong(list[1]))));
+            } else {
+                collector.emit(new Values(new WithTime<T>((T) input.getValue(0), System.currentTimeMillis())));
+            }
+        } else {
+            collector.emit(new Values(new WithTime<T>((T) input.getValue(0), System.currentTimeMillis())));
+        }
     }
 
     @Override

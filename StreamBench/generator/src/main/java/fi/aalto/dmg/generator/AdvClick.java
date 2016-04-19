@@ -1,6 +1,6 @@
 package fi.aalto.dmg.generator;
 
-import fi.aalto.dmg.statistics.Throughput;
+import fi.aalto.dmg.statistics.ThroughputLog;
 import org.apache.commons.math3.random.RandomDataGenerator;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Generator for Advertise Clicks workload
  * Created by jun on 28/01/16.
  */
 
@@ -29,7 +30,7 @@ public class AdvClick extends Generator {
 
     public AdvClick(){
         super();
-        producer = createSmallBufferProducer();
+        producer = createBigBufferProducer();
 
         ADV_TOPIC = properties.getProperty("topic1", "Advertisement");
         CLICK_TOPIC = properties.getProperty("topic2", "AdvClick");
@@ -39,7 +40,7 @@ public class AdvClick extends Generator {
     }
 
     public void generate(int sleep_frequency) throws InterruptedException {
-        Throughput throughput = new Throughput(this.getClass().getSimpleName());
+        ThroughputLog throughput = new ThroughputLog(this.getClass().getSimpleName());
         long time = System.currentTimeMillis();
 
         // Obtain a cached thread pool
@@ -47,7 +48,7 @@ public class AdvClick extends Generator {
 
         RandomDataGenerator generator = new RandomDataGenerator();
         generator.reSeed(10000000L);
-        // subthread use variable in main thread
+        // sub thread use variable in main thread
         // for loop to generate advertisement
 
         ArrayList<Advertisement> advList = new ArrayList<>();
@@ -73,33 +74,21 @@ public class AdvClick extends Generator {
 
             throughput.execute();
             // control data generate speed
-            if(i%sleep_frequency == 0) {
+            if(sleep_frequency > 0 && i%sleep_frequency == 0) {
                 Thread.sleep(1);
             }
 
-            cachedPool.shutdown();
-            try {
-                cachedPool.awaitTermination(1, TimeUnit.MINUTES);
-            } catch (InterruptedException e) {
-            }
-
         }
-        logger.info("Latency: " + String.valueOf(System.currentTimeMillis()-time));
+        cachedPool.shutdown();
+        try {
+            cachedPool.awaitTermination(1, TimeUnit.MINUTES);
+        } catch (InterruptedException e) {
+        }
+
+        logger.info("LatencyLog: " + String.valueOf(System.currentTimeMillis()-time));
 
     }
 
-    public static void main( String[] args ) throws InterruptedException {
-        int SLEEP_FREQUENCY = 1000;
-        if(args.length > 0) {
-            SLEEP_FREQUENCY = Integer.parseInt(args[0]);
-        }
-
-        if(args.length > 1) {
-            ADV_NUM = Long.parseLong(args[1]);
-        }
-        new AdvClick().generate(SLEEP_FREQUENCY);
-
-    }
 
     static class Advertisement implements Comparable<Advertisement>{
         Advertisement(String id, long time) {
@@ -142,7 +131,15 @@ public class AdvClick extends Generator {
                         String.format("%d\t%s", System.currentTimeMillis(), adv.id)));
 //                System.out.println("Clicked: " + adv.id);
             }
-
         }
     }
+
+    public static void main( String[] args ) throws InterruptedException {
+        int SLEEP_FREQUENCY = -1;
+        if(args.length > 0) {
+            SLEEP_FREQUENCY = Integer.parseInt(args[0]);
+        }
+        new AdvClick().generate(SLEEP_FREQUENCY);
+    }
+
 }

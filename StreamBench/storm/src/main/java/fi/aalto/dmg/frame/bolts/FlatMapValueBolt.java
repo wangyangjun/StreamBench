@@ -7,7 +7,7 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import fi.aalto.dmg.frame.functions.FlatMapFunction;
-import fi.aalto.dmg.statistics.Throughput;
+import fi.aalto.dmg.statistics.ThroughputLog;
 import org.apache.log4j.Logger;
 
 /**
@@ -19,14 +19,14 @@ public class FlatMapValueBolt<V, R> extends BaseBasicBolt {
     private static final long serialVersionUID = 8601926877987440101L;
 
     private FlatMapFunction<V, R> fun;
-    private Throughput throughput;
+    private ThroughputLog throughput;
 
     public FlatMapValueBolt(FlatMapFunction<V, R> function){
         this.fun = function;
     }
 
     public void enableThroughput(String loggerName) {
-        this.throughput = new Throughput(loggerName);
+        this.throughput = new ThroughputLog(loggerName);
     }
 
 

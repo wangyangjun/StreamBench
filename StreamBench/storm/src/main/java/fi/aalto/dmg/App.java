@@ -4,6 +4,7 @@ import fi.aalto.dmg.exceptions.WorkloadException;
 import fi.aalto.dmg.frame.OperatorCreator;
 import fi.aalto.dmg.frame.StormOperatorCreator;
 import fi.aalto.dmg.workloads.WordCount;
+import fi.aalto.dmg.workloads.WordCountWindowed;
 import fi.aalto.dmg.workloads.Workload;
 
 import java.io.IOException;
@@ -23,6 +24,7 @@ public class App
         // WordCount WordCountWindowed FasterWordCount ClickedAdvertisement
         OperatorCreator operatorCreator = new StormOperatorCreator("WordCount");
         Workload workload = new WordCount(operatorCreator);
+//        Workload workload = new WordCountWindowed(operatorCreator);
         workload.Start();
 
 //        BenchStarter.StartWorkload("WordCount");

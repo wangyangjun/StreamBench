@@ -10,17 +10,17 @@ import java.io.Serializable;
  * Created by yangjun.wang on 14/10/15.
  * Measure the throughput when run out of stream tuple
  */
-public class Throughput implements Serializable{
+public class ThroughputLog implements Serializable{
 
     private static final long serialVersionUID = -4968905648218161496L;
-    private static Logger logger = LoggerFactory.getLogger(Throughput.class);
+    private static Logger logger = LoggerFactory.getLogger(ThroughputLog.class);
     private String loggerName;
     private long received;
 
     private long lastLogTime;
     private long lastLogEle;
 
-    public Throughput(String loggerName) {
+    public ThroughputLog(String loggerName) {
         this.loggerName = loggerName;
         this.received = 0;
         this.lastLogTime = 0;

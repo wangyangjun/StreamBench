@@ -26,20 +26,9 @@ public class WordCountWindowed  extends Workload implements Serializable {
         super(creater);
     }
 
-    public static ReduceFunction<Tuple2<String, Integer>> tuple2ReduceFunction = new ReduceFunction<Tuple2<String, Integer>>() {
-        @Override
-        public Tuple2<String, Integer> reduce(Tuple2<String, Integer> var1, Tuple2<String, Integer> var2) throws Exception {
-            return new Tuple2<String, Integer>(var1._1(), var1._2()+var2._2());
-        }
-    };
     @Override
     public void Process() throws WorkloadException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         try {
-            int hosts = Integer.parseInt(properties.getProperty("hosts"));
-            int cores = Integer.parseInt(properties.getProperty("cores"));
-            int parallelism = hosts*cores;
-
-
             // Flink doesn't support shuffle().window()
             // Actually Flink does keyGrouping().window().update()
             // It is the same situation to Spark streaming
@@ -47,9 +36,9 @@ public class WordCountWindowed  extends Workload implements Serializable {
             PairWorkloadOperator<String, WithTime<Integer>> counts =
                     operator.flatMap(UserFunctions.splitFlatMapWithTime, "splitter")
                             .mapToPair(UserFunctions.mapToStrIntPairWithTime, "pair")
-                            .reduceByKeyAndWindow(UserFunctions.sumReduceWithTime, "counter",
+                            .reduceByKeyAndWindow(UserFunctions.sumReduceWithTime2, "counter",
                                     new TimeDurations(TimeUnit.SECONDS, 1), new TimeDurations(TimeUnit.SECONDS, 1));
-            counts.print();
+            counts.sink();
 
             // cumulate counts
 //            PairWorkloadOperator<String, Integer> cumulateCounts =counts.updateStateByKey(UserFunctions.sumReduce, "cumulate");

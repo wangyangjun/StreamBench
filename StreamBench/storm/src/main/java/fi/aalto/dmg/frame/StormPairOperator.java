@@ -93,8 +93,11 @@ public class StormPairOperator<K, V> extends PairWorkloadOperator<K,V> {
     @Override
     public PairWorkloadOperator<K, V> reduceByKeyAndWindow(ReduceFunction<V> fun, String componentId, TimeDurations windowDuration, TimeDurations slideDuration) {
         try {
+            WindowPairReduceByKeyBolt<K,V> reduceByKeyBolt
+                    = new WindowPairReduceByKeyBolt<>(fun, windowDuration, slideDuration);
+            reduceByKeyBolt.enableThroughput("ReduceByKey");
             topologyBuilder.setBolt(componentId + "-local",
-                    new WindowPairReduceByKeyBolt<>(fun, windowDuration, slideDuration),
+                    reduceByKeyBolt,
                     parallelism)
                 .localOrShuffleGrouping(preComponentId);
             topologyBuilder.setBolt(componentId,

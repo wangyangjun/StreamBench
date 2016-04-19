@@ -10,7 +10,7 @@ import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import fi.aalto.dmg.exceptions.DurationException;
 import fi.aalto.dmg.frame.bolts.BoltConstants;
-import fi.aalto.dmg.statistics.Throughput;
+import fi.aalto.dmg.statistics.ThroughputLog;
 import fi.aalto.dmg.util.TimeDurations;
 import fi.aalto.dmg.util.Utils;
 
@@ -38,7 +38,7 @@ public abstract class WindowedBolt extends BaseBasicBolt {
     // slide index in the windowed data structure: (0, 1, ..., WINDOW_SIZE-1)
     protected int slideInWindow = 0;
 
-    protected Throughput throughput;
+    protected ThroughputLog throughput;
 
     public WindowedBolt(TimeDurations windowDuration, TimeDurations slideDuration) throws DurationException {
         long window_tick_frequency_seconds = Utils.getSeconds(windowDuration);

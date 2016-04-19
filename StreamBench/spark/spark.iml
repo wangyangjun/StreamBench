@@ -71,9 +71,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.sun.jersey:jersey-json:1.9" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.codehaus.jettison:jettison:1.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: stax:stax-api:1.0.1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sun.xml.bind:jaxb-impl:2.2.3-1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: javax.xml.bind:jaxb-api:2.2.2" level="project" />
-    <orderEntry type="library" name="Maven: javax.activation:activation:1.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.codehaus.jackson:jackson-jaxrs:1.8.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.codehaus.jackson:jackson-xc:1.8.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.sun.jersey.contribs:jersey-guice:1.9" level="project" />
@@ -149,6 +146,34 @@
     <orderEntry type="library" name="Maven: org.apache.kafka:kafka_2.10:0.8.2.1" level="project" />
     <orderEntry type="library" name="Maven: com.yammer.metrics:metrics-core:2.2.0" level="project" />
     <orderEntry type="library" name="Maven: com.101tec:zkclient:0.3" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.spark:spark-mllib_2.10:1.5.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.spark:spark-sql_2.10:1.5.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.spark:spark-catalyst_2.10:1.5.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.codehaus.janino:janino:2.7.8" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.codehaus.janino:commons-compiler:2.7.8" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.parquet:parquet-column:1.7.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.parquet:parquet-common:1.7.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.parquet:parquet-encoding:1.7.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.parquet:parquet-generator:1.7.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.parquet:parquet-hadoop:1.7.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.parquet:parquet-format:2.3.0-incubating" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.parquet:parquet-jackson:1.7.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.spark:spark-graphx_2.10:1.5.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.github.fommil.netlib:core:1.1.2" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: net.sourceforge.f2j:arpack_combined_all:0.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.scalanlp:breeze_2.10:0.11.2" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.scalanlp:breeze-macros_2.10:0.11.2" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.scalamacros:quasiquotes_2.10:2.0.0-M8" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: net.sf.opencsv:opencsv:2.3" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.github.rwl:jtransforms:2.4.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.spire-math:spire_2.10:0.7.4" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.spire-math:spire-macros_2.10:0.7.4" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jpmml:pmml-model:1.1.15" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jpmml:pmml-agent:1.1.15" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jpmml:pmml-schema:1.1.15" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sun.xml.bind:jaxb-impl:2.2.7" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.sun.xml.bind:jaxb-core:2.2.7" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: javax.xml.bind:jaxb-api:2.2.7" level="project" />
     <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.10.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.4" level="project" />
   </component>

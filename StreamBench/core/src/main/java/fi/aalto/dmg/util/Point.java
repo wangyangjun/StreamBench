@@ -11,37 +11,37 @@ import java.io.Serializable;
 // *************************************************************************
 
 /**
- * A simple two-dimensional point.
+ * A simple multi-dimensional point.
  */
 public class Point implements Serializable {
 
     private long time;
     public int id; // Centroid id: 0, 1, 2, ...
-    public double x, y;
+    public double[] location;
 
     public Point() {}
 
-    public Point(int id, double x, double y) {
-        this.x = x;
-        this.y = y;
+    public Point(int id, double[] l) {
         this.id = id;
+        this.location = l;
         this.time = System.currentTimeMillis();
     }
 
-    public Point(int id, double x, double y, long time) {
-        this(id, x, y);
+    public Point(int id, double[] l, long time) {
+        this(id, l);
         this.time = time;
     }
 
-    public Point(double x, double y) {
-        this(-1, x, y);
+    public Point(double[] l) {
+        this(-1, l);
     }
 
-    public Point(double x, double y, long time) {
-        this(-1, x, y);
+    public Point(double[] l, long time) {
+        this(-1, l);
         this.time = time;
     }
 
+    public int dimension(){ return this.location.length; }
 
     public boolean isCentroid() {
         return this.id >= 0;
@@ -51,36 +51,58 @@ public class Point implements Serializable {
 
     public void setTime(long time) { this.time = time; }
 
-    public Point add(Point other) {
-        x += other.x;
-        y += other.y;
-        return this;
+    public Point add(Point other) throws Exception {
+        if(this.location.length != other.location.length) {
+            throw new Exception("Dimensions of points are not equal");
+        }
+        double[] location = new double[this.location.length];
+        for(int i=0; i<this.location.length; ++i) {
+            location[i] = this.location[i] + other.location[i];
+        }
+        return new Point(this.id, location, this.time);
     }
 
     public Point mul(long val) {
-        x *= val;
-        y *= val;
-        return this;
+        double[] location = new double[this.location.length];
+        for(int i=0; i<this.location.length; ++i) {
+            location[i] = this.location[i]*val;
+        }
+        return new Point(this.id, location, this.time);
     }
 
     public Point div(long val) {
-        x /= val;
-        y /= val;
-        return this;
+        double[] location = new double[this.location.length];
+        for(int i=0; i<this.location.length; ++i) {
+            location[i] = this.location[i]/val;
+        }
+        return new Point(this.id, location, this.time);
     }
 
     public double euclideanDistance(Point other) {
-        return Math.sqrt((x-other.x)*(x-other.x) + (y-other.y)*(y-other.y));
+        return Math.sqrt(distanceSquaredTo(other));
     }
 
-    public void clear() {
-        x = y = 0.0;
+    public double distanceSquaredTo(Point other){
+        double squareSum= 0;
+        for(int i=0; i<this.location.length; ++i) {
+            squareSum += Math.pow(this.location[i] - other.location[i], 2);
+        }
+        return squareSum;
     }
+
+//    public void clear() {
+//        x = y = 0.0;
+//    }
 
     @Override
     public String toString() {
+        String str = "(";
+        for(int i=0; i<this.location.length-1; ++i) {
+            str += this.location[i] + ", ";
+        }
+        str += this.location[this.location.length-1] + ")";
         if(-1 != this.id)
-            return id + ":(" + x + ", " + y + ")";
-        return "(" + x + ", " + y + ")";
+            return id + ":" + str;
+        return str;
     }
 }

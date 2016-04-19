@@ -40,8 +40,8 @@ public class WordCount extends Workload implements Serializable{
                             .mapToPair(UserFunctions.mapToStrIntPairWithTime, "pair")
                             .reduceByKey(UserFunctions.sumReduceWithTime, "sum")
                             .updateStateByKey(UserFunctions.sumReduceWithTime, "accumulate");
-//            counts.sink();
-            counts.print();
+            counts.sink();
+//            counts.print();
         }
         catch (Exception e){
             logger.error(e.getMessage());
