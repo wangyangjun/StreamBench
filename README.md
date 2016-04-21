@@ -1,5 +1,15 @@
 # RealtimeStreamBenchmark
 
+## Experiment Environment Setup
+**Module path:** script.  
+**Description:** Setup experiment environment, install Storm, Flink, Spark, Kafka, HDFS and Zookeeper.  
+**Usage:**  
+&nbsp;&nbsp;&nbsp;&nbsp;1. Set ssh passwordless login experiment cluster;  
+&nbsp;&nbsp;&nbsp;&nbsp;2. Update configureation file `cluster-config.json` to the role of each node in the cluster;  
+&nbsp;&nbsp;&nbsp;&nbsp;3. Clone this repository to home directory of master node;  
+&nbsp;&nbsp;&nbsp;&nbsp;4. Run `python scripts\pull-updates.py` to clone this repository to each node in the cluster;  
+&nbsp;&nbsp;&nbsp;&nbsp;4. Run `python scripts\install.py` with different parameter to install softwares
+
 ## Data generator
 **Module path:** StreamBench/generator.  
 **Description:** This module defineds data generators for workloads. Parameters could be configured in configure files under resources folder.  
