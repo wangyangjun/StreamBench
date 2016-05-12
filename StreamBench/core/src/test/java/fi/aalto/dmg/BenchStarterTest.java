@@ -8,31 +8,27 @@ import junit.framework.TestSuite;
  * Unit test for simple BenchStarter.
  */
 public class BenchStarterTest
-    extends TestCase
-{
+        extends TestCase {
     /**
      * Create the test case
      *
      * @param testName name of the test case
      */
-    public BenchStarterTest(String testName)
-    {
-        super( testName );
+    public BenchStarterTest(String testName) {
+        super(testName);
     }
 
     /**
      * @return the suite of tests being tested
      */
-    public static Test suite()
-    {
-        return new TestSuite( BenchStarterTest.class );
+    public static Test suite() {
+        return new TestSuite(BenchStarterTest.class);
     }
 
     /**
      * Rigourous Test :-)
      */
-    public void testApp()
-    {
-        assertTrue( true );
+    public void testApp() {
+        assertTrue(true);
     }
 }

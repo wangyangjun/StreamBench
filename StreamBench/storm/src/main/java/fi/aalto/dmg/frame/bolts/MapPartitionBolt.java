@@ -12,14 +12,14 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by yangjun.wang on 31/10/15.
  */
-public class MapPartitionBolt<T,R> extends BaseBasicBolt {
+public class MapPartitionBolt<T, R> extends BaseBasicBolt {
 
     private static final Logger logger = LoggerFactory.getLogger(MapPartitionBolt.class);
     private static final long serialVersionUID = -3273118129502437891L;
 
     MapPartitionFunction<T, R> fun;
 
-    public MapPartitionBolt(MapPartitionFunction<T, R> function){
+    public MapPartitionBolt(MapPartitionFunction<T, R> function) {
         this.fun = function;
     }
 

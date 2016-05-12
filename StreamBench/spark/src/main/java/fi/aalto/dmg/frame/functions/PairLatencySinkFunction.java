@@ -9,18 +9,18 @@ import scala.Tuple2;
 /**
  * Created by jun on 08/12/15.
  */
-public class PairLatencySinkFunction<K,V> implements Function<Tuple2<K, V>, Boolean> {
+public class PairLatencySinkFunction<K, V> implements Function<Tuple2<K, V>, Boolean> {
 
     private static Logger logger = Logger.getLogger(PairLatencySinkFunction.class);
     private LatencyLog latency;
 
-    public PairLatencySinkFunction(){
+    public PairLatencySinkFunction() {
         latency = new LatencyLog(PairLatencySinkFunction.class.getSimpleName());
     }
 
     @Override
     public Boolean call(Tuple2<K, V> tuple2) throws Exception {
-        latency.execute((WithTime)tuple2._2());
+        latency.execute((WithTime) tuple2._2());
         return true;
     }
 }

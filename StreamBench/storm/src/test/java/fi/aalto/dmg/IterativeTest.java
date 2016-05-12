@@ -66,7 +66,7 @@ public class IterativeTest {
         @Override
         public void nextTuple() {
             Utils.sleep(100);
-            if( i < 10)
+            if (i < 10)
                 _collector.emit(new Values(i++));
         }
 
@@ -107,7 +107,7 @@ public class IterativeTest {
         @Override
         public void execute(Tuple tuple, BasicOutputCollector collector) {
             int i = tuple.getInteger(0);
-            if( i > 0) {
+            if (i > 0) {
                 System.out.println(i);
                 collector.emit("GreaterThanZero", new Values(i));
             } else {

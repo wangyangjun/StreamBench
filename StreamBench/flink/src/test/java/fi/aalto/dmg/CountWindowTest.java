@@ -29,15 +29,15 @@ public class CountWindowTest {
                     @Override
                     public void apply(GlobalWindow window, Iterable<Integer> tuples, Collector<Tuple2<Integer, Integer>> out) throws Exception {
                         HashMap<Integer, Integer> map = new HashMap<>();
-                        for(Integer tuple : tuples){
+                        for (Integer tuple : tuples) {
                             Integer value = 0;
-                            if(map.containsKey(tuple)){
+                            if (map.containsKey(tuple)) {
                                 value = map.get(tuple);
                             }
-                            map.put(tuple, value+1);
+                            map.put(tuple, value + 1);
                         }
 
-                        for(Map.Entry<Integer, Integer> entry : map.entrySet()) {
+                        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
                             out.collect(new Tuple2<>(entry.getKey(), entry.getValue()));
                         }
                     }

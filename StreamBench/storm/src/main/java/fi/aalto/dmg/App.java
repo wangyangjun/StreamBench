@@ -13,12 +13,11 @@ import java.util.regex.Pattern;
 
 /**
  * Hello world!
- *
  */
-public class App
-{
+public class App {
     private static final Pattern SPACE = Pattern.compile(" ");
-    public static void main( String[] args ) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
+
+    public static void main(String[] args) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
 
         System.out.println("Start ...");
         // WordCount WordCountWindowed FasterWordCount ClickedAdvertisement

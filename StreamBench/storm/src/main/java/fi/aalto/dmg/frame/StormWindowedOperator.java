@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 /**
  * Created by jun on 11/9/15.
  */
-public class StormWindowedOperator<T> extends WindowedWorkloadOperator<T>  {
+public class StormWindowedOperator<T> extends WindowedWorkloadOperator<T> {
 
     private static final long serialVersionUID = -6227716871223564255L;
     protected TopologyBuilder topologyBuilder;

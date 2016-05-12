@@ -13,7 +13,7 @@ import java.util.Map;
 public class BTreeTest {
 
     @Test
-    public void findParent(){
+    public void findParent() {
         BTree<Integer> tree = new BTree<>(13);
         Assert.assertEquals(tree.findParent(0), 13);
         Assert.assertEquals(tree.findParent(12), 23);
@@ -43,7 +43,7 @@ public class BTreeTest {
     }
 
     @Test
-    public void findChildren(){
+    public void findChildren() {
         BTree<Integer> tree = new BTree<>(13);
         Assert.assertTrue(tree.findChildren(13).contains(0));
         Assert.assertTrue(tree.findChildren(13).contains(1));

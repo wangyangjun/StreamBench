@@ -16,9 +16,8 @@ import java.util.regex.Pattern;
  * Created by jun on 28/02/16.
  */
 
-public class KMeans
-{
-    public static void main( String[] args ) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
+public class KMeans {
+    public static void main(String[] args) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
 
         Logger logger = LoggerFactory.getLogger("KMeans");
         logger.warn("Start ...");

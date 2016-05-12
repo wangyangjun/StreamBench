@@ -42,7 +42,7 @@ public class FlinkWindowedWorkloadOperator<T, W extends Window> extends Windowed
         DataStream<R> newDataStream = this.windowStream.apply(new WindowFunction<T, R, T, W>() {
             @Override
             public void apply(T t, W window, Iterable<T> values, Collector<R> collector) throws Exception {
-                for(T value : values){
+                for (T value : values) {
                     R result = fun.map(value);
                     collector.collect(result);
                 }
@@ -56,8 +56,8 @@ public class FlinkWindowedWorkloadOperator<T, W extends Window> extends Windowed
         DataStream<T> newDataStream = this.windowStream.apply(new WindowFunction<T, T, T, W>() {
             @Override
             public void apply(T t, W window, Iterable<T> values, Collector<T> collector) throws Exception {
-                for(T value : values){
-                    if(fun.filter(value))
+                for (T value : values) {
+                    if (fun.filter(value))
                         collector.collect(value);
                 }
             }
@@ -78,11 +78,11 @@ public class FlinkWindowedWorkloadOperator<T, W extends Window> extends Windowed
 
     @Override
     public <K, V> PairWorkloadOperator<K, V> mapToPair(final MapPairFunction<T, K, V> fun, String componentId) {
-        DataStream<Tuple2<K,V>> newDataStream = this.windowStream.apply(new WindowFunction<T, Tuple2<K, V>, T, W>() {
+        DataStream<Tuple2<K, V>> newDataStream = this.windowStream.apply(new WindowFunction<T, Tuple2<K, V>, T, W>() {
             @Override
             public void apply(T t, W window, Iterable<T> values, Collector<Tuple2<K, V>> collector) throws Exception {
-                for(T value : values){
-                    Tuple2<K,V> result = fun.mapToPair(value);
+                for (T value : values) {
+                    Tuple2<K, V> result = fun.mapToPair(value);
                     collector.collect(result);
                 }
             }

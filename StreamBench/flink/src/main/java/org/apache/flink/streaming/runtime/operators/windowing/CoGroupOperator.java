@@ -185,7 +185,7 @@ public class CoGroupOperator<K, IN1, IN2, OUT>
         }
 
         // re-register timers that this window1 context had set
-        for (Map.Entry<K, Map<Long, ContextPair>> entry: windows.entrySet()) {
+        for (Map.Entry<K, Map<Long, ContextPair>> entry : windows.entrySet()) {
             Map<Long, ContextPair> keyWindows = entry.getValue();
             for (ContextPair context : keyWindows.values()) {
                 if (context.processingTimeTimer > 0) {
@@ -214,9 +214,9 @@ public class CoGroupOperator<K, IN1, IN2, OUT>
     public final void close() throws Exception {
         super.close();
         // emit the elements that we still keep
-        for (Map.Entry<K, Map<Long, ContextPair>> entry: windows.entrySet()) {
+        for (Map.Entry<K, Map<Long, ContextPair>> entry : windows.entrySet()) {
             Map<Long, ContextPair> keyWindows = entry.getValue();
-            for (ContextPair window: keyWindows.values()) {
+            for (ContextPair window : keyWindows.values()) {
                 emitWindow(window);
             }
         }
@@ -226,7 +226,7 @@ public class CoGroupOperator<K, IN1, IN2, OUT>
     }
 
     protected void emitWindow(ContextPair context) throws Exception {
-        if(context.coGroupAble()){
+        if (context.coGroupAble()) {
             timestampedCollector.setTimestamp(context.window1.maxTimestamp());
             if (context.windowBuffer1.size() > 0 && context.windowBuffer2.size() > 0) {
                 setKeyContextElement(context.windowBuffer1.getElements().iterator().next());
@@ -261,26 +261,26 @@ public class CoGroupOperator<K, IN1, IN2, OUT>
     public void trigger(long time) throws Exception {
         Set<Long> toRemove = new HashSet<>();
 
-        for (Map.Entry<Long, Set<ContextPair>> triggers: processingTimeTimers.entrySet()) {
+        for (Map.Entry<Long, Set<ContextPair>> triggers : processingTimeTimers.entrySet()) {
             long actualTime = triggers.getKey();
             if (actualTime <= time) {
-                for (ContextPair context: triggers.getValue()) {
-                    if(null != context.window1 && null != context.window2)
+                for (ContextPair context : triggers.getValue()) {
+                    if (null != context.window1 && null != context.window2)
                         processTriggerResult(context.key, context.window1);
                 }
                 toRemove.add(triggers.getKey());
             }
         }
 
-        for (Long l: toRemove) {
+        for (Long l : toRemove) {
             processingTimeTimers.remove(l);
         }
     }
 
     /**
      * Store element of stream1 in corresponding window buffers
-     * @param element
-     *      record of stream 1
+     *
+     * @param element record of stream 1
      * @throws Exception
      */
     @Override
@@ -299,7 +299,7 @@ public class CoGroupOperator<K, IN1, IN2, OUT>
             windows.put(key, keyWindows);
         }
 
-        for (TimeWindow window: elementWindows) {
+        for (TimeWindow window : elementWindows) {
             long windowStartTime = window.getStart();
             ContextPair context = keyWindows.get(windowStartTime);
             if (context == null) {
@@ -307,7 +307,7 @@ public class CoGroupOperator<K, IN1, IN2, OUT>
                 WindowBuffer<IN2> windowBuffer2 = windowBufferFactory2.create();
                 context = new ContextPair(key, window, null, windowBuffer1, windowBuffer2);
                 keyWindows.put(windowStartTime, context);
-            } else if(!context.coGroupAble()) {
+            } else if (!context.coGroupAble()) {
                 context.window1 = window;
             }
             // store element
@@ -318,8 +318,8 @@ public class CoGroupOperator<K, IN1, IN2, OUT>
 
     /**
      * Store element of stream2 in corresponding window buffers
-     * @param element
-     *      record of stream 2
+     *
+     * @param element record of stream 2
      * @throws Exception
      */
     @Override
@@ -338,7 +338,7 @@ public class CoGroupOperator<K, IN1, IN2, OUT>
             windows.put(key, keyWindows);
         }
 
-        for (TimeWindow window: elementWindows) {
+        for (TimeWindow window : elementWindows) {
 
             long windowStartTime = window.getStart();
             ContextPair context = keyWindows.get(windowStartTime);
@@ -347,7 +347,7 @@ public class CoGroupOperator<K, IN1, IN2, OUT>
                 WindowBuffer<IN2> windowBuffer2 = windowBufferFactory2.create();
                 context = new ContextPair(key, null, window, windowBuffer1, windowBuffer2);
                 keyWindows.put(windowStartTime, context);
-            } else if(!context.coGroupAble()){
+            } else if (!context.coGroupAble()) {
                 context.window2 = window;
             }
             // store element
@@ -363,26 +363,26 @@ public class CoGroupOperator<K, IN1, IN2, OUT>
 
         // we cannot call the Trigger in here because trigger methods might register new triggers.
         // that would lead to concurrent modification errors.
-        for (Map.Entry<Long, Set<ContextPair>> triggers: watermarkTimers.entrySet()) {
+        for (Map.Entry<Long, Set<ContextPair>> triggers : watermarkTimers.entrySet()) {
             // TODO:
             if (triggers.getKey() <= mark.getTimestamp()
                     && triggers.getKey() <= this.currentWatermark2) {
-                for (ContextPair context: triggers.getValue()) {
+                for (ContextPair context : triggers.getValue()) {
                     toTrigger.add(context);
                 }
                 toRemove.add(triggers.getKey());
             }
         }
 
-        for (ContextPair context: toTrigger) {
+        for (ContextPair context : toTrigger) {
             if (context.watermarkTimer <= mark.getTimestamp()
                     && context.watermarkTimer <= this.currentWatermark2) {
-                if(null != context.window1 && null != context.window2)
+                if (null != context.window1 && null != context.window2)
                     processTriggerResult(context.key, context.window1);
             }
         }
 
-        for (Long l: toRemove) {
+        for (Long l : toRemove) {
             watermarkTimers.remove(l);
         }
 
@@ -397,25 +397,25 @@ public class CoGroupOperator<K, IN1, IN2, OUT>
 
         // we cannot call the Trigger in here because trigger methods might register new triggers.
         // that would lead to concurrent modification errors.
-        for (Map.Entry<Long, Set<ContextPair>> triggers: watermarkTimers.entrySet()) {
+        for (Map.Entry<Long, Set<ContextPair>> triggers : watermarkTimers.entrySet()) {
             if (triggers.getKey() <= mark.getTimestamp()
                     && triggers.getKey() <= this.currentWatermark1) {
-                for (ContextPair context: triggers.getValue()) {
+                for (ContextPair context : triggers.getValue()) {
                     toTrigger.add(context);
                 }
                 toRemove.add(triggers.getKey());
             }
         }
 
-        for (ContextPair context: toTrigger) {
+        for (ContextPair context : toTrigger) {
             if (context.watermarkTimer <= mark.getTimestamp()
                     && context.watermarkTimer <= this.currentWatermark1) {
-                if(null != context.window1 && null != context.window2)
+                if (null != context.window1 && null != context.window2)
                     processTriggerResult(context.key, context.window1);
             }
         }
 
-        for (Long l: toRemove) {
+        for (Long l : toRemove) {
             watermarkTimers.remove(l);
         }
 
@@ -425,7 +425,7 @@ public class CoGroupOperator<K, IN1, IN2, OUT>
 
     /**
      * The {@code Context} is responsible for keeping track of the state of one pane.
-     *
+     * <p>
      * <p>
      * A pane is the bucket of elements that have the same key (assigned by the
      * {@link org.apache.flink.api.java.functions.KeySelector}) and same {@link Window}. An element can
@@ -468,9 +468,10 @@ public class CoGroupOperator<K, IN1, IN2, OUT>
         }
 
 
-        public boolean coGroupAble(){
-            return this.window1!=null&&this.window2!=null;
+        public boolean coGroupAble() {
+            return this.window1 != null && this.window2 != null;
         }
+
         /**
          * Constructs a new {@code Context} by reading from a {@link DataInputView} that
          * contains a serialized context that we wrote in
@@ -521,13 +522,13 @@ public class CoGroupOperator<K, IN1, IN2, OUT>
 
             MultiplexingStreamRecordSerializer<IN1> recordSerializer1 = new MultiplexingStreamRecordSerializer<>(inputSerializer1);
             out.writeInt(windowBuffer1.size());
-            for (StreamRecord<IN1> element: windowBuffer1.getElements()) {
+            for (StreamRecord<IN1> element : windowBuffer1.getElements()) {
                 recordSerializer1.serialize(element, out);
             }
 
             MultiplexingStreamRecordSerializer<IN2> recordSerializer2 = new MultiplexingStreamRecordSerializer<>(inputSerializer2);
             out.writeInt(windowBuffer2.size());
-            for (StreamRecord<IN2> element: windowBuffer2.getElements()) {
+            for (StreamRecord<IN2> element : windowBuffer2.getElements()) {
                 recordSerializer2.serialize(element, out);
             }
         }
@@ -590,16 +591,16 @@ public class CoGroupOperator<K, IN1, IN2, OUT>
             // onElement calls registerProcessingTimeTimer or registerEventTimeTimer
             // if window1 or window2 is null, then there is no need to register this PairContext
             TimeWindow window = window1;
-            if(null != window2) {
-                if(window2.getEnd()>window1.getEnd()) window = window2;
+            if (null != window2) {
+                if (window2.getEnd() > window1.getEnd()) window = window2;
                 trigger1.onElement(element.getValue(), element.getTimestamp(), window, this);
             }
         }
 
         public void onElement2(StreamRecord<IN2> element) throws Exception {
             TimeWindow window = window2;
-            if(null != window1) {
-                if(window1.getEnd()>window2.getEnd()) window = window1;
+            if (null != window1) {
+                if (window1.getEnd() > window2.getEnd()) window = window1;
                 trigger2.onElement(element.getValue(), element.getTimestamp(), window, this);
             }
         }
@@ -631,10 +632,10 @@ public class CoGroupOperator<K, IN1, IN2, OUT>
         int numKeys = windows.size();
         out.writeInt(numKeys);
 
-        for (Map.Entry<K, Map<Long, ContextPair>> keyWindows: windows.entrySet()) {
+        for (Map.Entry<K, Map<Long, ContextPair>> keyWindows : windows.entrySet()) {
             int numWindows = keyWindows.getValue().size();
             out.writeInt(numWindows);
-            for (ContextPair context: keyWindows.getValue().values()) {
+            for (ContextPair context : keyWindows.getValue().values()) {
                 context.writeToState(out);
             }
         }

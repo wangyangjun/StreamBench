@@ -25,15 +25,9 @@
         <module name="core" />
         <module name="flink" />
         <module name="generator" />
+        <module name="spark" />
         <module name="Spark" />
         <module name="storm" />
-      </profile>
-      <profile default="false" name="Annotation profile for spark" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="true" />
-        <module name="spark" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

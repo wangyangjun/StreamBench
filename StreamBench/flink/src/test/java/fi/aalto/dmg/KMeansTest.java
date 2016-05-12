@@ -24,21 +24,21 @@ public class KMeansTest {
         // <Integer, Integer, Long, Long> ~
         // (origin 1 or feedback 0, cluster index, accumulated record number, record value)
         DataStream<Tuple4<Integer, Integer, Long, Long>> someIntegers = env.generateSequence(0, 10)
-            .map(new MapFunction<Long, Tuple4<Integer, Integer, Long, Long>>() {
-                @Override
-                public Tuple4<Integer, Integer, Long, Long> map(Long value) throws Exception {
-                    return new Tuple4<>(1, -1, 1L, value);
-                }
-            });
+                .map(new MapFunction<Long, Tuple4<Integer, Integer, Long, Long>>() {
+                    @Override
+                    public Tuple4<Integer, Integer, Long, Long> map(Long value) throws Exception {
+                        return new Tuple4<>(1, -1, 1L, value);
+                    }
+                });
 
         class Assign implements MapFunction<Tuple4<Integer, Integer, Long, Long>, Tuple4<Integer, Integer, Long, Long>> {
             public List<Long> initMeanList;
 
-            public Assign(){
+            public Assign() {
                 initMeanList = new ArrayList<>();
-                initMeanList.add((long)new Random().nextInt(10));
-                initMeanList.add((long)new Random().nextInt(10));
-                initMeanList.add((long)new Random().nextInt(10));
+                initMeanList.add((long) new Random().nextInt(10));
+                initMeanList.add((long) new Random().nextInt(10));
+                initMeanList.add((long) new Random().nextInt(10));
                 System.out.println(initMeanList);
             }
 
@@ -46,16 +46,16 @@ public class KMeansTest {
             public Tuple4<Integer, Integer, Long, Long> map(Tuple4<Integer, Integer, Long, Long> value) throws Exception {
                 System.out.println(initMeanList.toString() + String.valueOf(System.identityHashCode(initMeanList)));
                 // Update mean
-                if( value.f0 == 0) {
+                if (value.f0 == 0) {
                     initMeanList.set(value.f1, value.f3);
                     return value;
                 } else {
                     int minIndex = -1;
                     long minDistance = Long.MAX_VALUE;
 
-                    for(int i = 0; i < initMeanList.size(); i++) {
+                    for (int i = 0; i < initMeanList.size(); i++) {
                         long distance = Math.abs(value.f3 - initMeanList.get(i));
-                        if(distance < minDistance) {
+                        if (distance < minDistance) {
                             minDistance = distance;
                             minIndex = i;
                         }
@@ -72,16 +72,13 @@ public class KMeansTest {
         DataStream<Tuple4<Integer, Integer, Long, Long>> updateMeans = assigned.filter(new FilterFunction<Tuple4<Integer, Integer, Long, Long>>() {
             @Override
             public boolean filter(Tuple4<Integer, Integer, Long, Long> value) throws Exception {
-                if(value.f0 != 1) {
-                    return false;
-                }
-                return true;
+                return value.f0 == 1;
             }
         }).keyBy(1).reduce(new ReduceFunction<Tuple4<Integer, Integer, Long, Long>>() {
             @Override
             public Tuple4<Integer, Integer, Long, Long> reduce(Tuple4<Integer, Integer, Long, Long> value1, Tuple4<Integer, Integer, Long, Long> value2) throws Exception {
-                long totalElementNum = value1.f2+value2.f2;
-                long mean = (value1.f2*value1.f3 + value2.f2*value2.f3)/totalElementNum;
+                long totalElementNum = value1.f2 + value2.f2;
+                long mean = (value1.f2 * value1.f3 + value2.f2 * value2.f3) / totalElementNum;
                 return new Tuple4<>(0, value1.f1, totalElementNum, mean);
             }
         }).broadcast();

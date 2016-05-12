@@ -25,7 +25,7 @@ public class MapWithInitListBolt<T, R> extends BaseBasicBolt {
     private ThroughputLog throughput;
     private List<T> initList;
 
-    public MapWithInitListBolt(MapWithInitListFunction<T, R> function, List<T> list){
+    public MapWithInitListBolt(MapWithInitListFunction<T, R> function, List<T> list) {
         this.fun = function;
         this.initList = list;
     }
@@ -36,16 +36,16 @@ public class MapWithInitListBolt<T, R> extends BaseBasicBolt {
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
-        if(null != throughput) {
+        if (null != throughput) {
             throughput.execute();
         }
         Object o = input.getValue(0);
         try {
             R result = this.fun.map((T) o, initList);
-            if(null != result) {
+            if (null != result) {
                 collector.emit(new Values(result));
             }
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             logger.error("Cast tuple[0] failed");
         }
     }

@@ -7,18 +7,18 @@ import scala.Tuple2;
 /**
  * Created by yangjun.wang on 28/10/15.
  */
-public class PairFunctionImpl<T,K,V> implements PairFunction<T,K,V>  {
+public class PairFunctionImpl<T, K, V> implements PairFunction<T, K, V> {
     private static final long serialVersionUID = -1342161519291972356L;
 
-    private MapPairFunction<T,K,V> fun;
+    private MapPairFunction<T, K, V> fun;
     private ThroughputLog throughput;
     private boolean enableThroughput;
 
-    public PairFunctionImpl(MapPairFunction<T,K,V> function){
+    public PairFunctionImpl(MapPairFunction<T, K, V> function) {
         fun = function;
     }
 
-    public PairFunctionImpl(MapPairFunction<T,K,V> function, boolean enableThroughput){
+    public PairFunctionImpl(MapPairFunction<T, K, V> function, boolean enableThroughput) {
         this(function);
         this.enableThroughput = enableThroughput;
         throughput = new ThroughputLog(PairFunctionImpl.class.getSimpleName());
@@ -26,7 +26,7 @@ public class PairFunctionImpl<T,K,V> implements PairFunction<T,K,V>  {
 
     @Override
     public Tuple2<K, V> call(T t) throws Exception {
-        if(enableThroughput) {
+        if (enableThroughput) {
             throughput.execute();
         }
         return fun.mapToPair(t);

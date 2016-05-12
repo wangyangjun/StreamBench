@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
  * Created by jun on 27/01/16.
  */
 
-public class UniformWordCount extends Generator{
+public class UniformWordCount extends Generator {
     private static final Logger logger = Logger.getLogger(UniformWordCount.class);
     private static KafkaProducer<String, String> producer;
 
@@ -25,7 +25,7 @@ public class UniformWordCount extends Generator{
     private double mu;
     private double sigma;
 
-    public UniformWordCount(){
+    public UniformWordCount() {
         super();
         producer = createBigBufferProducer();
 
@@ -45,7 +45,7 @@ public class UniformWordCount extends Generator{
         for (long sent_sentences = 0; sent_sentences < SENTENCE_NUM; ++sent_sentences) {
             double sentence_length = messageGenerator.nextGaussian(mu, sigma);
             StringBuilder messageBuilder = new StringBuilder();
-            for(int l = 0; l < sentence_length; ++l){
+            for (int l = 0; l < sentence_length; ++l) {
                 int number = messageGenerator.nextInt(1, uniformSize);
                 messageBuilder.append(Utils.intToString(number)).append(" ");
             }
@@ -57,18 +57,18 @@ public class UniformWordCount extends Generator{
             producer.send(newRecord);
 
             // control data generate speed
-            if(sleep_frequency>0 && sent_sentences%sleep_frequency == 0) {
+            if (sleep_frequency > 0 && sent_sentences % sleep_frequency == 0) {
                 Thread.sleep(1);
             }
         }
         producer.close();
-        logger.info("LatencyLog: " + String.valueOf(System.currentTimeMillis()-time));
+        logger.info("LatencyLog: " + String.valueOf(System.currentTimeMillis() - time));
     }
 
 
-    public static void main( String[] args ) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException {
         int SLEEP_FREQUENCY = -1;
-        if(args.length > 0) {
+        if (args.length > 0) {
             SLEEP_FREQUENCY = Integer.parseInt(args[0]);
         }
         new UniformWordCount().generate(SLEEP_FREQUENCY);

@@ -19,10 +19,10 @@ public class PairMapBolt<K, V, R> extends BaseBasicBolt {
     private static final Logger logger = Logger.getLogger(MapBolt.class);
     private static final long serialVersionUID = 1L;
 
-    private MapFunction<Tuple2<K,V>, R> fun;
+    private MapFunction<Tuple2<K, V>, R> fun;
     private ThroughputLog throughput;
 
-    public PairMapBolt(MapFunction<Tuple2<K,V>, R> function){
+    public PairMapBolt(MapFunction<Tuple2<K, V>, R> function) {
         this.fun = function;
     }
 
@@ -32,16 +32,16 @@ public class PairMapBolt<K, V, R> extends BaseBasicBolt {
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
-        if(null != throughput) {
+        if (null != throughput) {
             throughput.execute();
         }
-        K key = (K)input.getValue(0);
-        V value = (V)input.getValue(1);
+        K key = (K) input.getValue(0);
+        V value = (V) input.getValue(1);
 
         try {
             R result = this.fun.map(new Tuple2<>(key, value));
             collector.emit(new Values(result));
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             logger.error("Cast tuple[0] failed");
         }
     }

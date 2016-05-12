@@ -16,12 +16,12 @@ import java.lang.reflect.InvocationTargetException;
  * Spark, Flink implement pre-aggregation
  * Storm reduces on field grouping stream
  * Spark streaming is a mini-batches model, which need call updateStateByKey to accumulate
- *
+ * <p>
  * *********** Components ***************
  * Source -> AddTime -> Splitter -> Pair -> Sum -> (Update state) -> Sink(log latency)
  * Created by yangjun.wang on 27/10/15.
  */
-public class WordCount extends Workload implements Serializable{
+public class WordCount extends Workload implements Serializable {
 
     private static final Logger logger = Logger.getLogger(WordCount.class);
     private static final long serialVersionUID = -1558126580235739604L;
@@ -42,8 +42,7 @@ public class WordCount extends Workload implements Serializable{
                             .updateStateByKey(UserFunctions.sumReduceWithTime, "accumulate");
             counts.sink();
 //            counts.print();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
             e.printStackTrace();
         }

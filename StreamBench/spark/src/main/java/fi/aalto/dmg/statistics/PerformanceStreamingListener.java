@@ -12,33 +12,49 @@ public class PerformanceStreamingListener implements StreamingListener {
     private static Logger logger = LoggerFactory.getLogger(PerformanceStreamingListener.class);
 
 
-
-    /** Called when a receiver has been started */
+    /**
+     * Called when a receiver has been started
+     */
     @Override
-    public void onReceiverStarted(StreamingListenerReceiverStarted receiverStarted) { }
+    public void onReceiverStarted(StreamingListenerReceiverStarted receiverStarted) {
+    }
 
-    /** Called when a receiver has reported an error */
+    /**
+     * Called when a receiver has reported an error
+     */
     @Override
-    public void onReceiverError(StreamingListenerReceiverError receiverError) { }
+    public void onReceiverError(StreamingListenerReceiverError receiverError) {
+    }
 
-    /** Called when a receiver has been stopped */
+    /**
+     * Called when a receiver has been stopped
+     */
     @Override
-    public void onReceiverStopped(StreamingListenerReceiverStopped receiverStopped) { }
+    public void onReceiverStopped(StreamingListenerReceiverStopped receiverStopped) {
+    }
 
-    /** Called when a batch of jobs has been submitted for processing. */
+    /**
+     * Called when a batch of jobs has been submitted for processing.
+     */
     @Override
-    public void onBatchSubmitted(StreamingListenerBatchSubmitted batchSubmitted) { }
+    public void onBatchSubmitted(StreamingListenerBatchSubmitted batchSubmitted) {
+    }
 
-    /** Called when processing of a batch of jobs has started.  */
+    /**
+     * Called when processing of a batch of jobs has started.
+     */
     @Override
-    public void onBatchStarted(StreamingListenerBatchStarted batchStarted) { }
+    public void onBatchStarted(StreamingListenerBatchStarted batchStarted) {
+    }
 
-    /** Called when processing of a batch of jobs has completed. */
+    /**
+     * Called when processing of a batch of jobs has completed.
+     */
     @Override
     public void onBatchCompleted(StreamingListenerBatchCompleted batchCompleted) {
         BatchInfo batchInfo = batchCompleted.batchInfo();
-        logger.warn( batchInfo.batchTime().milliseconds() + "\t"
-                + batchInfo.schedulingDelay().get()+ "\t"
+        logger.warn(batchInfo.batchTime().milliseconds() + "\t"
+                + batchInfo.schedulingDelay().get() + "\t"
                 + batchInfo.processingDelay().get() + "\t"
                 + batchInfo.totalDelay().get() + "\t"
                 + batchInfo.numRecords());

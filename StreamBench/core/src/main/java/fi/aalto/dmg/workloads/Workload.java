@@ -17,7 +17,7 @@ import java.util.Properties;
 /**
  * Created by yangjun.wang on 14/10/15.
  */
-abstract public class Workload implements Serializable{
+abstract public class Workload implements Serializable {
     private static final Logger logger = LoggerFactory.getLogger(Workload.class);
 
     protected Properties properties;
@@ -27,7 +27,7 @@ abstract public class Workload implements Serializable{
     public Workload(OperatorCreator creator) throws WorkloadException {
         this.operatorCreator = creator;
         Configure.LoadConfigure();
-        parallelism = Configure.clusterHosts*Configure.hostCores;
+        parallelism = Configure.clusterHosts * Configure.hostCores;
 
         // load specific configure for each workload
         properties = new Properties();
@@ -46,9 +46,11 @@ abstract public class Workload implements Serializable{
 
     }
 
-    protected OperatorCreator getOperatorCreator(){ return operatorCreator; }
+    protected OperatorCreator getOperatorCreator() {
+        return operatorCreator;
+    }
 
-    protected WorkloadOperator<WithTime<String>> stringStreamWithTime(String componentId){
+    protected WorkloadOperator<WithTime<String>> stringStreamWithTime(String componentId) {
         String topic = properties.getProperty("topic");
         String groupId = properties.getProperty("group.id");
         String kafkaServers = properties.getProperty("bootstrap.servers");
@@ -59,7 +61,7 @@ abstract public class Workload implements Serializable{
                 kafkaServers, groupId, topic, offset, componentId, parallelism);
     }
 
-    protected WorkloadOperator<Point> getPointStream(String componentId){
+    protected WorkloadOperator<Point> getPointStream(String componentId) {
         String topic = properties.getProperty("topic");
         String groupId = properties.getProperty("group.id");
         String kafkaServers = properties.getProperty("bootstrap.servers");
@@ -70,7 +72,7 @@ abstract public class Workload implements Serializable{
                 kafkaServers, groupId, topic, offset, componentId, parallelism);
     }
 
-    protected WorkloadOperator<String> kafkaStreamOperator(String componentId){
+    protected WorkloadOperator<String> kafkaStreamOperator(String componentId) {
         String topic = properties.getProperty("topic");
         String groupId = properties.getProperty("group.id");
         String kafkaServers = properties.getProperty("bootstrap.servers");
@@ -81,7 +83,7 @@ abstract public class Workload implements Serializable{
                 kafkaServers, groupId, topic, offset, componentId, parallelism);
     }
 
-    protected WorkloadOperator<String> kafkaStreamOperator2(String componentId){
+    protected WorkloadOperator<String> kafkaStreamOperator2(String componentId) {
         String topic = properties.getProperty("topic2");
         String groupId = properties.getProperty("group.id");
         String kafkaServers = properties.getProperty("bootstrap.servers");
@@ -92,7 +94,7 @@ abstract public class Workload implements Serializable{
                 kafkaServers, groupId, topic, offset, componentId, parallelism);
     }
 
-    public void Start(){
+    public void Start() {
         logger.info("Start workload: " + this.getClass().getSimpleName());
         try {
             Process();

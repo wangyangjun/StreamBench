@@ -31,23 +31,23 @@ public class DiscretizedFilterBolt<T> extends DiscretizedBolt {
         super(preComponentId);
         this.fun = function;
         slideDataMap = new HashMap<>(BUFFER_SLIDES_NUM);
-        for(int i=0; i<BUFFER_SLIDES_NUM; ++i){
+        for (int i = 0; i < BUFFER_SLIDES_NUM; ++i) {
             slideDataMap.put(i, new ArrayList<T>());
         }
     }
 
     @Override
     public void processTuple(Tuple tuple) {
-        try{
+        try {
             int slideId = tuple.getInteger(0);
-            slideId = slideId%BUFFER_SLIDES_NUM;
+            slideId = slideId % BUFFER_SLIDES_NUM;
             T t = (T) tuple.getValue(1);
             List<T> filterList = slideDataMap.get(slideId);
-            if(null == filterList){
+            if (null == filterList) {
                 filterList = new ArrayList<>();
 
             }
-            if(fun.filter(t)){
+            if (fun.filter(t)) {
                 filterList.add(t);
             }
             slideDataMap.put(slideId, filterList);
@@ -59,7 +59,7 @@ public class DiscretizedFilterBolt<T> extends DiscretizedBolt {
     @Override
     public void processSlide(BasicOutputCollector collector, int slideIndex) {
         List<T> list = slideDataMap.get(slideIndex);
-        for(T t : list) {
+        for (T t : list) {
             collector.emit(new Values(slideIndex, t));
         }
         // clear data

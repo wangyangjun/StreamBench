@@ -12,7 +12,7 @@ import java.util.Properties;
 /**
  * Configure class
  * load common configurations
- *
+ * <p>
  * Created by jun on 11/03/16.
  */
 public class Configure {
@@ -24,7 +24,7 @@ public class Configure {
     private static final String OPERATOR_CREATOR = "operator.creator";
     private static final String THROUGHPUT_FREQUENCY = "throughput.frequency";
     private static final String LATENCY_FREQUENCY = "latency.frequency";
-    private static final String KMEANS_CENTROIDS_FREQUENCY= "kmeans.centroids.frequency";
+    private static final String KMEANS_CENTROIDS_FREQUENCY = "kmeans.centroids.frequency";
     private static final String CLUSTER_HOSTS = "cluster.hosts";
     private static final String HOST_CORES = "host.cores";
 
@@ -37,7 +37,7 @@ public class Configure {
 
     // load configuration from config.properties
     public static void LoadConfigure() throws WorkloadException {
-        if(null == config) {
+        if (null == config) {
             config = new Properties();
             try {
                 config.load(Configure.class.getClassLoader().getResourceAsStream(Configure.COMMON_CONFIGURE));

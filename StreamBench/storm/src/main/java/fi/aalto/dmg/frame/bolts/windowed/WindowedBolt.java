@@ -18,9 +18,8 @@ import java.util.Map;
 
 /**
  * Created by jun on 11/12/15.
- *
+ * <p>
  * Implement window operation for Storm
- *
  */
 public abstract class WindowedBolt extends BaseBasicBolt {
 
@@ -46,7 +45,7 @@ public abstract class WindowedBolt extends BaseBasicBolt {
         this.TOPOLOGY_TICK_TUPLE_FREQ_SECS = slide_tick_frequency_seconds;
 
         // window duration should be multi of slide duration
-        if(window_tick_frequency_seconds % slide_tick_frequency_seconds != 0){
+        if (window_tick_frequency_seconds % slide_tick_frequency_seconds != 0) {
             throw new DurationException("Window duration should be multi times of slide duration.");
         }
         WINDOW_SIZE = (int) (window_tick_frequency_seconds / slide_tick_frequency_seconds);
@@ -54,20 +53,21 @@ public abstract class WindowedBolt extends BaseBasicBolt {
 
     @Override
     public void execute(Tuple tuple, BasicOutputCollector collector) {
-        if(null != throughput) {
+        if (null != throughput) {
             throughput.execute();
         }
-        if(isTickTuple(tuple)){
+        if (isTickTuple(tuple)) {
             processSlide(collector);
             collector.emit(BoltConstants.TICK_STREAM_ID, new Values(slideIndexInBuffer));
-            slideIndexInBuffer = (slideIndexInBuffer +1)%BUFFER_SLIDES_NUM;
-            slideInWindow = (slideInWindow +1)% WINDOW_SIZE;
+            slideIndexInBuffer = (slideIndexInBuffer + 1) % BUFFER_SLIDES_NUM;
+            slideInWindow = (slideInWindow + 1) % WINDOW_SIZE;
         } else {
             processTuple(tuple);
         }
     }
 
     public abstract void processTuple(Tuple tuple);
+
     public abstract void processSlide(BasicOutputCollector collector);
 
     @Override
@@ -79,6 +79,7 @@ public abstract class WindowedBolt extends BaseBasicBolt {
 
     /**
      * declare tick stream
+     *
      * @param declarer
      */
     @Override
@@ -88,7 +89,7 @@ public abstract class WindowedBolt extends BaseBasicBolt {
     }
 
 
-    public static boolean isTickTuple(Tuple tuple){
+    public static boolean isTickTuple(Tuple tuple) {
         return tuple.getSourceComponent().equals(Constants.SYSTEM_COMPONENT_ID)
                 && tuple.getSourceStreamId().equals(Constants.SYSTEM_TICK_STREAM_ID);
     }

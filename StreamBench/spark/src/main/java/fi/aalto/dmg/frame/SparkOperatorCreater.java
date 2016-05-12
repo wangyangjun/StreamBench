@@ -34,7 +34,7 @@ public class SparkOperatorCreater extends OperatorCreator implements Serializabl
         @Override
         public WithTime<String> call(Tuple2<String, String> stringStringTuple2) throws Exception {
             String[] list = stringStringTuple2._2().split(Constant.TimeSeparatorRegex);
-            if(list.length == 2) {
+            if (list.length == 2) {
                 return new WithTime<String>(list[0], Long.parseLong(list[1]));
             }
             return new WithTime<>(stringStringTuple2._2(), System.currentTimeMillis());
@@ -131,16 +131,16 @@ public class SparkOperatorCreater extends OperatorCreator implements Serializabl
         jssc.addStreamingListener(new PerformanceStreamingListener());
 
 //        jssc.checkpoint("/tmp/log-analyzer-streaming");
-//        jssc.checkpoint("hdfs://master:8020/usr/warehouse/wordcount/checkpoint");
+        jssc.checkpoint("hdfs://master:8020/usr/warehouse/wordcount/checkpoint");
         jssc.start();
         jssc.awaitTermination();
     }
 
-    public String getMaster(){
+    public String getMaster() {
         return properties.getProperty("cluster.master");
     }
 
-    public long getDurationsMilliseconds(){
+    public long getDurationsMilliseconds() {
         return Long.parseLong(properties.getProperty("streaming.durations.milliseconds"));
     }
 }

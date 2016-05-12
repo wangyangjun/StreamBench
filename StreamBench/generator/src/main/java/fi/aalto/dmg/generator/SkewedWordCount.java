@@ -26,7 +26,7 @@ public class SkewedWordCount extends Generator {
     private double mu;
     private double sigma;
 
-    public SkewedWordCount(){
+    public SkewedWordCount() {
         super();
         producer = createBigBufferProducer();
 
@@ -48,7 +48,7 @@ public class SkewedWordCount extends Generator {
         for (long sent_sentences = 0; sent_sentences < SENTENCE_NUM; ++sent_sentences) {
             double sentence_length = messageGenerator.nextGaussian(mu, sigma);
             StringBuilder messageBuilder = new StringBuilder();
-            for(int l = 0; l < sentence_length; ++l){
+            for (int l = 0; l < sentence_length; ++l) {
                 int number = zipfGenerator.next();
                 messageBuilder.append(Utils.intToString(number)).append(" ");
             }
@@ -61,17 +61,17 @@ public class SkewedWordCount extends Generator {
             producer.send(newRecord);
 
             // control data generate speed
-            if(sleep_frequency>0 && sent_sentences%sleep_frequency == 0) {
+            if (sleep_frequency > 0 && sent_sentences % sleep_frequency == 0) {
                 Thread.sleep(1);
             }
         }
         producer.close();
-        logger.info("LatencyLog: " + String.valueOf(System.currentTimeMillis()-time));
+        logger.info("LatencyLog: " + String.valueOf(System.currentTimeMillis() - time));
     }
 
-    public static void main( String[] args ) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException {
         int SLEEP_FREQUENCY = -1;
-        if(args.length > 0) {
+        if (args.length > 0) {
             SLEEP_FREQUENCY = Integer.parseInt(args[0]);
         }
         new SkewedWordCount().generate(SLEEP_FREQUENCY);

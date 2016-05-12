@@ -21,7 +21,7 @@ import java.util.Map;
  * Created by jun on 11/9/15.
  * Tested
  */
-public class WindowPairReduceByKeyBolt<K,V> extends WindowedBolt {
+public class WindowPairReduceByKeyBolt<K, V> extends WindowedBolt {
 
     private static final Logger logger = Logger.getLogger(WindowPairReduceByKeyBolt.class);
     private static final long serialVersionUID = 3371879383220577120L;
@@ -35,7 +35,7 @@ public class WindowPairReduceByKeyBolt<K,V> extends WindowedBolt {
         super(windowDuration, slideDuration);
         this.fun = function;
         reduceDataContainer = new BTree<>(WINDOW_SIZE);
-        for(int i=0; i<WINDOW_SIZE; ++i) {
+        for (int i = 0; i < WINDOW_SIZE; ++i) {
             reduceDataContainer.set(i, new HashMap<K, V>());
         }
     }
@@ -46,18 +46,19 @@ public class WindowPairReduceByKeyBolt<K,V> extends WindowedBolt {
 
     /**
      * called after receiving a normal tuple
+     *
      * @param tuple
      */
     @Override
     public void processTuple(Tuple tuple) {
         try {
             Map<K, V> map = reduceDataContainer.get(slideInWindow);
-            K key = (K)tuple.getValue(0);
-            V value = (V)tuple.getValue(1);
+            K key = (K) tuple.getValue(0);
+            V value = (V) tuple.getValue(1);
             V reducedValue = map.get(key);
             if (null == reducedValue)
                 map.put(key, value);
-            else{
+            else {
                 map.put(key, fun.reduce(reducedValue, value));
             }
             reduceDataContainer.set(slideInWindow, map);
@@ -69,17 +70,18 @@ public class WindowPairReduceByKeyBolt<K,V> extends WindowedBolt {
     /**
      * called after receiving a tick tuple
      * reduce all data(slides) in current window
+     *
      * @param collector
      */
     @Override
     public void processSlide(BasicOutputCollector collector) {
-        try{
+        try {
             // update slideInWindow node and its parents until root
             // single slide window
-            if(!reduceDataContainer.isRoot(slideInWindow)) {
+            if (!reduceDataContainer.isRoot(slideInWindow)) {
                 int updatedNode = slideInWindow;
                 // if latest updated node is not root, update its parent node
-                while (!reduceDataContainer.isRoot(updatedNode)){
+                while (!reduceDataContainer.isRoot(updatedNode)) {
                     int parent = reduceDataContainer.findParent(updatedNode);
                     BTree.Children children = reduceDataContainer.findChildren(parent);
                     reduceDataContainer.set(parent,
@@ -88,8 +90,8 @@ public class WindowPairReduceByKeyBolt<K,V> extends WindowedBolt {
                     updatedNode = parent;
                 }
             }
-            Map<K,V> root = reduceDataContainer.getRoot();
-            for(Map.Entry<K, V> entry: root.entrySet()){
+            Map<K, V> root = reduceDataContainer.getRoot();
+            for (Map.Entry<K, V> entry : root.entrySet()) {
                 collector.emit(new Values(slideIndexInBuffer, entry.getKey(), entry.getValue()));
             }
             // clear data
@@ -106,11 +108,11 @@ public class WindowPairReduceByKeyBolt<K,V> extends WindowedBolt {
         declarer.declare(new Fields(BoltConstants.OutputSlideIdField, BoltConstants.OutputKeyField, BoltConstants.OutputValueField));
     }
 
-    private Map<K, V> merge(Map<K,V> leftMap, Map<K,V> rightMap) throws Exception {
-        Map<K,V> parentMap = new HashMap<>(leftMap);
-        for(Map.Entry<K, V> entry: rightMap.entrySet()){
-            if(parentMap.containsKey(entry.getKey())){
-                parentMap.put(entry.getKey(), fun.reduce(parentMap.get(entry.getKey()), entry.getValue() ));
+    private Map<K, V> merge(Map<K, V> leftMap, Map<K, V> rightMap) throws Exception {
+        Map<K, V> parentMap = new HashMap<>(leftMap);
+        for (Map.Entry<K, V> entry : rightMap.entrySet()) {
+            if (parentMap.containsKey(entry.getKey())) {
+                parentMap.put(entry.getKey(), fun.reduce(parentMap.get(entry.getKey()), entry.getValue()));
             } else {
                 parentMap.put(entry.getKey(), entry.getValue());
             }

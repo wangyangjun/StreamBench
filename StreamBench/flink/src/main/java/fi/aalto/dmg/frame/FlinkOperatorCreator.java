@@ -8,6 +8,7 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.util.serialization.SimpleStringSchema;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer082;
+
 import java.io.IOException;
 import java.util.Properties;
 
@@ -58,7 +59,7 @@ public class FlinkOperatorCreator extends OperatorCreator {
             @Override
             public WithTime<String> map(String value) throws Exception {
                 String[] list = value.split(Constant.TimeSeparatorRegex);
-                if(list.length == 2) {
+                if (list.length == 2) {
                     return new WithTime<>(list[0], Long.parseLong(list[1]));
                 }
                 return new WithTime<>(value, System.currentTimeMillis());
@@ -85,12 +86,12 @@ public class FlinkOperatorCreator extends OperatorCreator {
             public Point map(String value) throws Exception {
                 String[] list = value.split(Constant.TimeSeparatorRegex);
                 long time = System.currentTimeMillis();
-                if(list.length == 2) {
+                if (list.length == 2) {
                     time = Long.parseLong(list[1]);
                 }
                 String[] strs = list[0].split("\t");
                 double[] position = new double[strs.length];
-                for(int i=0; i<strs.length; i++) {
+                for (int i = 0; i < strs.length; i++) {
                     position[i] = Double.parseDouble(strs[i]);
                 }
                 return new Point(position, time);
@@ -115,6 +116,7 @@ public class FlinkOperatorCreator extends OperatorCreator {
         properties.put("auto.commit.enable", false);
         properties.put("auto.offset.reset", offset);
 
+        env.setParallelism(parallelism);
         DataStream<String> stream = env
                 .addSource(new FlinkKafkaConsumer082<>(topics, new SimpleStringSchema(), properties));
         return new FlinkWorkloadOperator<>(stream, parallelism);

@@ -33,13 +33,13 @@ public class DiscretizedReduceBolt<T> extends DiscretizedBolt {
 
     @Override
     public void processTuple(Tuple tuple) {
-        try{
+        try {
             int slideId = tuple.getInteger(0);
-            slideId = slideId%BUFFER_SLIDES_NUM;
+            slideId = slideId % BUFFER_SLIDES_NUM;
             T value = (T) tuple.getValue(1);
 
             T reducedValue = slideDataMap.get(slideId);
-            if(null == reducedValue){
+            if (null == reducedValue) {
                 reducedValue = value;
                 slideDataMap.put(slideId, reducedValue);
             } else {
@@ -53,7 +53,7 @@ public class DiscretizedReduceBolt<T> extends DiscretizedBolt {
     @Override
     public void processSlide(BasicOutputCollector collector, int slideIndex) {
         T t = slideDataMap.get(slideIndex);
-        if(null != t){
+        if (null != t) {
             collector.emit(new Values(slideIndex, t));
         }
         // clear data

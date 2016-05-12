@@ -21,7 +21,7 @@ public class MapBolt<T, R> extends BaseBasicBolt {
     private MapFunction<T, R> fun;
     private ThroughputLog throughput;
 
-    public MapBolt(MapFunction<T, R> function){
+    public MapBolt(MapFunction<T, R> function) {
         this.fun = function;
     }
 
@@ -31,14 +31,14 @@ public class MapBolt<T, R> extends BaseBasicBolt {
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
-        if(null != throughput) {
+        if (null != throughput) {
             throughput.execute();
         }
         Object o = input.getValue(0);
         try {
             R result = this.fun.map((T) o);
             collector.emit(new Values(result));
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             logger.error("Cast tuple[0] failed");
         }
     }

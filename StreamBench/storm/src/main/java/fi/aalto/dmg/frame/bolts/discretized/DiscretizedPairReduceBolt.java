@@ -19,7 +19,7 @@ import java.util.Map;
  * Created by jun on 11/13/15.
  */
 
-public class DiscretizedPairReduceBolt<K,V> extends DiscretizedBolt {
+public class DiscretizedPairReduceBolt<K, V> extends DiscretizedBolt {
     private static final Logger logger = LoggerFactory.getLogger(DiscretizedPairReduceByKeyBolt.class);
     private static final long serialVersionUID = -3392765120683897619L;
     private ReduceFunction<Tuple2<K, V>> fun;
@@ -34,15 +34,15 @@ public class DiscretizedPairReduceBolt<K,V> extends DiscretizedBolt {
 
     @Override
     public void processTuple(Tuple tuple) {
-        try{
+        try {
             int slideId = tuple.getInteger(0);
-            slideId = slideId%BUFFER_SLIDES_NUM;
+            slideId = slideId % BUFFER_SLIDES_NUM;
             K key = (K) tuple.getValue(1);
             V value = (V) tuple.getValue(2);
-            Tuple2<K,V> tuple2 = new Tuple2<>(key, value);
+            Tuple2<K, V> tuple2 = new Tuple2<>(key, value);
 
             Tuple2<K, V> slideReducedTuple = slideDataMap.get(slideId);
-            if(null == slideReducedTuple){
+            if (null == slideReducedTuple) {
                 slideReducedTuple = tuple2;
             } else {
                 slideReducedTuple = fun.reduce(slideReducedTuple, tuple2);

@@ -74,7 +74,7 @@
                             <classifier>assembly</classifier>
                             <archive>
                                 <manifestEntries>
-                                    <program-class>fi.aalto.dmg.KMeans</program-class>
+                                    <program-class>fi.aalto.dmg.WordCount</program-class>
                                 </manifestEntries>
                             </archive>
                         </configuration>

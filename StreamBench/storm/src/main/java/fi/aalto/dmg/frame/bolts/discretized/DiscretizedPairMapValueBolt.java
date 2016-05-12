@@ -27,30 +27,30 @@ public class DiscretizedPairMapValueBolt<K, V, R> extends DiscretizedBolt {
     private static final long serialVersionUID = 8203174840485668437L;
 
     // each slide has a corresponding List<Tuple2<K,R>>
-    private Map<Integer, List<Tuple2<K,R>>> slideDataMap;
+    private Map<Integer, List<Tuple2<K, R>>> slideDataMap;
     private MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun;
 
     public DiscretizedPairMapValueBolt(MapFunction<Tuple2<K, V>, Tuple2<K, R>> function, String preComponentId) {
         super(preComponentId);
         this.fun = function;
         slideDataMap = new HashMap<>(BUFFER_SLIDES_NUM);
-        for(int i=0; i<BUFFER_SLIDES_NUM; ++i){
-            slideDataMap.put(i, new ArrayList<Tuple2<K,R>>());
+        for (int i = 0; i < BUFFER_SLIDES_NUM; ++i) {
+            slideDataMap.put(i, new ArrayList<Tuple2<K, R>>());
         }
     }
 
     @Override
     public void processTuple(Tuple tuple) {
-        try{
+        try {
             int slideId = tuple.getInteger(0);
-            slideId = slideId%BUFFER_SLIDES_NUM;
+            slideId = slideId % BUFFER_SLIDES_NUM;
             K key = (K) tuple.getValue(1);
             V value = (V) tuple.getValue(2);
-            List<Tuple2<K,R>> mapedList = slideDataMap.get(slideId);
-            if(null == mapedList){
+            List<Tuple2<K, R>> mapedList = slideDataMap.get(slideId);
+            if (null == mapedList) {
                 mapedList = new ArrayList<>();
             }
-            Tuple2<K,V> t = new Tuple2<>(key, value);
+            Tuple2<K, V> t = new Tuple2<>(key, value);
             mapedList.add(fun.map(t));
             slideDataMap.put(slideId, mapedList);
         } catch (Exception e) {
@@ -60,8 +60,8 @@ public class DiscretizedPairMapValueBolt<K, V, R> extends DiscretizedBolt {
 
     @Override
     public void processSlide(BasicOutputCollector collector, int slideIndex) {
-        List<Tuple2<K,R>> list = slideDataMap.get(slideIndex);
-        for(Tuple2<K,R> t : list) {
+        List<Tuple2<K, R>> list = slideDataMap.get(slideIndex);
+        for (Tuple2<K, R> t : list) {
             collector.emit(new Values(slideIndex, t._1(), t._2()));
         }
         // clear data

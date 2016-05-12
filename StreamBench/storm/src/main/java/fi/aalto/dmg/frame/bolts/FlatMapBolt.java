@@ -21,7 +21,7 @@ public class FlatMapBolt<T, R> extends BaseBasicBolt {
     private FlatMapFunction<T, R> fun;
     private ThroughputLog throughput;
 
-    public FlatMapBolt(FlatMapFunction<T, R> function){
+    public FlatMapBolt(FlatMapFunction<T, R> function) {
         this.fun = function;
     }
 
@@ -32,16 +32,16 @@ public class FlatMapBolt<T, R> extends BaseBasicBolt {
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
-        if(null != throughput) {
-           throughput.execute();
+        if (null != throughput) {
+            throughput.execute();
         }
         Object o = input.getValue(0);
         try {
             Iterable<R> results = this.fun.flatMap((T) o);
-            for(R r : results){
+            for (R r : results) {
                 collector.emit(new Values(r));
             }
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             logger.error("Cast tuple[0] failed");
         } catch (Exception e) {
             logger.error("execute exception: " + e.toString());

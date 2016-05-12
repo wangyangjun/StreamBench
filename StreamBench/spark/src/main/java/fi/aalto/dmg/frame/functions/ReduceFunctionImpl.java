@@ -6,13 +6,13 @@ import org.apache.spark.api.java.function.Function2;
 /**
  * Created by yangjun.wang on 28/10/15.
  */
-public class ReduceFunctionImpl<T> implements Function2<T,T,T>{
+public class ReduceFunctionImpl<T> implements Function2<T, T, T> {
 
     private static final long serialVersionUID = 2239722821222828275L;
     private ReduceFunction<T> fun;
     private static Logger logger = Logger.getLogger(ReduceFunctionImpl.class);
 
-    public ReduceFunctionImpl(ReduceFunction<T> function){
+    public ReduceFunctionImpl(ReduceFunction<T> function) {
         fun = function;
     }
 

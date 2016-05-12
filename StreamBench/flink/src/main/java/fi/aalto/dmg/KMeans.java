@@ -13,11 +13,10 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * Created by jun on 29/02/16.
  */
-public class KMeans
-{
+public class KMeans {
     private static Logger logger = LoggerFactory.getLogger(KMeans.class);
 
-    public static void main( String[] args ) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
+    public static void main(String[] args) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
         logger.warn("Start...");
 
         OperatorCreator operatorCreator = new FlinkOperatorCreator("KMeans");

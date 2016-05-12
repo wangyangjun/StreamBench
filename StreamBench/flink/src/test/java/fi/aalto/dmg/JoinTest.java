@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by jun on 20/11/15.
  */
-public class JoinTest implements Serializable{
+public class JoinTest implements Serializable {
     private static final long serialVersionUID = -4881298165222782534L;
 
     public static void main(String[] args) throws Exception {
@@ -29,7 +29,7 @@ public class JoinTest implements Serializable{
         // Window base on event time
 //        env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
-        KeySelector<Tuple2<String,Integer>, String> keySelector1 = new KeySelector<Tuple2<String,Integer>, String>() {
+        KeySelector<Tuple2<String, Integer>, String> keySelector1 = new KeySelector<Tuple2<String, Integer>, String>() {
             @Override
             public String getKey(Tuple2<String, Integer> value) throws Exception {
                 return value.f0;
@@ -41,14 +41,8 @@ public class JoinTest implements Serializable{
                 .flatMap(new Splitter())
                 .keyBy(keySelector1);
 
-//                .assignTimestamps(new AscendingTimestampExtractor<Tuple2<String, Integer>>() {
-//                    @Override
-//                    public long extractAscendingTimestamp(Tuple2<String, Integer> element, long currentTimestamp) {
-//                        return 0;
-//                    }
-//                });
 
-        KeySelector<Tuple2<String,String>, String> keySelector2 = new KeySelector<Tuple2<String,String>, String>() {
+        KeySelector<Tuple2<String, String>, String> keySelector2 = new KeySelector<Tuple2<String, String>, String>() {
             @Override
             public String getKey(Tuple2<String, String> value) throws Exception {
                 return value.f0;
@@ -72,14 +66,14 @@ public class JoinTest implements Serializable{
         };
         StreamJoinOperator<String, Tuple2<String, Integer>, Tuple2<String, String>, Tuple3<String, String, Integer>> joinOperator
                 = new StreamJoinOperator<>(
-                    joinFunction,
-                    keySelector1,
-                    keySelector2,
-                    windowDuration1.toMilliSeconds(),
-                    windowDuration2.toMilliSeconds(),
-                    gender.getType().createSerializer(env.getConfig()),
-                    sex.getType().createSerializer(env.getConfig())
-                );
+                joinFunction,
+                keySelector1,
+                keySelector2,
+                windowDuration1.toMilliSeconds(),
+                windowDuration2.toMilliSeconds(),
+                gender.getType().createSerializer(env.getConfig()),
+                sex.getType().createSerializer(env.getConfig())
+        );
 
 
         TypeInformation<Tuple3<String, String, Integer>> resultType = TypeExtractor.getBinaryOperatorReturnType(
@@ -121,7 +115,7 @@ public class JoinTest implements Serializable{
     public static class Splitter implements FlatMapFunction<String, Tuple2<String, Integer>> {
         @Override
         public void flatMap(String sentence, Collector<Tuple2<String, Integer>> out) throws Exception {
-            for (String name: sentence.split(" ")) {
+            for (String name : sentence.split(" ")) {
                 out.collect(new Tuple2<String, Integer>(name, 1));
             }
         }
@@ -130,7 +124,7 @@ public class JoinTest implements Serializable{
     public static class Splitter2 implements FlatMapFunction<String, Tuple2<String, String>> {
         @Override
         public void flatMap(String sentence, Collector<Tuple2<String, String>> out) throws Exception {
-            for (String name: sentence.split(" ")) {
+            for (String name : sentence.split(" ")) {
                 out.collect(new Tuple2<String, String>(name, "M"));
             }
         }

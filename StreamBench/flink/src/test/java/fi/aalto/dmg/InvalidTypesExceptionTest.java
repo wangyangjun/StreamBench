@@ -43,7 +43,7 @@ public class InvalidTypesExceptionTest {
     public static class Splitter implements FlatMapFunction<String, String> {
         @Override
         public void flatMap(String sentence, Collector<String> out) throws Exception {
-            for (String word: sentence.split(" ")) {
+            for (String word : sentence.split(" ")) {
                 out.collect(word);
             }
         }
@@ -52,13 +52,13 @@ public class InvalidTypesExceptionTest {
     public static class Splitter2 implements FlatMapFunction<String, Tuple2<String, Integer>> {
         @Override
         public void flatMap(String sentence, Collector<Tuple2<String, Integer>> out) throws Exception {
-            for (String name: sentence.split(" ")) {
+            for (String name : sentence.split(" ")) {
                 out.collect(new Tuple2<String, Integer>(name, 1));
             }
         }
     }
 
-    public static  <K,V,T> DataStream<Tuple2<K,V>> mapToPair(DataStream<T> dataStream , final MapPairFunction<T, K, V> fun){
+    public static <K, V, T> DataStream<Tuple2<K, V>> mapToPair(DataStream<T> dataStream, final MapPairFunction<T, K, V> fun) {
         return dataStream.map(new MapFunction<T, Tuple2<K, V>>() {
             @Override
             public Tuple2<K, V> map(T t) throws Exception {
@@ -67,14 +67,14 @@ public class InvalidTypesExceptionTest {
         });
     }
 
-    public static <K,V> KeyedStream<Tuple2<K,V>,K> groupByKey(DataStream<Tuple2<K,V>> dataStream) {
+    public static <K, V> KeyedStream<Tuple2<K, V>, K> groupByKey(DataStream<Tuple2<K, V>> dataStream) {
         KeySelector<Tuple2<K, V>, K> keySelector = new KeySelector<Tuple2<K, V>, K>() {
             @Override
             public K getKey(Tuple2<K, V> value) throws Exception {
                 return value.f0;
             }
         };
-        KeySelector<K,K> keySelector2 = new KeySelector<K, K>() {
+        KeySelector<K, K> keySelector2 = new KeySelector<K, K>() {
             @Override
             public K getKey(K value) throws Exception {
                 return value;
@@ -83,7 +83,7 @@ public class InvalidTypesExceptionTest {
         // get key type
 //        BasicTypeInfo.STRING_TYPE_INFO
 //        TypeInformation<K> keyTypeInfo = TypeExtractor.getKeySelectorTypes(keySelector, dataStream.getType());
-        TypeInformation<K> keyTypeInfo = TypeExtractor.getUnaryOperatorReturnType(keySelector2, KeySelector.class, false, false, dataStream.getType(), null ,false);
+        TypeInformation<K> keyTypeInfo = TypeExtractor.getUnaryOperatorReturnType(keySelector2, KeySelector.class, false, false, dataStream.getType(), null, false);
 
         KeyedStream<Tuple2<K, V>, K> keyedStream = new KeyedStream<>(dataStream, keySelector, keyTypeInfo);
         return keyedStream;
@@ -91,7 +91,7 @@ public class InvalidTypesExceptionTest {
 
 
     public interface MapPairFunction<T, K, V> extends Serializable {
-        Tuple2<K,V> mapPair(T t);
+        Tuple2<K, V> mapPair(T t);
     }
 
     public static MapPairFunction<String, String, Integer> mapToStringIntegerPair = new MapPairFunction<String, String, Integer>() {

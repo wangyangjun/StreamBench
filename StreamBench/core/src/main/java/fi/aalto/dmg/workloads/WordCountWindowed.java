@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by yangjun.wang on 03/11/15.
  */
-public class WordCountWindowed  extends Workload implements Serializable {
+public class WordCountWindowed extends Workload implements Serializable {
     private static final Logger logger = Logger.getLogger(WordCountWindowed.class);
     private static final long serialVersionUID = 5131563712627441022L;
 
@@ -44,8 +44,7 @@ public class WordCountWindowed  extends Workload implements Serializable {
 //            PairWorkloadOperator<String, Integer> cumulateCounts =counts.updateStateByKey(UserFunctions.sumReduce, "cumulate");
 //            cumulateCounts.print();
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
             e.printStackTrace();
         }

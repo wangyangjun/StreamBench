@@ -13,7 +13,7 @@ public class TimeDurations {
     private long length;
 
     public TimeDurations(TimeUnit timeUnit, long timeLength) throws DurationException {
-        switch(timeUnit){
+        switch (timeUnit) {
             case MILLISECONDS:
                 break;
             case SECONDS:
@@ -37,9 +37,9 @@ public class TimeDurations {
 
     public long toSeconds() {
         long seconds = this.length;
-        switch(unit){
+        switch (unit) {
             case MILLISECONDS:
-                seconds = this.length/1000L;
+                seconds = this.length / 1000L;
                 break;
             case SECONDS:
                 seconds = this.length;
@@ -53,7 +53,7 @@ public class TimeDurations {
 
     public long toMilliSeconds() {
         long milliseconds = this.length;
-        switch(unit){
+        switch (unit) {
             case MILLISECONDS:
                 milliseconds = this.length;
                 break;
@@ -67,7 +67,7 @@ public class TimeDurations {
         return milliseconds;
     }
 
-    public boolean equals(TimeDurations timeDurations){
-        return this.getLength()==timeDurations.getLength()&&this.getUnit().equals(timeDurations.getUnit());
+    public boolean equals(TimeDurations timeDurations) {
+        return this.getLength() == timeDurations.getLength() && this.getUnit().equals(timeDurations.getUnit());
     }
 }

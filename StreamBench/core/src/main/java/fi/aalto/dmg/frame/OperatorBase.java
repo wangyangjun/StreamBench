@@ -16,15 +16,17 @@ abstract public class OperatorBase implements Serializable {
         this.setParallelism(parallelism);
     }
 
-    public int getParallelism(){
+    public int getParallelism() {
         return this.parallelism;
     }
 
-    public void setParallelism(int parallelism){
+    public void setParallelism(int parallelism) {
         this.parallelism = parallelism;
     }
 
-    public void iterative() { this.iterative_enabled = true; }
+    public void iterative() {
+        this.iterative_enabled = true;
+    }
 
     abstract public void closeWith(OperatorBase stream, boolean broadcast) throws UnsupportOperatorException;
 

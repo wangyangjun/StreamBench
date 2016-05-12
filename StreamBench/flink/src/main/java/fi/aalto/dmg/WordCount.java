@@ -16,7 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 public class WordCount {
     private static Logger logger = LoggerFactory.getLogger(WordCount.class);
 
-    public static void main( String[] args ) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
+    public static void main(String[] args) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
         logger.warn("Start...");
 
         OperatorCreator operatorCreator = new FlinkOperatorCreator("WordCount");

@@ -28,16 +28,16 @@ public class JoinTimeWindows extends WindowAssigner<Object, TimeWindow> {
         windows = new ArrayList<>();
     }
 
-    public static JoinTimeWindows of(AbstractTime size){
+    public static JoinTimeWindows of(AbstractTime size) {
         return new JoinTimeWindows(size.toMilliseconds());
     }
 
     @Override
     public Collection<TimeWindow> assignWindows(Object element, long timestamp) {
-        windows.add(new TimeWindow(timestamp, timestamp+size));
+        windows.add(new TimeWindow(timestamp, timestamp + size));
         List<TimeWindow> windowsOfThisEle = new ArrayList<>();
-        for(TimeWindow window : windows){
-            if(window.getEnd() > timestamp){
+        for (TimeWindow window : windows) {
+            if (window.getEnd() > timestamp) {
                 windowsOfThisEle.add(window);
             } else {
                 windowsOfThisEle.remove(window);

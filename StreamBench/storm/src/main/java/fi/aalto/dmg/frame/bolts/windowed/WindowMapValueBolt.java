@@ -25,7 +25,7 @@ public class WindowMapValueBolt<K, V, R> extends WindowedBolt {
     private static final long serialVersionUID = -1888695011536742555L;
 
     // each slide has a corresponding List<R>
-    private List<List<Tuple2<K,R>>> mapedList;
+    private List<List<Tuple2<K, R>>> mapedList;
     private MapFunction<Tuple2<K, V>, Tuple2<K, R>> fun;
 
     public WindowMapValueBolt(MapFunction<Tuple2<K, V>, Tuple2<K, R>> function,
@@ -34,7 +34,7 @@ public class WindowMapValueBolt<K, V, R> extends WindowedBolt {
         super(windowDuration, slideDuration);
         this.fun = function;
         mapedList = new ArrayList<>(WINDOW_SIZE);
-        for(int i=0; i<WINDOW_SIZE; ++i){
+        for (int i = 0; i < WINDOW_SIZE; ++i) {
             mapedList.add(i, new ArrayList<Tuple2<K, R>>());
         }
     }
@@ -45,14 +45,15 @@ public class WindowMapValueBolt<K, V, R> extends WindowedBolt {
 
     /**
      * Map T(t) to R(r) and added it to current slide
+     *
      * @param tuple
      */
     @Override
     public void processTuple(Tuple tuple) {
-        try{
+        try {
             List<Tuple2<K, R>> list = mapedList.get(slideInWindow);
-            K key = (K)tuple.getValue(0);
-            V value = (V)tuple.getValue(1);
+            K key = (K) tuple.getValue(0);
+            V value = (V) tuple.getValue(1);
             list.add(fun.map(new Tuple2<>(key, value)));
         } catch (Exception e) {
             logger.error(e.toString());
@@ -61,18 +62,19 @@ public class WindowMapValueBolt<K, V, R> extends WindowedBolt {
 
     /**
      * emit all the data(type R) in the current window to next component
+     *
      * @param collector
      */
     @Override
     public void processSlide(BasicOutputCollector collector) {
-        try{
-            for(List<Tuple2<K,R>> list : mapedList){
-                for(Tuple2<K,R> tuple2 : list){
+        try {
+            for (List<Tuple2<K, R>> list : mapedList) {
+                for (Tuple2<K, R> tuple2 : list) {
                     collector.emit(new Values(slideIndexInBuffer, tuple2._1(), tuple2._2()));
                 }
             }
             // clear data
-            mapedList.get((slideInWindow +1)% WINDOW_SIZE).clear();
+            mapedList.get((slideInWindow + 1) % WINDOW_SIZE).clear();
         } catch (Exception e) {
             logger.error(e.toString());
         }

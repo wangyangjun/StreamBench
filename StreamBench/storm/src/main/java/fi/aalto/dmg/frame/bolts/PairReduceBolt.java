@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Created by yangjun.wang on 01/11/15.
  */
-public class PairReduceBolt<K,V> extends BaseBasicBolt {
+public class PairReduceBolt<K, V> extends BaseBasicBolt {
 
     private static final Logger logger = Logger.getLogger(PairReduceBolt.class);
     private static final long serialVersionUID = 3751131798984227211L;
@@ -25,7 +25,7 @@ public class PairReduceBolt<K,V> extends BaseBasicBolt {
     private ReduceFunction<V> fun;
     private ThroughputLog throughput;
 
-    public PairReduceBolt(ReduceFunction<V> function){
+    public PairReduceBolt(ReduceFunction<V> function) {
         this.fun = function;
         map = new HashMap<>();
     }
@@ -37,22 +37,22 @@ public class PairReduceBolt<K,V> extends BaseBasicBolt {
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
-        if(null != throughput){
+        if (null != throughput) {
             throughput.execute();
         }
         Object k = input.getValue(0);
         Object v = input.getValue(1);
         V currentValue = map.get(k);
         try {
-            K key = (K)k;
-            if(null != currentValue){
+            K key = (K) k;
+            if (null != currentValue) {
                 currentValue = this.fun.reduce((V) v, currentValue);
             } else {
-                currentValue = (V)v;
+                currentValue = (V) v;
             }
             map.put(key, currentValue);
             collector.emit(new Values(key, currentValue));
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             logger.error("Cast tuple[0] failed");
         } catch (Exception e) {
             e.printStackTrace();

@@ -20,7 +20,7 @@ public class FilterBolt<T> extends BaseBasicBolt {
     FilterFunction<T> fun;
     ThroughputLog throughput;
 
-    public FilterBolt(FilterFunction<T> function){
+    public FilterBolt(FilterFunction<T> function) {
         this.fun = function;
     }
 
@@ -31,15 +31,15 @@ public class FilterBolt<T> extends BaseBasicBolt {
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
-        if(null != throughput) {
+        if (null != throughput) {
             throughput.execute();
         }
         Object o = input.getValue(0);
         try {
-            if(this.fun.filter((T) o)){
+            if (this.fun.filter((T) o)) {
                 collector.emit(new Values(o));
             }
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             logger.error("Cast tuple[0] failed");
         } catch (Exception e) {
             e.printStackTrace();

@@ -32,8 +32,7 @@ public class FasterWordCount extends Workload implements Serializable {
                             .reduceByKey(UserFunctions.sumReduceWithTime, "sum")
                             .updateStateByKey(UserFunctions.sumReduceWithTime, "accumulate");
             counts.sink();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
             e.printStackTrace();
         }

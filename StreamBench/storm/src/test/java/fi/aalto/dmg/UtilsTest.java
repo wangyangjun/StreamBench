@@ -13,31 +13,30 @@ import java.util.Map;
 public class UtilsTest {
 
     @Test
-    public void longDivideTest()
-    {
+    public void longDivideTest() {
         long a = 100500L;
-        long b = a/1000L;
+        long b = a / 1000L;
         System.out.print(b);
         Assert.assertTrue(true);
     }
 
     @Test
-    public void mapListTest(){
+    public void mapListTest() {
         List<Map<String, Integer>> maps = new ArrayList<>(3);
 
     }
 
     @Test
-    public void doWhileTest(){
+    public void doWhileTest() {
         int i = 0;
         int j = 0;
-        while (i<5){
+        while (i < 5) {
             System.out.println(i);
             ++i;
         }
-        do{
+        do {
             System.out.println(j);
             ++j;
-        } while(j<5);
+        } while (j < 5);
     }
 }

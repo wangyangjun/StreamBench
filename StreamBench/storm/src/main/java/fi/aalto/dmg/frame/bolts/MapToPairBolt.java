@@ -21,7 +21,7 @@ public class MapToPairBolt<T, K, V> extends BaseBasicBolt {
     MapPairFunction<T, K, V> fun;
     ThroughputLog throughput;
 
-    public MapToPairBolt(MapPairFunction<T, K, V> function){
+    public MapToPairBolt(MapPairFunction<T, K, V> function) {
         this.fun = function;
     }
 
@@ -31,14 +31,14 @@ public class MapToPairBolt<T, K, V> extends BaseBasicBolt {
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
-        if(null != throughput) {
+        if (null != throughput) {
             throughput.execute();
         }
         Object o = input.getValue(0);
         try {
-            Tuple2<K,V> result = this.fun.mapToPair((T) o);
+            Tuple2<K, V> result = this.fun.mapToPair((T) o);
             collector.emit(new Values(result._1(), result._2()));
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             logger.error("Cast tuple[0] failed");
         }
     }

@@ -10,9 +10,9 @@ import java.util.Properties;
  * Created by jun on 29/02/16.
  */
 public class SimpleProducer {
-    public static void main( String[] args ) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException {
         int SLEEP_FREQUENCY = 50;
-        if(args.length > 0) {
+        if (args.length > 0) {
             SLEEP_FREQUENCY = Integer.parseInt(args[0]);
         }
 

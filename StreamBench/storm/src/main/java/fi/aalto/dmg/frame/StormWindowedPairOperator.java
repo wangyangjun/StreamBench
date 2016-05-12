@@ -15,7 +15,7 @@ import scala.Tuple2;
 /**
  * Created by jun on 11/9/15.
  */
-public class StormWindowedPairOperator<K,V> extends WindowedPairWorkloadOperator<K,V>{
+public class StormWindowedPairOperator<K, V> extends WindowedPairWorkloadOperator<K, V> {
 
     private static final long serialVersionUID = -2953749652496717735L;
     private TopologyBuilder topologyBuilder;
@@ -53,6 +53,7 @@ public class StormWindowedPairOperator<K,V> extends WindowedPairWorkloadOperator
 
     /**
      * It seems that no one will call this function
+     *
      * @param fun
      * @param componentId
      * @return

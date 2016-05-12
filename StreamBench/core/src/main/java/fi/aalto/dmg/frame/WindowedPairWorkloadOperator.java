@@ -8,14 +8,13 @@ import java.io.Serializable;
 /**
  * Created by jun on 11/3/15.
  */
-abstract public class WindowedPairWorkloadOperator<K,V> extends OperatorBase {
+abstract public class WindowedPairWorkloadOperator<K, V> extends OperatorBase {
 
     public WindowedPairWorkloadOperator(int parallelism) {
         super(parallelism);
     }
 
     /**
-     *
      * @param fun
      * @param componentId
      * @return PairWorkloadOperator<K, V>
@@ -24,6 +23,7 @@ abstract public class WindowedPairWorkloadOperator<K,V> extends OperatorBase {
 
     /**
      * cumulate window stream
+     *
      * @param fun
      * @param componentId
      * @return

@@ -22,7 +22,7 @@ public class ReduceBolt<T> extends BaseBasicBolt {
     ReduceFunction<T> fun;
     ThroughputLog throughput;
 
-    public ReduceBolt(ReduceFunction<T> function){
+    public ReduceBolt(ReduceFunction<T> function) {
         this.fun = function;
         this.currentValue = null;
     }
@@ -34,18 +34,18 @@ public class ReduceBolt<T> extends BaseBasicBolt {
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
-        if(null != throughput) {
+        if (null != throughput) {
             throughput.execute();
         }
         Object o = input.getValue(0);
         try {
-            if(null != currentValue){
+            if (null != currentValue) {
                 currentValue = this.fun.reduce((T) o, currentValue);
             } else {
-                currentValue = (T)o;
+                currentValue = (T) o;
             }
             collector.emit(new Values(currentValue));
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             logger.error("Cast tuple[0] failed");
         } catch (Exception e) {
             e.printStackTrace();

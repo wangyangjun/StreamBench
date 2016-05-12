@@ -28,14 +28,14 @@ public abstract class DiscretizedBolt extends BaseBasicBolt {
     private int preComponentTaksNum = 0;
     protected String preComponentId;
 
-    public DiscretizedBolt(String preComponentId){
+    public DiscretizedBolt(String preComponentId) {
         this.preComponentId = preComponentId;
         slideTicksMap = new HashMap<>();
 
     }
 
     @Override
-    public void prepare(Map stormConf, TopologyContext context){
+    public void prepare(Map stormConf, TopologyContext context) {
         preComponentTaksNum = context.getComponentTasks(preComponentId).size();
 
     }
@@ -50,17 +50,17 @@ public abstract class DiscretizedBolt extends BaseBasicBolt {
     @Override
     public void execute(Tuple tuple, BasicOutputCollector collector) {
         // which slide the tuple belongs to
-        if(isTickTuple(tuple)){
+        if (isTickTuple(tuple)) {
             int slideId = tuple.getInteger(0);
-            int slideIndex = slideId%BUFFER_SLIDES_NUM;
+            int slideIndex = slideId % BUFFER_SLIDES_NUM;
             Integer receivedTicks = slideTicksMap.get(slideIndex);
-            if(null == receivedTicks){
+            if (null == receivedTicks) {
                 receivedTicks = 1;
             } else {
                 receivedTicks++;
             }
             /* check whether is it the last tick for the slide */
-            if( receivedTicks == preComponentTaksNum) {
+            if (receivedTicks == preComponentTaksNum) {
                 // process data in the slide and emit to the next component
                 processSlide(collector, slideIndex);
                 collector.emit(BoltConstants.TICK_STREAM_ID, new Values(slideIndex));
@@ -76,6 +76,7 @@ public abstract class DiscretizedBolt extends BaseBasicBolt {
 
     /**
      * declare tick stream
+     *
      * @param declarer
      */
     @Override
@@ -86,12 +87,14 @@ public abstract class DiscretizedBolt extends BaseBasicBolt {
 
     /**
      * How to determine which slide the tuple belongs to?
+     *
      * @param tuple
      */
     public abstract void processTuple(Tuple tuple);
+
     public abstract void processSlide(BasicOutputCollector collector, int slideIndex);
 
-    private static boolean isTickTuple(Tuple tuple){
+    private static boolean isTickTuple(Tuple tuple) {
         return tuple.getSourceStreamId().equals(BoltConstants.TICK_STREAM_ID);
     }
 

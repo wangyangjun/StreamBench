@@ -31,7 +31,7 @@ public class WindowFilterBolt<T> extends WindowedBolt {
         super(windowDuration, slideDuration);
         this.fun = function;
         filteredList = new ArrayList<>(WINDOW_SIZE);
-        for(int i=0; i<WINDOW_SIZE; ++i){
+        for (int i = 0; i < WINDOW_SIZE; ++i) {
             filteredList.add(i, new ArrayList<T>());
         }
     }
@@ -42,14 +42,15 @@ public class WindowFilterBolt<T> extends WindowedBolt {
 
     /**
      * added filterd value to current slide
+     *
      * @param tuple
      */
     @Override
     public void processTuple(Tuple tuple) {
-        try{
+        try {
             List<T> list = filteredList.get(slideInWindow);
-            T value = (T)tuple.getValue(0);
-            if(fun.filter(value)){
+            T value = (T) tuple.getValue(0);
+            if (fun.filter(value)) {
                 list.add(value);
             }
         } catch (Exception e) {
@@ -59,13 +60,14 @@ public class WindowFilterBolt<T> extends WindowedBolt {
 
     /**
      * emit all the data(type R) in the current window to next component
+     *
      * @param collector
      */
     @Override
     public void processSlide(BasicOutputCollector collector) {
-        try{
-            for(List<T> list : filteredList){
-                for(T t : list){
+        try {
+            for (List<T> list : filteredList) {
+                for (T t : list) {
                     collector.emit(new Values(slideIndexInBuffer, t));
                 }
             }

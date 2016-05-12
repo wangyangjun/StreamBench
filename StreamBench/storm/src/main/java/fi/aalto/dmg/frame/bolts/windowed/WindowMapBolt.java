@@ -30,7 +30,7 @@ public class WindowMapBolt<T, R> extends WindowedBolt {
         super(windowDuration, slideDuration);
         this.fun = function;
         mapedList = new ArrayList<>(WINDOW_SIZE);
-        for(int i=0; i<WINDOW_SIZE; ++i){
+        for (int i = 0; i < WINDOW_SIZE; ++i) {
             mapedList.add(i, new ArrayList<R>());
         }
     }
@@ -41,13 +41,14 @@ public class WindowMapBolt<T, R> extends WindowedBolt {
 
     /**
      * Map T(t) to R(r) and added it to current slide
+     *
      * @param tuple
      */
     @Override
     public void processTuple(Tuple tuple) {
-        try{
+        try {
             List<R> list = mapedList.get(slideInWindow);
-            T value = (T)tuple.getValue(0);
+            T value = (T) tuple.getValue(0);
             list.add(fun.map(value));
         } catch (Exception e) {
             logger.error(e.toString());
@@ -56,18 +57,19 @@ public class WindowMapBolt<T, R> extends WindowedBolt {
 
     /**
      * emit all the data(type R) in the current window to next component
+     *
      * @param collector
      */
     @Override
     public void processSlide(BasicOutputCollector collector) {
-        try{
-            for(List<R> list : mapedList){
-                for(R r : list){
+        try {
+            for (List<R> list : mapedList) {
+                for (R r : list) {
                     collector.emit(new Values(slideIndexInBuffer, r));
                 }
             }
             // clear data
-            mapedList.get((slideInWindow +1)% WINDOW_SIZE).clear();
+            mapedList.get((slideInWindow + 1) % WINDOW_SIZE).clear();
         } catch (Exception e) {
             logger.error(e.toString());
         }

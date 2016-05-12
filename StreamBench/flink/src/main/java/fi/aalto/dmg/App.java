@@ -22,13 +22,12 @@ import java.util.regex.Pattern;
 
 /**
  * Hello world!
- *
  */
-public class App
-{
+public class App {
     private static final Pattern SPACE = Pattern.compile(" ");
     private static Logger logger = LoggerFactory.getLogger(App.class);
-    public static void main( String[] args ) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
+
+    public static void main(String[] args) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
 
         logger.warn("Start...");
 

@@ -12,13 +12,13 @@ import java.util.List;
 /**
  * Created by yangjun.wang on 31/10/15.
  */
-public class StormOperator<T> extends  WorkloadOperator<T> {
+public class StormOperator<T> extends WorkloadOperator<T> {
     private static final long serialVersionUID = 3305991729931748598L;
     protected TopologyBuilder topologyBuilder;
     protected String preComponentId;
     private BoltDeclarer boltDeclarer;
 
-    public StormOperator(TopologyBuilder builder, String previousComponent, int parallelism){
+    public StormOperator(TopologyBuilder builder, String previousComponent, int parallelism) {
         super(parallelism);
         this.topologyBuilder = builder;
         this.preComponentId = previousComponent;
@@ -90,15 +90,15 @@ public class StormOperator<T> extends  WorkloadOperator<T> {
 
     @Override
     public void closeWith(OperatorBase stream, boolean broadcast) throws UnsupportOperatorException {
-        if(null == boltDeclarer) {
+        if (null == boltDeclarer) {
             throw new UnsupportOperatorException("boltDeclarer could not be null");
-        } else if( !stream.getClass().equals(this.getClass())) {
+        } else if (!stream.getClass().equals(this.getClass())) {
             throw new UnsupportOperatorException("The close stream should be the same type of the origin stream");
-        } else if(!this.iterative_enabled) {
+        } else if (!this.iterative_enabled) {
             throw new UnsupportOperatorException("Iterative is not enabled.");
         } else {
             StormOperator<T> stream_close = (StormOperator<T>) stream;
-            if(broadcast) {
+            if (broadcast) {
                 boltDeclarer.allGrouping(stream_close.preComponentId);
             } else {
                 boltDeclarer.shuffleGrouping(stream_close.preComponentId);
@@ -109,7 +109,7 @@ public class StormOperator<T> extends  WorkloadOperator<T> {
 
     @Override
     public void print() {
-        boltDeclarer = topologyBuilder.setBolt("print"+preComponentId, new PrintBolt<T>()).localOrShuffleGrouping(preComponentId);
+        boltDeclarer = topologyBuilder.setBolt("print" + preComponentId, new PrintBolt<T>()).localOrShuffleGrouping(preComponentId);
     }
 
     @Override

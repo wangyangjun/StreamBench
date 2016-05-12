@@ -16,17 +16,17 @@ public class CentroidLog implements Serializable {
     private static Logger logger = LoggerFactory.getLogger(CentroidLog.class);
 
 
-    public void execute(long counts, double[] location){
+    public void execute(long counts, double[] location) {
         double probability = 0.05;
-        if(Configure.kmeansCentroidsFrequency != null
+        if (Configure.kmeansCentroidsFrequency != null
                 && Configure.kmeansCentroidsFrequency > 0) {
             probability = Configure.kmeansCentroidsFrequency;
         }
 
-        if(Math.random() < probability) {
+        if (Math.random() < probability) {
             StringBuilder sb = new StringBuilder();
             sb.append(String.format("\t%d", counts));
-            for(double d : location){
+            for (double d : location) {
                 sb.append(String.format("\t%16.14f", d));
             }
             logger.warn(sb.toString());

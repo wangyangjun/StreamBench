@@ -20,38 +20,38 @@ import java.util.Map;
  * Tested
  */
 
-public class DiscretizedPairUpdateBolt<K,V> extends DiscretizedBolt {
+public class DiscretizedPairUpdateBolt<K, V> extends DiscretizedBolt {
     private static final Logger logger = LoggerFactory.getLogger(DiscretizedPairReduceByKeyBolt.class);
     private static final long serialVersionUID = 3021160470219166181L;
     private ReduceFunction<V> fun;
-    private Map<K,V> cumulatedDataMap;
-    private Map<Integer, Map<K,V>> slideDataMap;
+    private Map<K, V> cumulatedDataMap;
+    private Map<Integer, Map<K, V>> slideDataMap;
 
     public DiscretizedPairUpdateBolt(ReduceFunction<V> function, String preComponentId) {
         super(preComponentId);
         this.fun = function;
-        cumulatedDataMap = new HashMap<K,V>();
+        cumulatedDataMap = new HashMap<K, V>();
         slideDataMap = new HashMap<>(BUFFER_SLIDES_NUM);
-        for(int i=0; i<BUFFER_SLIDES_NUM; ++i)
+        for (int i = 0; i < BUFFER_SLIDES_NUM; ++i)
             slideDataMap.put(i, new HashMap<K, V>());
     }
 
     @Override
     public void processTuple(Tuple tuple) {
-        try{
+        try {
             int slideId = tuple.getInteger(0);
-            slideId = slideId%BUFFER_SLIDES_NUM;
+            slideId = slideId % BUFFER_SLIDES_NUM;
             K key = (K) tuple.getValue(1);
             V value = (V) tuple.getValue(2);
 
             Map<K, V> slideMap = slideDataMap.get(slideId);
-            if(null == slideMap){
+            if (null == slideMap) {
                 slideMap = new HashMap<>();
                 slideMap.put(key, value);
                 slideDataMap.put(slideId, slideMap);
             } else {
                 V reducedValue = slideMap.get(key);
-                if(null == reducedValue){
+                if (null == reducedValue) {
                     slideMap.put(key, value);
                 } else {
                     slideMap.put(key, fun.reduce(reducedValue, value));
@@ -78,7 +78,7 @@ public class DiscretizedPairUpdateBolt<K,V> extends DiscretizedBolt {
                 collector.emit(new Values(entry.getKey(), accumulatedValue));
             }
             slideMap.clear();
-        } catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.toString());
         }
     }
@@ -87,6 +87,6 @@ public class DiscretizedPairUpdateBolt<K,V> extends DiscretizedBolt {
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
         super.declareOutputFields(declarer);
         declarer.declareStream(Utils.DEFAULT_STREAM_ID,
-                new Fields( BoltConstants.OutputKeyField, BoltConstants.OutputValueField));
+                new Fields(BoltConstants.OutputKeyField, BoltConstants.OutputValueField));
     }
 }

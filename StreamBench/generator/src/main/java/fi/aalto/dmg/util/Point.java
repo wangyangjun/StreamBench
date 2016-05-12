@@ -11,7 +11,8 @@ public class Point implements Serializable {
     public int id; // Centroid id: 0, 1, 2, ...
     public double[] location;
 
-    public Point() {}
+    public Point() {
+    }
 
     public Point(int id, double[] l) {
         this.id = id;
@@ -33,22 +34,28 @@ public class Point implements Serializable {
         this.time = time;
     }
 
-    public int dimension(){ return this.location.length; }
+    public int dimension() {
+        return this.location.length;
+    }
 
     public boolean isCentroid() {
         return this.id >= 0;
     }
 
-    public long getTime() { return this.time; }
+    public long getTime() {
+        return this.time;
+    }
 
-    public void setTime(long time) { this.time = time; }
+    public void setTime(long time) {
+        this.time = time;
+    }
 
     public Point add(Point other) throws Exception {
-        if(this.location.length != other.location.length) {
+        if (this.location.length != other.location.length) {
             throw new Exception("Dimensions of points are not equal");
         }
         double[] location = new double[this.location.length];
-        for(int i=0; i<this.location.length; ++i) {
+        for (int i = 0; i < this.location.length; ++i) {
             location[i] = this.location[i] + other.location[i];
         }
         return new Point(this.id, location, this.time);
@@ -56,16 +63,16 @@ public class Point implements Serializable {
 
     public Point mul(long val) {
         double[] location = new double[this.location.length];
-        for(int i=0; i<this.location.length; ++i) {
-            location[i] = this.location[i]*val;
+        for (int i = 0; i < this.location.length; ++i) {
+            location[i] = this.location[i] * val;
         }
         return new Point(this.id, location, this.time);
     }
 
     public Point div(long val) {
         double[] location = new double[this.location.length];
-        for(int i=0; i<this.location.length; ++i) {
-            location[i] = this.location[i]/val;
+        for (int i = 0; i < this.location.length; ++i) {
+            location[i] = this.location[i] / val;
         }
         return new Point(this.id, location, this.time);
     }
@@ -74,9 +81,9 @@ public class Point implements Serializable {
         return Math.sqrt(distanceSquaredTo(other));
     }
 
-    public double distanceSquaredTo(Point other){
-        double squareSum= 0;
-        for(int i=0; i<this.location.length; ++i) {
+    public double distanceSquaredTo(Point other) {
+        double squareSum = 0;
+        for (int i = 0; i < this.location.length; ++i) {
             squareSum += Math.pow(this.location[i] - other.location[i], 2);
         }
         return squareSum;
@@ -89,21 +96,21 @@ public class Point implements Serializable {
     @Override
     public String toString() {
         String str = "(";
-        for(int i=0; i<this.location.length-1; ++i) {
+        for (int i = 0; i < this.location.length - 1; ++i) {
             str += this.location[i] + ", ";
         }
-        str += this.location[this.location.length-1] + ")";
-        if(-1 != this.id)
+        str += this.location[this.location.length - 1] + ")";
+        if (-1 != this.id)
             return id + ":" + str;
         return str;
     }
 
     public String positonString() {
         StringBuilder sb = new StringBuilder();
-        for(int i=0; i<this.location.length-1; ++i) {
+        for (int i = 0; i < this.location.length - 1; ++i) {
             sb.append(this.location[i]).append(", ");
         }
-        sb.append(this.location[location.length-1]);
+        sb.append(this.location[location.length - 1]);
         return sb.toString();
     }
 }

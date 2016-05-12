@@ -23,7 +23,7 @@ public class IteractiveBolt<T> extends BaseBasicBolt {
     FilterFunction<T> filterFunction;
     MapFunction<T, T> mapFunction;
 
-    public IteractiveBolt(MapFunction<T, T> mapFunction, FilterFunction<T> filterFunction){
+    public IteractiveBolt(MapFunction<T, T> mapFunction, FilterFunction<T> filterFunction) {
         this.mapFunction = mapFunction;
         this.filterFunction = filterFunction;
     }
@@ -33,13 +33,13 @@ public class IteractiveBolt<T> extends BaseBasicBolt {
         Object o = input.getValue(0);
         try {
             T result = this.mapFunction.map((T) o);
-            if(this.filterFunction.filter(result)){
+            if (this.filterFunction.filter(result)) {
                 collector.emit(ITERATIVE_STREAM, new Values(result));
 
             } else {
                 collector.emit(new Values(result));
             }
-        } catch (ClassCastException e){
+        } catch (ClassCastException e) {
             logger.error("Cast tuple[0] failed");
         } catch (Exception e) {
             e.printStackTrace();

@@ -6,22 +6,22 @@ import scala.Tuple2;
 /**
  * Created by jun on 28/10/15.
  */
-public class GrouperPairFunctionImpl<K,V> implements PairFunction<Tuple2<K,Iterable<V>>, K, V> {
+public class GrouperPairFunctionImpl<K, V> implements PairFunction<Tuple2<K, Iterable<V>>, K, V> {
 
     private static final long serialVersionUID = 5274813120639433080L;
     private ReduceFunction<V> fun;
-    public GrouperPairFunctionImpl(ReduceFunction<V> function){
+
+    public GrouperPairFunctionImpl(ReduceFunction<V> function) {
         this.fun = function;
     }
 
     @Override
     public Tuple2<K, V> call(Tuple2<K, Iterable<V>> kIterableTuple2) throws Exception {
         V reducedV = null;
-        for(V v : kIterableTuple2._2()){
-            if(null == reducedV){
+        for (V v : kIterableTuple2._2()) {
+            if (null == reducedV) {
                 reducedV = v;
-            }
-            else {
+            } else {
                 reducedV = fun.reduce(reducedV, v);
             }
         }

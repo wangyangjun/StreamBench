@@ -11,19 +11,19 @@ import org.apache.spark.streaming.api.java.JavaPairDStream;
 /**
  * Created by yangjun.wang on 25/10/15.
  */
-public class SparkGroupedWorkloadOperator<K,V> extends GroupedWorkloadOperator<K,V> {
+public class SparkGroupedWorkloadOperator<K, V> extends GroupedWorkloadOperator<K, V> {
 
     private static final long serialVersionUID = 8638460461407972003L;
     private JavaPairDStream<K, Iterable<V>> pairDStream;
 
-    public SparkGroupedWorkloadOperator(JavaPairDStream<K, Iterable<V>> stream, int parallelism){
+    public SparkGroupedWorkloadOperator(JavaPairDStream<K, Iterable<V>> stream, int parallelism) {
         super(parallelism);
         this.pairDStream = stream;
     }
 
     @Override
     public SparkPairWorkloadOperator<K, V> reduce(final ReduceFunction<V> fun, String componentId, int parallelism) {
-        JavaPairDStream<K,V> newStream = this.pairDStream.mapToPair(new GrouperPairFunctionImpl<K,V>(fun));
+        JavaPairDStream<K, V> newStream = this.pairDStream.mapToPair(new GrouperPairFunctionImpl<K, V>(fun));
         return new SparkPairWorkloadOperator<>(newStream, parallelism);
     }
 
@@ -33,5 +33,6 @@ public class SparkGroupedWorkloadOperator<K,V> extends GroupedWorkloadOperator<K
     }
 
     @Override
-    public void print() {}
+    public void print() {
+    }
 }

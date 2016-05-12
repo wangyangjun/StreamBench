@@ -43,7 +43,7 @@ public class StreamingWordCount {
                 .reduceByKey(new Function2<Long, Long, Long>() {
                     @Override
                     public Long call(Long aLong, Long aLong2) throws Exception {
-                        return aLong+aLong2;
+                        return aLong + aLong2;
                     }
                 })
                 .updateStateByKey(new Function2<List<Long>, Optional<Long>, Optional<Long>>() {

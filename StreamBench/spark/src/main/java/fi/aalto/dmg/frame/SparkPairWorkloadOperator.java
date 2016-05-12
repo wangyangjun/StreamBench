@@ -17,12 +17,12 @@ import scala.Tuple2;
 /**
  * Created by yangjun.wang on 24/10/15.
  */
-public class SparkPairWorkloadOperator<K,V> extends PairWorkloadOperator<K,V> {
+public class SparkPairWorkloadOperator<K, V> extends PairWorkloadOperator<K, V> {
 
     private static final long serialVersionUID = 7879350341179747221L;
-    private JavaPairDStream<K,V> pairDStream;
+    private JavaPairDStream<K, V> pairDStream;
 
-    public SparkPairWorkloadOperator(JavaPairDStream<K, V> stream, int parallelism){
+    public SparkPairWorkloadOperator(JavaPairDStream<K, V> stream, int parallelism) {
         super(parallelism);
         this.pairDStream = stream;
     }
@@ -35,13 +35,13 @@ public class SparkPairWorkloadOperator<K,V> extends PairWorkloadOperator<K,V> {
 
     @Override
     public PairWorkloadOperator<K, V> reduceByKey(final ReduceFunction<V> fun, String componentId) {
-        JavaPairDStream<K,V> newStream = pairDStream.reduceByKey(new ReduceFunctionImpl<>(fun));
+        JavaPairDStream<K, V> newStream = pairDStream.reduceByKey(new ReduceFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(newStream, parallelism);
     }
 
     @Override
     public <R> PairWorkloadOperator<K, R> mapValue(MapFunction<V, R> fun, String componentId) {
-        JavaPairDStream<K,R> newStream = pairDStream.mapValues(new FunctionImpl<>(fun));
+        JavaPairDStream<K, R> newStream = pairDStream.mapValues(new FunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(newStream, parallelism);
     }
 
@@ -57,13 +57,13 @@ public class SparkPairWorkloadOperator<K,V> extends PairWorkloadOperator<K,V> {
 
     @Override
     public <R> PairWorkloadOperator<K, R> flatMapValue(FlatMapFunction<V, R> fun, String componentId) {
-        JavaPairDStream<K,R> newStream = pairDStream.flatMapValues(new FlatMapValuesFunctionImpl<>(fun));
+        JavaPairDStream<K, R> newStream = pairDStream.flatMapValues(new FlatMapValuesFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(newStream, parallelism);
     }
 
     @Override
     public PairWorkloadOperator<K, V> filter(FilterFunction<Tuple2<K, V>> fun, String componentId) {
-        JavaPairDStream<K,V> newStream = pairDStream.filter(new FilterFunctionImpl<>(fun));
+        JavaPairDStream<K, V> newStream = pairDStream.filter(new FilterFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(newStream, parallelism);
     }
 
@@ -91,7 +91,7 @@ public class SparkPairWorkloadOperator<K,V> extends PairWorkloadOperator<K,V> {
 
 
     @Override
-    public WindowedPairWorkloadOperator<K,V> window(TimeDurations windowDuration) {
+    public WindowedPairWorkloadOperator<K, V> window(TimeDurations windowDuration) {
         return window(windowDuration, windowDuration);
     }
 
@@ -105,13 +105,11 @@ public class SparkPairWorkloadOperator<K,V> extends PairWorkloadOperator<K,V> {
 
     /**
      * Join two streams base on processing time
+     *
      * @param componentId
-     * @param joinStream
-     *          the other stream<K,R>
-     * @param windowDuration
-     *          window length of this stream
-     * @param joinWindowDuration
-     *          window length of joinStream
+     * @param joinStream         the other stream<K,R>
+     * @param windowDuration     window length of this stream
+     * @param joinWindowDuration window length of joinStream
      * @param <R>
      * @return
      * @throws WorkloadException
@@ -121,13 +119,13 @@ public class SparkPairWorkloadOperator<K,V> extends PairWorkloadOperator<K,V> {
                                                           PairWorkloadOperator<K, R> joinStream,
                                                           TimeDurations windowDuration,
                                                           TimeDurations joinWindowDuration) throws WorkloadException {
-        if(windowDuration.toMilliSeconds()%windowDuration.toMilliSeconds()!=0){
+        if (windowDuration.toMilliSeconds() % windowDuration.toMilliSeconds() != 0) {
             throw new WorkloadException("WindowDuration should be multi times of joinWindowDuration");
         }
         Duration windowDurations = Utils.timeDurationsToSparkDuration(windowDuration);
         Duration windowDurations2 = Utils.timeDurationsToSparkDuration(joinWindowDuration);
 
-        if(joinStream instanceof SparkPairWorkloadOperator) {
+        if (joinStream instanceof SparkPairWorkloadOperator) {
             SparkPairWorkloadOperator<K, R> joinSparkStream = ((SparkPairWorkloadOperator<K, R>) joinStream);
             JavaPairDStream<K, Tuple2<V, R>> joinedStream = pairDStream
                     .window(windowDurations.plus(windowDurations2), windowDurations2)
@@ -141,17 +139,13 @@ public class SparkPairWorkloadOperator<K,V> extends PairWorkloadOperator<K,V> {
 
     /**
      * Spark doesn't support event time join yet
+     *
      * @param componentId
-     * @param joinStream
-     *          the other stream<K,R>
-     * @param windowDuration
-     *          window length of this stream
-     * @param joinWindowDuration
-     *          window length of joinStream
-     * @param eventTimeAssigner1
-     *          event time assignment for this stream
-     * @param eventTimeAssigner2
-     *          event time assignment for joinStream
+     * @param joinStream         the other stream<K,R>
+     * @param windowDuration     window length of this stream
+     * @param joinWindowDuration window length of joinStream
+     * @param eventTimeAssigner1 event time assignment for this stream
+     * @param eventTimeAssigner2 event time assignment for joinStream
      * @param <R>
      * @return
      * @throws WorkloadException
@@ -163,13 +157,13 @@ public class SparkPairWorkloadOperator<K,V> extends PairWorkloadOperator<K,V> {
                                                           TimeDurations joinWindowDuration,
                                                           final AssignTimeFunction<V> eventTimeAssigner1,
                                                           final AssignTimeFunction<R> eventTimeAssigner2) throws WorkloadException {
-        if(windowDuration.toMilliSeconds()%windowDuration.toMilliSeconds()!=0){
+        if (windowDuration.toMilliSeconds() % windowDuration.toMilliSeconds() != 0) {
             throw new WorkloadException("WindowDuration should be multi times of joinWindowDuration");
         }
         final Duration windowDurations = Utils.timeDurationsToSparkDuration(windowDuration);
         Duration windowDurations2 = Utils.timeDurationsToSparkDuration(joinWindowDuration);
 
-        if(joinStream instanceof SparkPairWorkloadOperator) {
+        if (joinStream instanceof SparkPairWorkloadOperator) {
             SparkPairWorkloadOperator<K, R> joinSparkStream = ((SparkPairWorkloadOperator<K, R>) joinStream);
             JavaPairDStream<K, Tuple2<V, R>> joinedStream = pairDStream
                     .window(windowDurations.plus(windowDurations2), windowDurations2)
@@ -194,7 +188,7 @@ public class SparkPairWorkloadOperator<K,V> extends PairWorkloadOperator<K,V> {
 
     @Override
     public void sink() {
-        this.pairDStream = this.pairDStream.filter(new PairLatencySinkFunction<K,V>());
+        this.pairDStream = this.pairDStream.filter(new PairLatencySinkFunction<K, V>());
         this.pairDStream.count().print();
     }
 }

@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * Created by yangjun.wang on 25/10/15.
  */
-abstract public class GroupedWorkloadOperator<K,V> extends OperatorBase implements Serializable{
+abstract public class GroupedWorkloadOperator<K, V> extends OperatorBase implements Serializable {
     public GroupedWorkloadOperator(int parallelism) {
         super(parallelism);
     }

@@ -5,16 +5,16 @@ import java.io.Serializable;
 /**
  * Created by jun on 07/12/15.
  */
-public class WithTime<T> implements Serializable{
+public class WithTime<T> implements Serializable {
     private T value;
     private long time;
 
-    public WithTime(T v, long time){
+    public WithTime(T v, long time) {
         this.value = v;
         this.time = time;
     }
 
-    public WithTime(T v){
+    public WithTime(T v) {
         this.value = v;
         this.time = System.currentTimeMillis();
     }
@@ -36,7 +36,7 @@ public class WithTime<T> implements Serializable{
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return String.format("%s with time %d", value.toString(), time);
     }
 }

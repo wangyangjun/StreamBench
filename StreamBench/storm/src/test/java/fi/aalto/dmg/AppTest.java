@@ -33,11 +33,11 @@ import java.util.UUID;
  * Created by jun on 11/11/15.
  */
 
-public class AppTest  {
+public class AppTest {
 
     public static final int DEFAULT_TICK_FREQUENCY_SECONDS = 4;
 
-    public static void main( String[] args )  throws WorkloadException {
+    public static void main(String[] args) throws WorkloadException {
         TopologyBuilder builder = new TopologyBuilder();
         BrokerHosts hosts = new ZkHosts("localhost:2181");
         SpoutConfig spoutConfig = new SpoutConfig(hosts, "WordCount", "/" + "WordCount", UUID.randomUUID().toString());
@@ -46,7 +46,7 @@ public class AppTest  {
 
         builder.setSpout("spout", new KafkaSpout(spoutConfig));
         builder.setBolt("split", new SplitSentence()).shuffleGrouping("spout");
-        builder.setBolt("counter", new CounterBolt(), 3).fieldsGrouping("split", new Fields("wordCountPair") );
+        builder.setBolt("counter", new CounterBolt(), 3).fieldsGrouping("split", new Fields("wordCountPair"));
 
         Config conf = new Config();
         conf.setDebug(true);
@@ -59,11 +59,11 @@ public class AppTest  {
 
     public static class SplitSentence extends BaseBasicBolt {
         @Override
-        public void execute(Tuple tuple, BasicOutputCollector collector){
+        public void execute(Tuple tuple, BasicOutputCollector collector) {
             String[] words = tuple.getString(0).split(" ");
-            for(String word: words) {
-                if( null != word && !word.isEmpty()){
-                    collector.emit(new Values(new Tuple2<String,Integer>(word.trim().toLowerCase(),1)));
+            for (String word : words) {
+                if (null != word && !word.isEmpty()) {
+                    collector.emit(new Values(new Tuple2<String, Integer>(word.trim().toLowerCase(), 1)));
                 }
             }
         }
@@ -86,14 +86,14 @@ public class AppTest  {
         @Override
         public void execute(Tuple tuple, BasicOutputCollector collector) {
 
-            for(Map.Entry<String, Integer> entry: counts.entrySet()){
+            for (Map.Entry<String, Integer> entry : counts.entrySet()) {
                 String word = entry.getKey();
                 Integer count = entry.getValue();
                 collector.emit(Utils.DEFAULT_STREAM_ID, new Values(word, count));
             }
 
             Tuple2<String, Integer> tuple2 = (Tuple2<String, Integer>) tuple.getValue(0);
-            if(null != tuple2){
+            if (null != tuple2) {
                 Integer count = counts.get(tuple2._1());
                 if (count == null)
                     count = tuple2._2();

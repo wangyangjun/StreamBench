@@ -17,7 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 public class AdvClick {
     private static Logger logger = LoggerFactory.getLogger(AdvClick.class);
 
-    public static void main( String[] args ) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
+    public static void main(String[] args) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
         logger.warn("Start...");
 
         OperatorCreator operatorCreator = new FlinkOperatorCreator("AdvClick");

@@ -28,7 +28,7 @@ public class AdvClick extends Generator {
     private static long ADV_NUM = 100000000;
     private static KafkaProducer<String, String> producer;
 
-    public AdvClick(){
+    public AdvClick() {
         super();
         producer = createBigBufferProducer();
 
@@ -60,21 +60,21 @@ public class AdvClick extends Generator {
 //            System.out.println("Shown: " + System.currentTimeMillis() + "\t" + advId);
 
             // whether customer clicked this advertisement
-            if(generator.nextUniform(0,1)<= clickProbability){
+            if (generator.nextUniform(0, 1) <= clickProbability) {
 //                long deltaT = (long)generator.nextExponential(clickLambda)*1000;
-                long deltaT = (long)generator.nextGaussian(clickLambda, 1)*1000;
+                long deltaT = (long) generator.nextGaussian(clickLambda, 1) * 1000;
 //                System.out.println(deltaT);
-                advList.add(new Advertisement(advId, timestamp+deltaT));
+                advList.add(new Advertisement(advId, timestamp + deltaT));
             }
 
-            if(i%100 == 0){
+            if (i % 100 == 0) {
                 cachedPool.submit(new ClickThread(advList));
                 advList = new ArrayList<>();
             }
 
             throughput.execute();
             // control data generate speed
-            if(sleep_frequency > 0 && i%sleep_frequency == 0) {
+            if (sleep_frequency > 0 && i % sleep_frequency == 0) {
                 Thread.sleep(1);
             }
 
@@ -85,12 +85,12 @@ public class AdvClick extends Generator {
         } catch (InterruptedException e) {
         }
 
-        logger.info("LatencyLog: " + String.valueOf(System.currentTimeMillis()-time));
+        logger.info("LatencyLog: " + String.valueOf(System.currentTimeMillis() - time));
 
     }
 
 
-    static class Advertisement implements Comparable<Advertisement>{
+    static class Advertisement implements Comparable<Advertisement> {
         Advertisement(String id, long time) {
             this.id = id;
             this.time = time;
@@ -101,26 +101,27 @@ public class AdvClick extends Generator {
 
         @Override
         public int compareTo(Advertisement o) {
-            if(this.time > o.time)
+            if (this.time > o.time)
                 return 1;
-            else if(this.time == o.time)
+            else if (this.time == o.time)
                 return 0;
             else
                 return -1;
         }
     }
 
-    static class ClickThread implements Runnable{
+    static class ClickThread implements Runnable {
         private ArrayList<Advertisement> advList;
 
-        public ClickThread(ArrayList<Advertisement> advList){
+        public ClickThread(ArrayList<Advertisement> advList) {
             this.advList = advList;
             Collections.sort(this.advList);
         }
+
         @Override
         public void run() {
-            for (Advertisement adv: advList) {
-                if(System.currentTimeMillis() < adv.time) {
+            for (Advertisement adv : advList) {
+                if (System.currentTimeMillis() < adv.time) {
                     try {
                         Thread.sleep(adv.time - System.currentTimeMillis());
                     } catch (InterruptedException e) {
@@ -134,9 +135,9 @@ public class AdvClick extends Generator {
         }
     }
 
-    public static void main( String[] args ) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException {
         int SLEEP_FREQUENCY = -1;
-        if(args.length > 0) {
+        if (args.length > 0) {
             SLEEP_FREQUENCY = Integer.parseInt(args[0]);
         }
         new AdvClick().generate(SLEEP_FREQUENCY);

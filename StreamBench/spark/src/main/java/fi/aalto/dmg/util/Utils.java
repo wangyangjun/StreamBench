@@ -9,9 +9,9 @@ import java.util.Iterator;
  * Created by jun on 11/3/15.
  */
 public class Utils {
-    public static Duration timeDurationsToSparkDuration(TimeDurations timeDurations){
+    public static Duration timeDurationsToSparkDuration(TimeDurations timeDurations) {
         Duration duration = Durations.seconds(1);
-        switch(timeDurations.getUnit()){
+        switch (timeDurations.getUnit()) {
             case MILLISECONDS:
                 duration = Durations.milliseconds(timeDurations.getLength());
                 break;

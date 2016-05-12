@@ -30,10 +30,10 @@ public class PairLatencyBolt<T> extends BaseBasicBolt {
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {
-        if(null != throughput) {
+        if (null != throughput) {
             throughput.execute();
         }
-        WithTime<T> withTime = (WithTime<T>)input.getValue(1);
+        WithTime<T> withTime = (WithTime<T>) input.getValue(1);
         latency.execute(withTime);
     }
 

@@ -12,10 +12,10 @@ import java.util.Iterator;
 /**
  * Created by jun on 11/3/15.
  */
-public class SparkWindowedPairWorkloadOperator<K,V> extends WindowedPairWorkloadOperator<K,V> {
+public class SparkWindowedPairWorkloadOperator<K, V> extends WindowedPairWorkloadOperator<K, V> {
 
     private static final long serialVersionUID = 7216177060503270778L;
-    private JavaPairDStream<K,V> pairDStream;
+    private JavaPairDStream<K, V> pairDStream;
 
     public SparkWindowedPairWorkloadOperator(JavaPairDStream<K, V> stream, int parallelism) {
         super(parallelism);
@@ -25,7 +25,7 @@ public class SparkWindowedPairWorkloadOperator<K,V> extends WindowedPairWorkload
     @Override
     public PairWorkloadOperator<K, V> reduceByKey(ReduceFunction<V> fun,
                                                   String componentId) {
-        JavaPairDStream<K,V> newStream = this.pairDStream.reduceByKey(new ReduceFunctionImpl<>(fun));
+        JavaPairDStream<K, V> newStream = this.pairDStream.reduceByKey(new ReduceFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(newStream, parallelism);
     }
 
@@ -39,7 +39,7 @@ public class SparkWindowedPairWorkloadOperator<K,V> extends WindowedPairWorkload
     @Override
     public <R> PairWorkloadOperator<K, R> mapPartition(MapPartitionFunction<Tuple2<K, V>, Tuple2<K, R>> fun,
                                                        String componentId) {
-        JavaPairDStream<K,R> newStream = pairDStream.mapPartitionsToPair(new PairMapPartitionFunctionImpl<>(fun));
+        JavaPairDStream<K, R> newStream = pairDStream.mapPartitionsToPair(new PairMapPartitionFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(newStream, parallelism);
     }
 

@@ -61,9 +61,9 @@ public class KMeansTest {
 
         @Override
         public void nextTuple() {
-            if(i < KMeansData.POINTS.length) {
+            if (i < KMeansData.POINTS.length) {
                 _collector.emit(new Values(new KMeansData.Point(
-                        (double)KMeansData.POINTS[i][0], (double)KMeansData.POINTS[i][1])));
+                        (double) KMeansData.POINTS[i][0], (double) KMeansData.POINTS[i][1])));
                 i++;
             }
         }
@@ -97,15 +97,15 @@ public class KMeansTest {
 
         @Override
         public void execute(Tuple tuple, BasicOutputCollector collector) {
-            KMeansData.Point point = (KMeansData.Point)tuple.getValue(0);
-            if(tuple.getSourceComponent().equals("points")) {
+            KMeansData.Point point = (KMeansData.Point) tuple.getValue(0);
+            if (tuple.getSourceComponent().equals("points")) {
                 // assign
                 int minIndex = -1;
                 double minDistance = Double.MAX_VALUE;
 
-                for(int i = 0; i < initMeanList.size(); i++) {
+                for (int i = 0; i < initMeanList.size(); i++) {
                     double distance = point.euclideanDistance(initMeanList.get(i));
-                    if(distance < minDistance) {
+                    if (distance < minDistance) {
                         minDistance = distance;
                         minIndex = i;
                     }
@@ -113,7 +113,7 @@ public class KMeansTest {
                 point.id = minIndex;
 //                System.out.println(point.toString());
                 collector.emit(new Values(minIndex, point, 1L));
-            } else if(tuple.getSourceComponent().equals("aggregator")) {
+            } else if (tuple.getSourceComponent().equals("aggregator")) {
                 // update centroids
                 System.out.println(point.toString());
                 initMeanList.set(point.id, point);
@@ -142,14 +142,14 @@ public class KMeansTest {
         @Override
         public void execute(Tuple tuple, BasicOutputCollector collector) {
             int centroid_index = tuple.getInteger(0);
-            KMeansData.Point point = (KMeansData.Point)tuple.getValue(1);
+            KMeansData.Point point = (KMeansData.Point) tuple.getValue(1);
             long count = tuple.getLong(2);
 
             // accumulate counts, accumulate sum of x dimension, accumulate sum of y dimension
             Tuple3<Long, Double, Double> centroid_aggreate = centroids_aggreate.get(centroid_index);
             // declarer.declare(new Fields("centroid_index", "assigned_points", "count"));
 
-            if( null == centroid_aggreate) {
+            if (null == centroid_aggreate) {
 
                 centroids_aggreate.put(centroid_index, new Tuple3<>(1L, point.x, point.y));
                 collector.emit("centroids", new Values(new KMeansData.Point(centroid_index,
@@ -162,8 +162,8 @@ public class KMeansTest {
 
                 centroids_aggreate.put(centroid_index, new Tuple3<>(accumulate_counts, accumulate_x, accumulate_y));
                 collector.emit("centroids", new Values(new KMeansData.Point(centroid_index,
-                        accumulate_x/accumulate_counts,
-                        accumulate_y/accumulate_counts)));
+                        accumulate_x / accumulate_counts,
+                        accumulate_y / accumulate_counts)));
             }
 
         }

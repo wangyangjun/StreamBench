@@ -20,20 +20,20 @@ import org.apache.flink.util.Collector;
 import static java.util.Objects.requireNonNull;
 
 /**
- *{@code JoinedStreams} represents two {@link DataStream DataStreams} that have been joined.
+ * {@code JoinedStreams} represents two {@link DataStream DataStreams} that have been joined.
  * A streaming join operation is evaluated over elements in separate windows.
- *
+ * <p>
  * <p>
  * To finalize the join operation you also need to specify a {@link KeySelector}
  * and a {@link WindowAssigner} for both the first and second input and .
- *
+ * <p>
  * <p>
  * Note: Right now, the the join is being evaluated in memory so you need to ensure that the number
  * of elements per key does not get too high. Otherwise the JVM might crash.
- *
+ * <p>
  * <p>
  * Example:
- *
+ * <p>
  * <pre> {@code
  * DataStream<T1> one = ...;
  * DataStream<T2> two = ...;
@@ -48,13 +48,18 @@ import static java.util.Objects.requireNonNull;
  * } </pre>
  */
 public class MultiWindowsJoinedStreams<T1, T2> {
-    /** The first input stream */
+    /**
+     * The first input stream
+     */
     private DataStream<T1> input1;
 
-    /** The second input stream */
+    /**
+     * The second input stream
+     */
     private DataStream<T2> input2;
 
     private int parallelism;
+
     /**
      * Creates new JoinedStreams data streams, which are the first step towards building a streaming co-group.
      *
@@ -67,13 +72,14 @@ public class MultiWindowsJoinedStreams<T1, T2> {
         this.parallelism = Math.max(input1.getParallelism(), input2.getParallelism());
     }
 
-    public void setParallelism(int parallelism){
+    public void setParallelism(int parallelism) {
         this.parallelism = parallelism;
     }
+
     /**
      * Specifies a {@link KeySelector} for elements from the first input.
      */
-    public <KEY> Where<KEY> where(KeySelector<T1, KEY> keySelector)  {
+    public <KEY> Where<KEY> where(KeySelector<T1, KEY> keySelector) {
         TypeInformation<KEY> keyType = TypeExtractor.getKeySelectorTypes(keySelector, input1.getType());
         return new Where<>(input1.getExecutionEnvironment().clean(keySelector), keyType);
     }
@@ -93,12 +99,12 @@ public class MultiWindowsJoinedStreams<T1, T2> {
         Where(KeySelector<T1, KEY> keySelector1, TypeInformation<KEY> keyType) {
             this.keySelector1 = keySelector1;
             this.keyType = keyType;
-            if(!(input1 instanceof KeyedStream)){
+            if (!(input1 instanceof KeyedStream)) {
                 input1 = input1.keyBy(keySelector1);
             }
         }
 
-        public WithOneWindow window(WindowAssigner<? super T1, TimeWindow> windowAssigner){
+        public WithOneWindow window(WindowAssigner<? super T1, TimeWindow> windowAssigner) {
             return new WithOneWindow(windowAssigner, keyType);
         }
 
@@ -135,7 +141,7 @@ public class MultiWindowsJoinedStreams<T1, T2> {
 
                 EqualTo(KeySelector<T2, KEY> keySelector2) {
                     this.keySelector2 = requireNonNull(keySelector2);
-                    if(!(input2 instanceof KeyedStream)){
+                    if (!(input2 instanceof KeyedStream)) {
                         input2 = input2.keyBy(keySelector2);
                     }
                 }
@@ -159,8 +165,8 @@ public class MultiWindowsJoinedStreams<T1, T2> {
      * well as a {@link WindowAssigner}.
      * Doesn't support trigger and evictor
      *
-     * @param <T1> Type of the elements from the first input
-     * @param <T2> Type of the elements from the second input
+     * @param <T1>  Type of the elements from the first input
+     * @param <T2>  Type of the elements from the second input
      * @param <KEY> Type of the key. This must be the same for both inputs
      */
     public class WithWindow<T1, T2, KEY> {
@@ -269,8 +275,8 @@ public class MultiWindowsJoinedStreams<T1, T2> {
 
         @Override
         public void coGroup(Iterable<T1> first, Iterable<T2> second, Collector<T> out) throws Exception {
-            for (T1 val1: first) {
-                for (T2 val2: second) {
+            for (T1 val1 : first) {
+                for (T2 val2 : second) {
                     out.collect(wrappedFunction.join(val1, val2));
                 }
             }

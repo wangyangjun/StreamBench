@@ -11,11 +11,11 @@ import java.io.Serializable;
 abstract public class OperatorCreator implements Serializable {
     private String appName;
 
-    public String getAppName(){
+    public String getAppName() {
         return this.appName;
     }
 
-    public OperatorCreator(String name){
+    public OperatorCreator(String name) {
         this.appName = name;
     }
 
@@ -36,12 +36,12 @@ abstract public class OperatorCreator implements Serializable {
      * Consume point stream from kafka for workload 3
      */
     abstract public WorkloadOperator<Point> pointStreamFromKafka(String zkConStr,
-                                                               String kafkaServers,
-                                                               String group,
-                                                               String topics,
-                                                               String offset,
-                                                               String componentId,
-                                                               int parallelism);
+                                                                 String kafkaServers,
+                                                                 String group,
+                                                                 String topics,
+                                                                 String offset,
+                                                                 String componentId,
+                                                                 int parallelism);
 
     abstract public WorkloadOperator<String> stringStreamFromKafka(String zkConStr,
                                                                    String kafkaServers,

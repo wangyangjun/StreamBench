@@ -19,10 +19,14 @@ import static java.util.Objects.requireNonNull;
  * Created by jun on 30/11/15.
  */
 public class NoWindowJoinedStreams<IN1, IN2> {
-    /** The first input stream */
+    /**
+     * The first input stream
+     */
     private DataStream<IN1> input1;
 
-    /** The second input stream */
+    /**
+     * The second input stream
+     */
     private DataStream<IN2> input2;
 
     private int parallelism;
@@ -39,20 +43,20 @@ public class NoWindowJoinedStreams<IN1, IN2> {
         this.parallelism = Math.max(input1.getParallelism(), input2.getParallelism());
     }
 
-    public void setParallelism(int parallelism){
+    public void setParallelism(int parallelism) {
         this.parallelism = parallelism;
     }
 
     /**
      * Specifies a {@link KeySelector} for elements from the first input.
      */
-    public <KEY> Where<KEY> where(KeySelector<IN1, KEY> keySelector)  {
+    public <KEY> Where<KEY> where(KeySelector<IN1, KEY> keySelector) {
         TypeInformation<KEY> keyType = TypeExtractor.getKeySelectorTypes(keySelector, input1.getType());
         return new Where<>(input1.getExecutionEnvironment().clean(keySelector), keyType);
     }
 
     // TODO: tmp solution for InvalidTypesException
-    public <KEY> Where<KEY> where(KeySelector<IN1, KEY> keySelector, TypeInformation<KEY> keyType)  {
+    public <KEY> Where<KEY> where(KeySelector<IN1, KEY> keySelector, TypeInformation<KEY> keyType) {
         return new Where<>(input1.getExecutionEnvironment().clean(keySelector), keyType);
     }
 
@@ -78,7 +82,7 @@ public class NoWindowJoinedStreams<IN1, IN2> {
             }
         }
 
-        public WithOneBuffer buffer(Time time){
+        public WithOneBuffer buffer(Time time) {
             return new WithOneBuffer(time, keyType);
         }
 
@@ -130,7 +134,7 @@ public class NoWindowJoinedStreams<IN1, IN2> {
 
                 EqualTo(KeySelector<IN2, KEY> keySelector2) {
                     this.keySelector2 = requireNonNull(keySelector2);
-                    if(!(input2 instanceof KeyedStream)){
+                    if (!(input2 instanceof KeyedStream)) {
 //                        input2 = input2.keyBy(keySelector2);
                         // TODO: tmp solution for InvalidTypesException
                         input2 = new KeyedStream<>(input2, keySelector2, keyType);

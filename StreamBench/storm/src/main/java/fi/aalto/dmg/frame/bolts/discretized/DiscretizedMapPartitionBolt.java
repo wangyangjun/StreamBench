@@ -33,22 +33,23 @@ public class DiscretizedMapPartitionBolt<T, R> extends DiscretizedBolt {
         super(preComponentId);
         this.fun = function;
         slideDataMap = new HashMap<>(BUFFER_SLIDES_NUM);
-        for(int i=0; i<BUFFER_SLIDES_NUM; ++i){
+        for (int i = 0; i < BUFFER_SLIDES_NUM; ++i) {
             slideDataMap.put(i, new ArrayList<T>());
         }
     }
 
     /**
      * determine which slide the tuple belongs to
+     *
      * @param tuple
      */
     @Override
     public void processTuple(Tuple tuple) {
         int slideId = tuple.getInteger(0);
-        slideId = slideId%BUFFER_SLIDES_NUM;
+        slideId = slideId % BUFFER_SLIDES_NUM;
         T t = (T) tuple.getValue(1);
         List<T> mapedList = slideDataMap.get(slideId);
-        if(null == mapedList){
+        if (null == mapedList) {
             mapedList = new ArrayList<>();
         }
         mapedList.add(t);
@@ -59,7 +60,7 @@ public class DiscretizedMapPartitionBolt<T, R> extends DiscretizedBolt {
     public void processSlide(BasicOutputCollector collector, int slideIndex) {
         List<T> list = slideDataMap.get(slideIndex);
         Iterable<R> results = fun.mapPartition(list);
-        for(R r : results) {
+        for (R r : results) {
             collector.emit(new Values(slideIndex, r));
         }
         // clear data

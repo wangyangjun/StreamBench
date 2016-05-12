@@ -25,12 +25,12 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * In the benchmark, we use one side join
- *
+ * <p>
  * Join two streams <K,V> <K,R> on K=K
  * emit Values(K, Tuple2<V,R>)
  * Created by jun on 17/11/15.
  */
-public class JoinBolt<K,V,R> extends BaseBasicBolt {
+public class JoinBolt<K, V, R> extends BaseBasicBolt {
     private static final Logger logger = LoggerFactory.getLogger(JoinBolt.class);
 
     private static final long serialVersionUID = 4820980147212849642L;
@@ -48,14 +48,14 @@ public class JoinBolt<K,V,R> extends BaseBasicBolt {
     // event time assigner
     private AssignTimeFunction<V> eventTimeAssigner1;
     private AssignTimeFunction<R> eventTimeAssigner2;
+
     /**
-     *
-     * @param component1 component id of stream 1
+     * @param component1      component id of stream 1
      * @param windowDuration1 window duration of stream 1
-     * @param component2 component id of stream 2
+     * @param component2      component id of stream 2
      * @param windowDuration2 window duration of stream 2
      */
-    public JoinBolt(String component1, TimeDurations windowDuration1, String component2, TimeDurations windowDuration2){
+    public JoinBolt(String component1, TimeDurations windowDuration1, String component2, TimeDurations windowDuration2) {
         this.component1 = component1;
         this.component2 = component2;
 
@@ -68,7 +68,7 @@ public class JoinBolt<K,V,R> extends BaseBasicBolt {
 
     public JoinBolt(String component1, TimeDurations windowDuration1,
                     String component2, TimeDurations windowDuration2,
-                    AssignTimeFunction<V> eventTimeAssigner1, AssignTimeFunction<R> eventTimeAssigner2){
+                    AssignTimeFunction<V> eventTimeAssigner1, AssignTimeFunction<R> eventTimeAssigner2) {
         this(component1, windowDuration1, component2, windowDuration2);
         this.eventTimeAssigner1 = eventTimeAssigner1;
         this.eventTimeAssigner2 = eventTimeAssigner2;
@@ -90,16 +90,16 @@ public class JoinBolt<K,V,R> extends BaseBasicBolt {
 //        logger.warn("execute:" + tuple.toString());
         // get current time
         long currentTime = System.currentTimeMillis();
-        K key = (K)tuple.getValue(0);
+        K key = (K) tuple.getValue(0);
 
-        if(tuple.getSourceComponent().equals(this.component1)){
-            V value = (V)tuple.getValue(1);
-            if(null != this.eventTimeAssigner1) {
+        if (tuple.getSourceComponent().equals(this.component1)) {
+            V value = (V) tuple.getValue(1);
+            if (null != this.eventTimeAssigner1) {
                 currentTime = eventTimeAssigner1.assign(value);
             }
 
             Tuple4<Long, V, Long, R> tuple4 = streamBuffer.getIfPresent(key);
-            if( null == tuple4) {
+            if (null == tuple4) {
                 streamBuffer.put(key, new Tuple4<Long, V, Long, R>(currentTime, value, null, null));
             } else {
                 streamBuffer.invalidate(key);
@@ -112,13 +112,13 @@ public class JoinBolt<K,V,R> extends BaseBasicBolt {
             }
 
         } else {
-            R value = (R)tuple.getValue(1);
-            if(null != this.eventTimeAssigner2) {
+            R value = (R) tuple.getValue(1);
+            if (null != this.eventTimeAssigner2) {
                 currentTime = eventTimeAssigner2.assign(value);
             }
 
             Tuple4<Long, V, Long, R> tuple4 = streamBuffer.getIfPresent(key);
-            if(null == tuple4){
+            if (null == tuple4) {
                 streamBuffer.put(key, new Tuple4<Long, V, Long, R>(null, null, currentTime, value));
             } else {
                 streamBuffer.invalidate(key);

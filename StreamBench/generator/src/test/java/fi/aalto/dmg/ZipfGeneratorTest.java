@@ -10,8 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class ZipfGeneratorTest
-{
+public class ZipfGeneratorTest {
     public static void main(String[] args) {
 
         int size = 10;
@@ -28,42 +27,36 @@ public class ZipfGeneratorTest
         before = System.nanoTime();
         Map<Integer, Integer> counts0 = computeCounts(z0, size, n);
         after = System.nanoTime();
-        System.out.println(counts0+", duration "+(after-before)/1e6);
+        System.out.println(counts0 + ", duration " + (after - before) / 1e6);
 
         before = System.nanoTime();
         Map<Integer, Integer> counts1 = computeCounts(z1, size, n);
         after = System.nanoTime();
-        System.out.println(counts1+", duration "+(after-before)/1e6);
+        System.out.println(counts1 + ", duration " + (after - before) / 1e6);
     }
 
     private static Map<Integer, Integer> computeCounts(
-            ZipfGenerator z, int size, int n)
-    {
+            ZipfGenerator z, int size, int n) {
         Map<Integer, Integer> counts = new LinkedHashMap<Integer, Integer>();
-        for (int i=1; i<=size; i++)
-        {
+        for (int i = 1; i <= size; i++) {
             counts.put(i, 0);
         }
-        for (int i=1; i<=n; i++)
-        {
+        for (int i = 1; i <= n; i++) {
             int k = z.next();
-            counts.put(k, counts.get(k)+1);
+            counts.put(k, counts.get(k) + 1);
         }
         return counts;
     }
 
     private static Map<Integer, Integer> computeCounts(
-            FastZipfGenerator z, int size, int n)
-    {
+            FastZipfGenerator z, int size, int n) {
         Map<Integer, Integer> counts = new LinkedHashMap<Integer, Integer>();
-        for (int i=1; i<=size; i++)
-        {
+        for (int i = 1; i <= size; i++) {
             counts.put(i, 0);
         }
-        for (int i=1; i<=n; i++)
-        {
+        for (int i = 1; i <= n; i++) {
             int k = z.next();
-            counts.put(k, counts.get(k)+1);
+            counts.put(k, counts.get(k) + 1);
         }
         return counts;
     }
@@ -81,8 +74,8 @@ class ZipfGenerator {
         this.size = size;
         this.skew = skew;
 
-        for(int i=1;i <=size; i++) {
-            this.bottom += (1/Math.pow(i, this.skew));
+        for (int i = 1; i <= size; i++) {
+            this.bottom += (1 / Math.pow(i, this.skew));
         }
     }
 
@@ -93,12 +86,12 @@ class ZipfGenerator {
         double friquency = 0;
         double dice;
 
-        rank = rnd.nextInt(size)+1;
+        rank = rnd.nextInt(size) + 1;
         friquency = (1.0d / Math.pow(rank, this.skew)) / this.bottom;
         dice = rnd.nextDouble();
 
-        while(!(dice < friquency)) {
-            rank = rnd.nextInt(size)+1;
+        while (!(dice < friquency)) {
+            rank = rnd.nextInt(size) + 1;
             friquency = (1.0d / Math.pow(rank, this.skew)) / this.bottom;
             dice = rnd.nextDouble();
         }

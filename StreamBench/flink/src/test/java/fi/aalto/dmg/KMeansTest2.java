@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import fi.aalto.dmg.KMeansData.Point;
 
 /**
@@ -29,17 +30,17 @@ public class KMeansTest2 {
         // <Integer, Integer, Long, Long> ~
         // ( cluster index, accumulated record number, record value)
         DataStream<Tuple3<Integer, Long, Point>> someIntegers = KMeansData.getDefaultPointDataStream(env)
-            .map(new MapFunction<Point, Tuple3<Integer, Long, Point>>() {
-                @Override
-                public Tuple3<Integer, Long, Point> map(Point value) throws Exception {
-                    return new Tuple3<>(-1, 1L, value);
-                }
-            });
+                .map(new MapFunction<Point, Tuple3<Integer, Long, Point>>() {
+                    @Override
+                    public Tuple3<Integer, Long, Point> map(Point value) throws Exception {
+                        return new Tuple3<>(-1, 1L, value);
+                    }
+                });
 
         class Assign implements MapFunction<Tuple3<Integer, Long, Point>, Tuple3<Integer, Long, Point>> {
             public List<Point> initMeanList;
 
-            public Assign(){
+            public Assign() {
                 initMeanList = new ArrayList<>();
                 initMeanList.add(new Point(0, -31.85, -44.77));
                 initMeanList.add(new Point(1, 35.16, 17.46));
@@ -53,16 +54,16 @@ public class KMeansTest2 {
             public Tuple3<Integer, Long, Point> map(Tuple3<Integer, Long, Point> value) throws Exception {
 //                System.out.println(initMeanList.toString() + String.valueOf(System.identityHashCode(initMeanList)));
                 // Update mean
-                if( value.f2.isCentroid()) {
+                if (value.f2.isCentroid()) {
                     initMeanList.set(value.f2.id, value.f2);
                     return value;
                 } else {
                     int minIndex = -1;
                     double minDistance = Double.MAX_VALUE;
 
-                    for(int i = 0; i < initMeanList.size(); i++) {
+                    for (int i = 0; i < initMeanList.size(); i++) {
                         double distance = value.f2.euclideanDistance(initMeanList.get(i));
-                        if(distance < minDistance) {
+                        if (distance < minDistance) {
                             minDistance = distance;
                             minIndex = i;
                         }
@@ -82,12 +83,9 @@ public class KMeansTest2 {
                 = assigned.filter(new FilterFunction<Tuple3<Integer, Long, Point>>() {
             @Override
             public boolean filter(Tuple3<Integer, Long, Point> value) throws Exception {
-                if(value.f1 > 1) {
-                    return false;
-                }
-                return true;
+                return value.f1 <= 1;
             }
-        }).keyBy(new KeySelector<Tuple3<Integer,Long,Point>, Integer>() {
+        }).keyBy(new KeySelector<Tuple3<Integer, Long, Point>, Integer>() {
             @Override
             public Integer getKey(Tuple3<Integer, Long, Point> integerLongPointTuple3) throws Exception {
                 return integerLongPointTuple3.f0;
@@ -96,7 +94,7 @@ public class KMeansTest2 {
             @Override
             public Tuple3<Integer, Long, Point> reduce(Tuple3<Integer, Long, Point> value1,
                                                        Tuple3<Integer, Long, Point> value2) throws Exception {
-                long totalElementNum = value1.f1+value2.f1;
+                long totalElementNum = value1.f1 + value2.f1;
                 Point mean = value1.f2.mul(value1.f1).add(value2.f2.mul(value2.f1)).div(totalElementNum);
                 mean.id = value1.f0;
                 return new Tuple3<>(value1.f0, totalElementNum, mean);

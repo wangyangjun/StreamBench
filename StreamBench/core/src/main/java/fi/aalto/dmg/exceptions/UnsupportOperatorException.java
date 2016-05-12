@@ -9,23 +9,19 @@ public class UnsupportOperatorException extends Exception implements Serializabl
 
     private static final long serialVersionUID = 8844396756042772132L;
 
-    public UnsupportOperatorException(String message)
-    {
+    public UnsupportOperatorException(String message) {
         super(message);
     }
 
-    public UnsupportOperatorException()
-    {
+    public UnsupportOperatorException() {
         super();
     }
 
-    public UnsupportOperatorException(String message, Throwable cause)
-    {
-        super(message,cause);
+    public UnsupportOperatorException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public UnsupportOperatorException(Throwable cause)
-    {
+    public UnsupportOperatorException(Throwable cause) {
         super(cause);
     }
 

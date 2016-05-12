@@ -14,7 +14,7 @@ import java.lang.reflect.InvocationTargetException;
  * Created by jun on 12/04/16.
  */
 public class AdvClick {
-    public static void main( String[] args ) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
+    public static void main(String[] args) throws ClassNotFoundException, WorkloadException, InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
 
         Logger logger = LoggerFactory.getLogger("AdvClick");
         logger.warn("Start ...");

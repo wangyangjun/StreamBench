@@ -21,8 +21,12 @@ public class PrintBolt<T> extends BaseBasicBolt {
 
     private boolean windowed;
 
-    public PrintBolt(){ }
-    public PrintBolt(boolean windowed) { this.windowed=windowed; }
+    public PrintBolt() {
+    }
+
+    public PrintBolt(boolean windowed) {
+        this.windowed = windowed;
+    }
 
     @Override
     public void execute(Tuple input, BasicOutputCollector collector) {

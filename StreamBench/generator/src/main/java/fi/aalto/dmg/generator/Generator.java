@@ -27,7 +27,7 @@ public abstract class Generator {
         }
     }
 
-    public static KafkaProducer<String, String> createBigBufferProducer(){
+    public static KafkaProducer<String, String> createBigBufferProducer() {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ProducerConfig.RETRIES_CONFIG, "3");
@@ -54,7 +54,7 @@ public abstract class Generator {
         return producer;
     }
 
-    public static KafkaProducer<String, String> createSmallBufferProducer(){
+    public static KafkaProducer<String, String> createSmallBufferProducer() {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ProducerConfig.RETRIES_CONFIG, "3");

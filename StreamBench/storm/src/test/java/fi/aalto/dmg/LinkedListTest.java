@@ -11,14 +11,13 @@ import java.util.ListIterator;
  */
 public class LinkedListTest {
     @Test
-    public void forLoopTest()
-    {
+    public void forLoopTest() {
         LinkedList<Integer> linkedList = new LinkedList<>();
-        for(int i=0; i<10; ++i){
+        for (int i = 0; i < 10; ++i) {
             linkedList.add(i);
         }
         ListIterator<Integer> listIterator = linkedList.listIterator();
-        for(Integer integer : linkedList){
+        for (Integer integer : linkedList) {
             System.out.println(integer);
         }
         Assert.assertTrue(true);

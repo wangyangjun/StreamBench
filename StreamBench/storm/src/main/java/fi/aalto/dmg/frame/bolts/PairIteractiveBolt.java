@@ -15,16 +15,16 @@ import scala.Tuple2;
 /**
  * Created by jun on 02/12/15.
  */
-public class PairIteractiveBolt<K,V> extends BaseBasicBolt {
+public class PairIteractiveBolt<K, V> extends BaseBasicBolt {
 
     private static final Logger logger = LoggerFactory.getLogger(FilterBolt.class);
     private static final long serialVersionUID = 2401869900116259991L;
     public static String ITERATIVE_STREAM = "IterativeStream";
 
-    FilterFunction<Tuple2<K,V>> filterFunction;
+    FilterFunction<Tuple2<K, V>> filterFunction;
     MapFunction<V, V> mapFunction;
 
-    public PairIteractiveBolt(MapFunction<V, V> mapFunction, FilterFunction<Tuple2<K,V>> filterFunction) {
+    public PairIteractiveBolt(MapFunction<V, V> mapFunction, FilterFunction<Tuple2<K, V>> filterFunction) {
         this.mapFunction = mapFunction;
         this.filterFunction = filterFunction;
     }
@@ -35,7 +35,7 @@ public class PairIteractiveBolt<K,V> extends BaseBasicBolt {
         Object v = input.getValue(1);
         try {
             V result = this.mapFunction.map((V) v);
-            if (this.filterFunction.filter(new Tuple2<K, V>((K)k, result))) {
+            if (this.filterFunction.filter(new Tuple2<K, V>((K) k, result))) {
                 collector.emit(ITERATIVE_STREAM, new Values(k, result));
 
             } else {

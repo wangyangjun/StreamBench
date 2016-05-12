@@ -25,7 +25,7 @@ public class PointAssignMap<IN, OUT>
     @Override
     public void processElement(StreamRecord<IN> element) throws Exception {
         OUT out = userFunction.map(element.getValue());
-        if(null != out) {
+        if (null != out) {
             output.collect(element.replace(out));
         }
     }

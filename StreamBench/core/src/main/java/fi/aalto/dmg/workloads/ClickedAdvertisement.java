@@ -34,12 +34,13 @@ public class ClickedAdvertisement extends Workload implements Serializable {
         stream2Window = Integer.parseInt(properties.getProperty("stream2.window"));
     }
 
-    private static class TimeAssigner implements AssignTimeFunction<Long>, Serializable{
+    private static class TimeAssigner implements AssignTimeFunction<Long>, Serializable {
         @Override
         public long assign(Long var1) {
             return var1;
         }
     }
+
     @Override
     public void Process() throws WorkloadException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         try {
@@ -47,7 +48,7 @@ public class ClickedAdvertisement extends Workload implements Serializable {
             PairWorkloadOperator<String, Long> advertisements = kafkaStreamOperator("advertisement")
                     .mapToPair(UserFunctions.mapToStringLongPair, "Extractor");
             PairWorkloadOperator<String, Long> clicks = kafkaStreamOperator2("click")
-                    .mapToPair(UserFunctions.mapToStringLongPair, "Extractor2" );
+                    .mapToPair(UserFunctions.mapToStringLongPair, "Extractor2");
 //            advertisements.print();
 //            clicks.print();
             PairWorkloadOperator<String, Tuple2<Long, Long>> clicksWithCreateTime = advertisements.join(
@@ -66,8 +67,7 @@ public class ClickedAdvertisement extends Workload implements Serializable {
 
             clicksWithCreateTime.mapValue(UserFunctions.mapToWithTime, "MapToWithTime")
                     .sink();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
             e.printStackTrace();
         }

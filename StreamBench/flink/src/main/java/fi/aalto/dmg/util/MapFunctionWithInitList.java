@@ -13,7 +13,7 @@ public class MapFunctionWithInitList<T, R> implements MapFunction<T, R> {
     private List<T> initList;
     private MapWithInitListFunction<T, R> function;
 
-    public MapFunctionWithInitList(MapWithInitListFunction<T, R> fun, List<T> initList){
+    public MapFunctionWithInitList(MapWithInitListFunction<T, R> fun, List<T> initList) {
         this.function = fun;
         this.initList = initList;
     }

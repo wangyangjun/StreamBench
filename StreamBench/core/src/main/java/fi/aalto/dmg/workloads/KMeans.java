@@ -34,7 +34,7 @@ public class KMeans extends Workload implements Serializable {
     }
 
 
-    private List<Point> loadInitCentroids(){
+    private List<Point> loadInitCentroids() {
         List<Point> centroids = new ArrayList<>();
         BufferedReader br = null;
         InputStream stream = null;
@@ -45,11 +45,11 @@ public class KMeans extends Workload implements Serializable {
             br = new BufferedReader(new InputStreamReader(stream));
             while ((sCurrentLine = br.readLine()) != null) {
                 String[] strs = sCurrentLine.split(",");
-                if(strs.length != dimension){
+                if (strs.length != dimension) {
                     throw new DimensionMismatchException(strs.length, dimension);
                 }
                 double[] position = new double[dimension];
-                for(int i=0; i<dimension; i++) {
+                for (int i = 0; i < dimension; i++) {
                     position[i] = Double.valueOf(strs[i]);
                 }
                 centroids.add(new Point(position));
@@ -59,7 +59,7 @@ public class KMeans extends Workload implements Serializable {
         } finally {
             try {
                 if (stream != null) stream.close();
-                if (br != null)br.close();
+                if (br != null) br.close();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -84,8 +84,7 @@ public class KMeans extends Workload implements Serializable {
 //            assigned_points.print();
 //            points.print();
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage());
             e.printStackTrace();
         }

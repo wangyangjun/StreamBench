@@ -38,12 +38,12 @@ public class WindowReduceBolt<T> extends WindowedBolt {
 
     @Override
     public void processTuple(Tuple tuple) {
-        try{
+        try {
             T reduceValue = reduceList.get(slideInWindow);
-            T value = (T)tuple.getValue(0);
+            T value = (T) tuple.getValue(0);
             if (null == reduceValue)
                 reduceList.set(slideInWindow, value);
-            else{
+            else {
                 reduceList.set(slideInWindow, fun.reduce(reduceValue, value));
             }
         } catch (Exception e) {
@@ -54,11 +54,11 @@ public class WindowReduceBolt<T> extends WindowedBolt {
 
     @Override
     public void processSlide(BasicOutputCollector collector) {
-        try{
+        try {
             T reduceValue = null;
             // TODO: implement window data structure with tree, no need to for loop
-            for(T t : reduceList){
-                if( null == reduceValue){
+            for (T t : reduceList) {
+                if (null == reduceValue) {
                     reduceValue = t;
                 } else {
                     reduceValue = fun.reduce(reduceValue, t);
@@ -66,7 +66,7 @@ public class WindowReduceBolt<T> extends WindowedBolt {
             }
             collector.emit(new Values(slideIndexInBuffer, reduceValue));
             // clear data
-            reduceList.set((slideInWindow +1)% WINDOW_SIZE, null);
+            reduceList.set((slideInWindow + 1) % WINDOW_SIZE, null);
         } catch (Exception e) {
             logger.error(e.toString());
         }

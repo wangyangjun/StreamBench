@@ -31,11 +31,11 @@ import java.util.UUID;
  * Created by jun on 11/11/15.
  */
 
-public class TickTest  {
+public class TickTest {
 
     public static final int DEFAULT_TICK_FREQUENCY_SECONDS = 4;
 
-    public static void main( String[] args )  throws WorkloadException {
+    public static void main(String[] args) throws WorkloadException {
         TopologyBuilder builder = new TopologyBuilder();
         BrokerHosts hosts = new ZkHosts("localhost:2181");
         SpoutConfig spoutConfig = new SpoutConfig(hosts, "WordCount", "/" + "WordCount", UUID.randomUUID().toString());
@@ -60,10 +60,10 @@ public class TickTest  {
 
     public static class SplitSentence extends BaseBasicBolt {
         @Override
-        public void execute(Tuple tuple, BasicOutputCollector collector){
+        public void execute(Tuple tuple, BasicOutputCollector collector) {
             String[] words = tuple.getString(0).split(" ");
-            for(String word: words) {
-                if( null != word && !word.isEmpty()){
+            for (String word : words) {
+                if (null != word && !word.isEmpty()) {
                     collector.emit(new Values(word.trim().toLowerCase()));
                 }
             }
@@ -86,10 +86,10 @@ public class TickTest  {
 
         @Override
         public void execute(Tuple tuple, BasicOutputCollector collector) {
-            if (isTickTuple(tuple)){
+            if (isTickTuple(tuple)) {
                 System.out.print("Tick tuple");
                 System.out.println(System.currentTimeMillis());
-                for(Map.Entry<String, Integer> entry: counts.entrySet()){
+                for (Map.Entry<String, Integer> entry : counts.entrySet()) {
                     String word = entry.getKey();
                     Integer count = entry.getValue();
                     collector.emit(Utils.DEFAULT_STREAM_ID, new Values(word, count));
@@ -120,7 +120,7 @@ public class TickTest  {
             return conf;
         }
 
-        private static boolean isTickTuple(Tuple tuple){
+        private static boolean isTickTuple(Tuple tuple) {
             return tuple.getSourceComponent().equals(Constants.SYSTEM_COMPONENT_ID)
                     && tuple.getSourceStreamId().equals(Constants.SYSTEM_TICK_STREAM_ID);
         }
@@ -130,10 +130,10 @@ public class TickTest  {
         Map<String, Integer> counts = new HashMap<String, Integer>();
 
         @Override
-        public void prepare(Map stormConf, TopologyContext context){
-            Map<GlobalStreamId,Grouping> map = context.getThisSources();
-            for( Map.Entry<GlobalStreamId, Grouping> entry : map.entrySet()) {
-                if(entry.getKey().get_streamId().equals(Utils.DEFAULT_STREAM_ID)){
+        public void prepare(Map stormConf, TopologyContext context) {
+            Map<GlobalStreamId, Grouping> map = context.getThisSources();
+            for (Map.Entry<GlobalStreamId, Grouping> entry : map.entrySet()) {
+                if (entry.getKey().get_streamId().equals(Utils.DEFAULT_STREAM_ID)) {
                     List<Integer> list = context.getComponentTasks(entry.getKey().get_componentId());
                     System.out.println(list.toString());
                 }
@@ -142,7 +142,7 @@ public class TickTest  {
 
         @Override
         public void execute(Tuple tuple, BasicOutputCollector collector) {
-            if(isTickTuple(tuple)){
+            if (isTickTuple(tuple)) {
                 System.out.print("Tick tuple!");
                 System.out.println(System.currentTimeMillis());
             } else {
@@ -163,7 +163,7 @@ public class TickTest  {
         }
 
 
-        private static boolean isTickTuple(Tuple tuple){
+        private static boolean isTickTuple(Tuple tuple) {
             return (tuple.getSourceComponent().equals(Constants.SYSTEM_COMPONENT_ID)
                     && tuple.getSourceStreamId().equals(Constants.SYSTEM_TICK_STREAM_ID))
                     || (tuple.getSourceStreamId().equals("tick"));

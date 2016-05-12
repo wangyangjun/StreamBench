@@ -15,14 +15,14 @@ public class SetTest {
         set.add("World");
         set.add("Hello");
 
-        for(String str : set){
+        for (String str : set) {
             System.out.println(str);
         }
 
         System.out.println(String.format("%05d", 123));
 
         int i = 0;
-        while(i<10){
+        while (i < 10) {
             System.out.println(++i);
         }
     }

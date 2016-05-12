@@ -24,29 +24,30 @@ public class DiscretizedMapToPairBolt<T, K, V> extends DiscretizedBolt {
     private static final Logger logger = LoggerFactory.getLogger(DiscretizedMapBolt.class);
     private static final long serialVersionUID = 1291962079966581567L;
 
-    private Map<Integer, List<Tuple2<K,V>>> slideDataMap;
+    private Map<Integer, List<Tuple2<K, V>>> slideDataMap;
     private MapPairFunction<T, K, V> fun;
 
     public DiscretizedMapToPairBolt(MapPairFunction<T, K, V> function, String preComponentId) {
         super(preComponentId);
         this.fun = function;
         slideDataMap = new HashMap<>(BUFFER_SLIDES_NUM);
-        for(int i=0; i<BUFFER_SLIDES_NUM; ++i){
+        for (int i = 0; i < BUFFER_SLIDES_NUM; ++i) {
             slideDataMap.put(i, new ArrayList<Tuple2<K, V>>());
         }
     }
 
     /**
      * determine which slide the tuple belongs to
+     *
      * @param tuple
      */
     @Override
     public void processTuple(Tuple tuple) {
         int slideId = tuple.getInteger(0);
-        slideId = slideId%BUFFER_SLIDES_NUM;
+        slideId = slideId % BUFFER_SLIDES_NUM;
         T t = (T) tuple.getValue(1);
-        List<Tuple2<K,V>> pariList = slideDataMap.get(slideId);
-        if(null == pariList){
+        List<Tuple2<K, V>> pariList = slideDataMap.get(slideId);
+        if (null == pariList) {
             pariList = new ArrayList<>();
         }
         pariList.add(fun.mapToPair(t));
@@ -55,8 +56,8 @@ public class DiscretizedMapToPairBolt<T, K, V> extends DiscretizedBolt {
 
     @Override
     public void processSlide(BasicOutputCollector collector, int slideIndex) {
-        List<Tuple2<K,V>> list = slideDataMap.get(slideIndex);
-        for(Tuple2<K,V> pair : list) {
+        List<Tuple2<K, V>> list = slideDataMap.get(slideIndex);
+        for (Tuple2<K, V> pair : list) {
             collector.emit(new Values(slideIndex, pair._1(), pair._2()));
         }
         // clear data

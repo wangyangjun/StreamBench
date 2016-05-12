@@ -12,7 +12,7 @@ public class SparkWindowedWorkloadOperator<T> extends WindowedWorkloadOperator<T
     private static final long serialVersionUID = -6693062092516294209L;
     private JavaDStream<T> dStream;
 
-    public SparkWindowedWorkloadOperator(JavaDStream<T> stream, int parallelism){
+    public SparkWindowedWorkloadOperator(JavaDStream<T> stream, int parallelism) {
         super(parallelism);
         dStream = stream;
     }
@@ -49,7 +49,7 @@ public class SparkWindowedWorkloadOperator<T> extends WindowedWorkloadOperator<T
     @Override
     public <K, V> PairWorkloadOperator<K, V> mapToPair(MapPairFunction<T, K, V> fun,
                                                        String componentId) {
-        JavaPairDStream<K,V> pairDStream = dStream.mapToPair(new PairFunctionImpl<>(fun));
+        JavaPairDStream<K, V> pairDStream = dStream.mapToPair(new PairFunctionImpl<>(fun));
         return new SparkPairWorkloadOperator<>(pairDStream, parallelism);
     }
 

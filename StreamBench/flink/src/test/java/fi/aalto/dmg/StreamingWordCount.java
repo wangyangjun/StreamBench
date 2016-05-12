@@ -24,7 +24,7 @@ public class StreamingWordCount {
         final DataStream<Tuple2<String, Integer>> counts = env
                 .socketTextStream("localhost", 9999)
                 .flatMap(new Splitter())
-                .keyBy(new KeySelector<Tuple2<String,Integer>, String>() {
+                .keyBy(new KeySelector<Tuple2<String, Integer>, String>() {
                     @Override
                     public String getKey(Tuple2<String, Integer> value) throws Exception {
                         return value.f0;
@@ -37,7 +37,7 @@ public class StreamingWordCount {
                     }
                 });
 
-         counts.print();
+        counts.print();
         // UpdateStateByKey
         // counts.groupBy(0).sum(1).print();
         env.execute("Socket Stream WordCount");
@@ -48,7 +48,7 @@ public class StreamingWordCount {
     public static class Splitter implements FlatMapFunction<String, Tuple2<String, Integer>> {
         @Override
         public void flatMap(String sentence, Collector<Tuple2<String, Integer>> out) throws Exception {
-            for (String word: sentence.split(" ")) {
+            for (String word : sentence.split(" ")) {
                 out.collect(new Tuple2<>(word, 1));
             }
         }

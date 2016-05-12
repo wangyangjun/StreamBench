@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * Created by jun on 11/9/15.
  */
-public class UpdateStateBolt<K,V> extends WindowedBolt  {
+public class UpdateStateBolt<K, V> extends WindowedBolt {
 
     private static final Logger logger = LoggerFactory.getLogger(PairReduceBolt.class);
     private static final long serialVersionUID = -5859171958528281638L;
@@ -33,7 +33,7 @@ public class UpdateStateBolt<K,V> extends WindowedBolt  {
         super(windowDuration, slideDuration);
         this.fun = function;
         maps = new ArrayList<>(WINDOW_SIZE);
-        for(int i=0; i<WINDOW_SIZE; ++i) {
+        for (int i = 0; i < WINDOW_SIZE; ++i) {
             maps.add(new HashMap<K, V>());
         }
     }
@@ -42,12 +42,12 @@ public class UpdateStateBolt<K,V> extends WindowedBolt  {
     public void processTuple(Tuple tuple) {
         try {
             Map<K, V> map = maps.get(slideInWindow);
-            K key = (K)tuple.getValue(0);
-            V value = (V)tuple.getValue(1);
+            K key = (K) tuple.getValue(0);
+            V value = (V) tuple.getValue(1);
             V reducedValue = map.get(key);
             if (null == reducedValue)
                 map.put(key, value);
-            else{
+            else {
                 map.put(key, fun.reduce(reducedValue, value));
             }
         } catch (Exception e) {
@@ -57,19 +57,19 @@ public class UpdateStateBolt<K,V> extends WindowedBolt  {
 
     @Override
     public void processSlide(BasicOutputCollector collector) {
-        try{
+        try {
             Map<K, V> reduceMap = new HashMap<>();
-            for(Map<K,V> map : maps){
-                for(Map.Entry<K,V> entry : map.entrySet()){
+            for (Map<K, V> map : maps) {
+                for (Map.Entry<K, V> entry : map.entrySet()) {
                     V reducedValue = reduceMap.get(entry.getKey());
-                    if(null == reducedValue){
+                    if (null == reducedValue) {
                         reduceMap.put(entry.getKey(), entry.getValue());
                     } else {
                         reduceMap.put(entry.getKey(), fun.reduce(reducedValue, entry.getValue()));
                     }
                 }
             }
-            for(Map.Entry<K, V> entry: reduceMap.entrySet()){
+            for (Map.Entry<K, V> entry : reduceMap.entrySet()) {
                 collector.emit(new Values(slideIndexInBuffer, entry.getKey(), entry.getValue()));
             }
             // there is no need to clear data

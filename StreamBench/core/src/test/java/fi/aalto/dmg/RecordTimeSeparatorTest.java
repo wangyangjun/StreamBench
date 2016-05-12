@@ -11,7 +11,7 @@ import org.junit.Test;
 public class RecordTimeSeparatorTest {
 
     @Test
-    public void SeparatorTest(){
+    public void SeparatorTest() {
         String str = "k23j4 2k34j 2kl34 23jk4 ";
         String[] list = str.split(Constant.TimeSeparatorRegex);
         System.out.println(list[0]);

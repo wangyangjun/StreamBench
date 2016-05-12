@@ -16,11 +16,11 @@ import java.util.*;
  * Two streams:
  * Names: Yangjun Jun Junshao Wang Hello World
  * Name-age:
- *      Yangjun 5
- *      Jun 14
- *      Junshao 29
- *      Hello 23
- *      Hi 23
+ * Yangjun 5
+ * Jun 14
+ * Junshao 29
+ * Hello 23
+ * Hi 23
  * Created by jun on 18/11/15.
  */
 public class SparkJoinTest {
@@ -45,9 +45,9 @@ public class SparkJoinTest {
             @Override
             public Tuple2<String, Long> call(String s) throws Exception {
                 String[] list = s.split(" ");
-                String name  = list[0];
+                String name = list[0];
                 long age = 0L;
-                if(list.length>1)
+                if (list.length > 1)
                     age = Long.parseLong(list[1]);
                 return new Tuple2<String, Long>(name, age);
             }

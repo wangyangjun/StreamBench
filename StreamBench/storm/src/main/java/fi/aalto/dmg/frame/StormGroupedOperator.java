@@ -10,13 +10,13 @@ import fi.aalto.dmg.frame.functions.ReduceFunction;
 /**
  * Created by yangjun.wang on 01/11/15.
  */
-public class StormGroupedOperator<K,V> extends GroupedWorkloadOperator<K,V>  {
+public class StormGroupedOperator<K, V> extends GroupedWorkloadOperator<K, V> {
 
     private static final long serialVersionUID = 3901262136572311573L;
     protected TopologyBuilder topologyBuilder;
     protected String preComponentId;
 
-    public StormGroupedOperator(TopologyBuilder builder, String previousComponent, int parallelism){
+    public StormGroupedOperator(TopologyBuilder builder, String previousComponent, int parallelism) {
         super(parallelism);
         this.topologyBuilder = builder;
         this.preComponentId = previousComponent;
@@ -26,9 +26,9 @@ public class StormGroupedOperator<K,V> extends GroupedWorkloadOperator<K,V>  {
     public PairWorkloadOperator<K, V> reduce(ReduceFunction<V> fun, String componentId, int parallelism) {
 
         topologyBuilder.setBolt(componentId,
-                new PairReduceBolt<K,V>(fun),
+                new PairReduceBolt<K, V>(fun),
                 parallelism)
-            .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
+                .fieldsGrouping(preComponentId, new Fields(BoltConstants.OutputKeyField));
         return new StormPairOperator<>(topologyBuilder, componentId, parallelism);
     }
 

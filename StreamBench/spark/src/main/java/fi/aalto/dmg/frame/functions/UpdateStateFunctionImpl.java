@@ -16,21 +16,21 @@ public class UpdateStateFunctionImpl<V> implements Function2<List<V>, Optional<V
 
     private ReduceFunction<V> fun;
 
-    public UpdateStateFunctionImpl(ReduceFunction<V> function){
+    public UpdateStateFunctionImpl(ReduceFunction<V> function) {
         this.fun = function;
     }
 
     @Override
     public Optional<V> call(List<V> values, Optional<V> vOptional) throws Exception {
         V reducedValue = vOptional.orNull();
-        for(V value : values) {
-            if(null == reducedValue) {
+        for (V value : values) {
+            if (null == reducedValue) {
                 reducedValue = value;
             } else {
                 reducedValue = fun.reduce(reducedValue, value);
             }
         }
-        if(null != reducedValue)
+        if (null != reducedValue)
             return Optional.of(reducedValue);
         return vOptional;
     }

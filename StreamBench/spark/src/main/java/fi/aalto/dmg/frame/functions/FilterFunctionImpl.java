@@ -9,7 +9,7 @@ public class FilterFunctionImpl<T> implements Function<T, Boolean> {
     private static final long serialVersionUID = -6809290167835550952L;
     private FilterFunction<T> fun;
 
-    public FilterFunctionImpl(FilterFunction<T> function){
+    public FilterFunctionImpl(FilterFunction<T> function) {
         fun = function;
     }
 

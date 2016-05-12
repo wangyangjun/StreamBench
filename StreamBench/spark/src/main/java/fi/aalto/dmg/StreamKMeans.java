@@ -65,7 +65,7 @@ public class StreamKMeans {
         }
     }
 
-    private static Vector[] loadInitCentroids(){
+    private static Vector[] loadInitCentroids() {
         List<Vector> centroids = new ArrayList<>();
         BufferedReader br = null;
         InputStream stream = null;
@@ -76,11 +76,11 @@ public class StreamKMeans {
             br = new BufferedReader(new InputStreamReader(stream));
             while ((sCurrentLine = br.readLine()) != null) {
                 String[] strs = sCurrentLine.split(",");
-                if(strs.length != dimension){
+                if (strs.length != dimension) {
                     throw new DimensionMismatchException(strs.length, dimension);
                 }
                 double[] position = new double[dimension];
-                for(int i=0; i<dimension; i++) {
+                for (int i = 0; i < dimension; i++) {
                     position[i] = Double.valueOf(strs[i]);
                 }
                 centroids.add(Vectors.dense(position));
@@ -93,21 +93,20 @@ public class StreamKMeans {
         } finally {
             try {
                 if (stream != null) stream.close();
-                if (br != null)br.close();
+                if (br != null) br.close();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
         Vector[] vectors = new Vector[centroids.size()];
-        for(int i=0; i<centroids.size(); i++){
+        for (int i = 0; i < centroids.size(); i++) {
             vectors[i] = centroids.get(i);
         }
         return vectors;
     }
 
 
-    public static void main( String[] args )
-    {
+    public static void main(String[] args) {
 
 //        String inputFile = StreamKMeans.class.getClassLoader().getResource("centroids.txt").getFile();
         SparkConf sparkConf = new SparkConf().setMaster("spark://master:7077").setAppName("JavaKMeans");
@@ -138,7 +137,9 @@ public class StreamKMeans {
 
         Vector[] initCentroids = loadInitCentroids();
         double[] weights = new double[96];
-        for(int i=0; i<96; i++) { weights[i] = 1.0/96; }
+        for (int i = 0; i < 96; i++) {
+            weights[i] = 1.0 / 96;
+        }
 
         final StreamingKMeans model = new StreamingKMeans()
                 .setK(96)
@@ -151,7 +152,7 @@ public class StreamKMeans {
             @Override
             public Void call(JavaRDD<Vector> vectorJavaRDD, Time time) throws Exception {
                 Vector[] vector = model.latestModel().clusterCenters();
-                for(int i=0; i<vector.length; i++) {
+                for (int i = 0; i < vector.length; i++) {
                     logger.warn(vector[i].toArray()[0] + "\t" + vector[i].toArray()[1]);
                 }
                 return null;
