@@ -32,10 +32,10 @@
 &nbsp;&nbsp;&nbsp;&nbsp;4. start flink cluster and submit workload job: `/usr/local/flink/bin/flink run flink-1.0-SNAPSHOT-jar-with-dependencies.jar`;  
 
 ### Output
-**collect log files**  
+#### Collect log files
 The output of benchmark job is log files. As the job runs in a distributed system, we use help script to collect log files.
 `python StreamBench/script/logs-collection.py flink flink.tar`   
-**Analysis logs**
+#### Analysis logs
 There are two script under `statistic_script` folder, latency.py and throughput.py
 Usage:
 ```
