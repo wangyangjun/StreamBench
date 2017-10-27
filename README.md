@@ -31,6 +31,26 @@
 &nbsp;&nbsp;&nbsp;&nbsp;3. get packaged jar file with dependencies -- flink-1.0-SNAPSHOT-jar-with-dependencies.jar;  
 &nbsp;&nbsp;&nbsp;&nbsp;4. start flink cluster and submit workload job: `/usr/local/flink/bin/flink run flink-1.0-SNAPSHOT-jar-with-dependencies.jar`;  
 
-**Log collection and statistic:**
-1. collect log files: `python StreamBench/script/logs-collection.py flink flink.tar`   
+### Output
+**collect log files**  
+The output of benchmark job is log files. As the job runs in a distributed system, we use help script to collect log files.
+`python StreamBench/script/logs-collection.py flink flink.tar`   
+**Analysis logs**
+There are two script under `statistic_script` folder, latency.py and throughput.py
+Usage:
+```
+# extract latency log from original log
+python latency.py extract origin.log latency.log
+# combine several log files into one file
+python latency.py combine output.log file1.log file2.log ...
+# analysis latency log
+python latency.log analysis latency.log
+# All in one process command, you could put original logs under one folder and run this command to ayalysis 
+python latency.py process original-log-folder
+
+```
+
+### Notes
+For other platform, the usage are similar to Flink.
+
 

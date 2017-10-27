@@ -111,7 +111,7 @@ if __name__ == "__main__":
         print("Usage: python %s command" % sys.argv[0])
         print("commands includes: ", commands)
         print("analysis is used to analysis extracted and combined log file")
-        print("process is used to origin log files under one folder")
+        print("process is used to process origin log files under one folder")
         exit(1)
     if "extract" == sys.argv[1]:
         if len(sys.argv) < 4:
